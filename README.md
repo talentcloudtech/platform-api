@@ -31,3 +31,9 @@ dotnet csharpier .
 dotnet format style
 dotnet format analyzers
 ```
+
+
+## Docker build
+```bash
+docker build -t platform-api:latest .
+```
