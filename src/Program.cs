@@ -1,9 +1,3 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Platform.Api.Common;
 using Platform.Api.Configurations;
 using Platform.Api.Endpoints;
@@ -31,7 +25,7 @@ builder.Services.AddIdentityApiEndpoints<ApplicationUser>().AddEntityFrameworkSt
 // Request response compression
 builder.Services.AddCompressionSetup();
 
-// HttpContextAcessor
+// HttpContextAccessor
 builder.Services.AddHttpContextAccessor();
 
 // Mediator
@@ -47,8 +41,8 @@ if (builder.Environment.EnvironmentName != "Testing")
 {
     builder.Host.UseLoggingSetup(builder.Configuration);
 
-    // Add opentelemetry
-    builder.AddOpenTemeletrySetup();
+    // Add open telemetry
+    builder.AddOpenTelemetrySetup();
 }
 
 var app = builder.Build();
@@ -72,7 +66,9 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapHeroEndpoints();
+// app.MapHeroEndpoints();
+app.MapProjectEndpoints();
 app.MapGroup("api/identity").WithTags("Identity").MapIdentityApi<ApplicationUser>();
+app.MapGet("/", () => Results.Redirect("/swagger"));
 
 await app.RunAsync();

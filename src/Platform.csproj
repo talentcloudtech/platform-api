@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <!-- <GenerateDocumentationFile>true</GenerateDocumentationFile> -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

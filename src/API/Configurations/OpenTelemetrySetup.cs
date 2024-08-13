@@ -1,19 +1,21 @@
-﻿using System;
-using System.Diagnostics;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using OpenTelemetry;
-using OpenTelemetry.Metrics;
+﻿using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Platform.Application.Extensions;
+using System.Diagnostics;
 
 namespace Platform.Api.Configurations;
 
+/// <summary>
+/// Represents the OpenTelemetry setup class.
+/// </summary>
 public static class OpenTelemetrySetup
 {
-    public static void AddOpenTemeletrySetup(this WebApplicationBuilder builder)
+    /// <summary>
+    /// Adds the OpenTelemetry setup.
+    /// </summary>
+    /// <param name="builder">The web application builder.</param>
+    public static void AddOpenTelemetrySetup(this WebApplicationBuilder builder)
     {
         Activity.DefaultIdFormat = ActivityIdFormat.W3C;
 
