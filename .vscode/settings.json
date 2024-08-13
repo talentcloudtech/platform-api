@@ -1,0 +1,11 @@
+{
+  "editor.formatOnSave": false,
+  "[csharp]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "csharpier.csharpier-vscode"
+  },
+  "cSpell.words": [
+    "Ardalis",
+    "serilog"
+]
+}
