@@ -14,4 +14,14 @@ public static class StringSizes
     /// The maximum size for a title.
     /// </summary>
     public const int Title = 200;
+
+    /// <summary>
+    /// The maximum size for a bio.
+    /// </summary>
+    public const int Bio = 500;
+
+    /// <summary>
+    /// The maximum size for a bio.
+    /// </summary>
+    public const int Url = 500;
 }

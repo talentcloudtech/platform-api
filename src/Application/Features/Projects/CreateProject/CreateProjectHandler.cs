@@ -1,8 +1,8 @@
 using Ardalis.Result;
-using Domain.Entities;
 using Mapster;
 using MediatR;
 using Platform.Application.Common;
+using Platform.Domain.Entities;
 
 namespace Platform.Application.Features.Projects.CreateProject;
 

@@ -1,6 +1,6 @@
-﻿using Domain.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Platform.Domain.Entities;
 
 namespace Platform.Application.Common;
 
@@ -18,6 +18,11 @@ public interface IContext : IAsyncDisposable, IDisposable
     /// Gets or sets the projects DbSet.
     /// </summary>
     public DbSet<Project> Projects { get; }
+
+    /// <summary>
+    /// Gets or sets the member profile DbSet.
+    /// </summary>
+    public DbSet<MemberProfile> MemberProfiles { get; }
 
     // /// <summary>
     // /// Gets or sets the DbSet of ProjectUser entities.

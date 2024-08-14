@@ -42,3 +42,20 @@ public partial struct ProjectId : IGuid
         return new ProjectId(guid);
     }
 }
+
+/// <summary>
+/// Represents a strongly typed identifier for a member profile.
+/// </summary>
+[StronglyTypedId]
+public partial struct MemberProfileId : IGuid
+{
+    /// <summary>
+    /// Implicitly converts a Guid to a member profile id.
+    /// </summary>
+    /// <param name="guid">The Guid value.</param>
+    /// <returns>A new instance of ProjectId.</returns>
+    public static implicit operator MemberProfileId(Guid guid)
+    {
+        return new MemberProfileId(guid);
+    }
+}

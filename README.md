@@ -48,5 +48,5 @@ docker build -t platform-api:latest .
 1. Verify the script and push to the changes manually if needed
 
    ```bash
-   dotnet ef migrations update
+   dotnet ef database update
    ```

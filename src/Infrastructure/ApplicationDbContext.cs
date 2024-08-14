@@ -1,7 +1,7 @@
-﻿using Domain.Entities;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
+using Platform.Domain.Entities;
 using Platform.Infrastructure.Configuration;
 
 namespace Platform.Infrastructure;
@@ -22,6 +22,11 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     /// Gets or sets the projects DbSet.
     /// </summary>
     public DbSet<Project> Projects { get; set; } = null!;
+
+    /// <summary>
+    /// Gets or sets the Member profiles DbSet.
+    /// </summary>
+    public DbSet<MemberProfile> MemberProfiles { get; set; } = null!;
 
     // /// <summary>
     // /// Gets or sets the DbSet of ProjectUser entities.
