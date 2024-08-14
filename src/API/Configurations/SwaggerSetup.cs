@@ -1,13 +1,8 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
+﻿using System.Reflection;
 using Microsoft.OpenApi.Models;
 using Platform.Domain.Entities.Common;
 using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.SwaggerUI;
-using System;
-using System.IO;
-using System.Linq;
-using System.Reflection;
 
 namespace Platform.Api.Configurations;
 

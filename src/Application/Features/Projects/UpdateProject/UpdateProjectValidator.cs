@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Platform.Application.Common;
-using Platform.Application.Features.Projects.UpdateProject;
 
 namespace Platform.Application.Features.Projects.UpdateProject;
 

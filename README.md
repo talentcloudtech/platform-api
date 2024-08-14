@@ -21,7 +21,6 @@ cd src
 dotnet watch run
 ```
 
-
 ## Code Quality maintenance
 
 Before pushing the code make sure all are passing
@@ -32,8 +31,22 @@ dotnet format style
 dotnet format analyzers
 ```
 
-
 ## Docker build
+
 ```bash
 docker build -t platform-api:latest .
 ```
+
+## Generating migrations and updating to db
+
+1. If changes on the entity then generate the migration files using
+
+   ```bash
+   dotnet ef migrations add MessageTitle
+   ```
+
+1. Verify the script and push to the changes manually if needed
+
+   ```bash
+   dotnet ef migrations update
+   ```
