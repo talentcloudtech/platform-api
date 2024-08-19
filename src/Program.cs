@@ -8,6 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Controllers
 builder.AddValidationSetup();
 
+// add logto authorization
+builder.Services.AddLogtoAuthorizationSetup(builder.Configuration);
+
 builder.Services.AddAuthorization();
 
 // Swagger
@@ -68,7 +71,8 @@ app.UseAuthorization();
 
 // app.MapHeroEndpoints();
 app.MapProjectEndpoints();
-app.MapGroup("api/identity").WithTags("Identity").MapIdentityApi<ApplicationUser>();
+
+// app.MapGroup("api/identity").WithTags("Identity").MapIdentityApi<ApplicationUser>();
 app.MapGet("/", () => Results.Redirect("/swagger"));
 
 await app.RunAsync();
