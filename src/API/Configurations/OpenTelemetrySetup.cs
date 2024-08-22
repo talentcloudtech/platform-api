@@ -1,8 +1,8 @@
-﻿using System.Diagnostics;
-using OpenTelemetry.Metrics;
+﻿using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Platform.Application.Extensions;
+using System.Diagnostics;
 
 namespace Platform.Api.Configurations;
 

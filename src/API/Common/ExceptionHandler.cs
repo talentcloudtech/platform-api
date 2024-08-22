@@ -1,7 +1,7 @@
-using System.Diagnostics;
-using System.Net;
 using Ardalis.Result;
 using Microsoft.AspNetCore.Diagnostics;
+using System.Diagnostics;
+using System.Net;
 
 namespace Platform.Api.Common;
 

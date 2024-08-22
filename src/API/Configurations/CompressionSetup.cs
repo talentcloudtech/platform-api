@@ -1,5 +1,5 @@
-﻿using System.IO.Compression;
-using Microsoft.AspNetCore.ResponseCompression;
+﻿using Microsoft.AspNetCore.ResponseCompression;
+using System.IO.Compression;
 
 namespace Platform.Api.Configurations;
 

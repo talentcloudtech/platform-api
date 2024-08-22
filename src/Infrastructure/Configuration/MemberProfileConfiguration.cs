@@ -1,10 +1,10 @@
-using System;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Platform.Application.Common;
 using Platform.Domain.Entities;
 using Platform.Domain.Entities.Common;
+using System;
 
 namespace Platform.Infrastructure.Configuration;
 
@@ -23,6 +23,7 @@ public class MemberProfileConfiguration : IEntityTypeConfiguration<MemberProfile
 
         builder.Property(x => x.Id).HasConversion<MemberProfileId.EfCoreValueConverter>();
         builder.Property(x => x.FullName).IsRequired().HasMaxLength(StringSizes.Title);
+        builder.Property(x => x.HandleName).IsRequired().HasMaxLength(20);
         builder.Property(x => x.ShortBio).IsRequired().HasMaxLength(StringSizes.Bio);
         builder.Property(x => x.ProfilePictureUrl).IsRequired().HasMaxLength(StringSizes.Url);
         builder.Property(x => x.Timezone).IsRequired().HasMaxLength(50);

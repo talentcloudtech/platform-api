@@ -1,4 +1,3 @@
-using System.Net;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -20,6 +19,9 @@ public static class LogtoAuthorizationSetup
         IConfiguration configuration
     )
     {
+        var authority = configuration["JwtSettings:Authority"];
+        var audience = configuration["JwtSettings:Audience"];
+
         services
             .AddAuthentication(options =>
             {
@@ -28,8 +30,8 @@ public static class LogtoAuthorizationSetup
             })
             .AddJwtBearer(options =>
             {
-                options.Authority = "https://rtuyk7.logto.app/oidc"; // Replace with your Logto domain
-                options.Audience = "http://localhost:5257/api"; // Replace with your API audience
+                options.Authority = authority;
+                options.Audience = audience;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,

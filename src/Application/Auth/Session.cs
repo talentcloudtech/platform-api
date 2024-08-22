@@ -1,5 +1,5 @@
-﻿using System.Security.Claims;
-using Platform.Domain.Entities.Common;
+﻿using Platform.Domain.Entities.Common;
+using System.Security.Claims;
 using ISession = Platform.Domain.Auth.Interfaces.ISession;
 
 namespace Platform.Application.Auth;

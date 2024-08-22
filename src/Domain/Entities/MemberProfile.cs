@@ -19,6 +19,11 @@ public class MemberProfile : Entity<MemberProfileId>
     public required string FullName { get; set; }
 
     /// <summary>
+    /// Gets or sets the handle name of the member
+    /// </summary>
+    public required string HandleName { get; set; }
+
+    /// <summary>
     /// Gets or sets the short biography of the member.
     /// </summary>
     public required string ShortBio { get; set; }
