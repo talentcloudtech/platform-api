@@ -1,6 +1,7 @@
 using Platform.Api.Common;
 using Platform.Api.Configurations;
 using Platform.Api.Endpoints;
+using Platform.API.Endpoints;
 using Platform.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -69,8 +70,8 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// app.MapHeroEndpoints();
 app.MapProjectEndpoints();
+app.MapMemberProfileEndpoints();
 
 // app.MapGroup("api/identity").WithTags("Identity").MapIdentityApi<ApplicationUser>();
 app.MapGet("/", () => Results.Redirect("/swagger"));
