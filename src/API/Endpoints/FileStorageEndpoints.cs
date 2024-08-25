@@ -1,0 +1,45 @@
+﻿using Ardalis.Result.AspNetCore;
+using MediatR;
+using Platform.Application.Features.FileStorages.GenerateSasUri;
+using Platform.Application.Features.FileStorages.UploadFile;
+
+namespace Platform.API.Endpoints;
+
+/// <summary>
+/// Represents the endpoints for file storage.
+/// </summary>
+public static class FileStorageEndpoints
+{
+    /// <summary>
+    /// Maps the endpoints for file storage.
+    /// </summary>
+    /// <param name="builder">The endpoint route builder.</param>
+    public static void MapFileStorageEndpoints(this IEndpointRouteBuilder builder)
+    {
+        var group = builder.MapGroup("api/fileStorage").WithTags("FileStorage").RequireAuthorization();
+
+        group
+            .MapPost(
+                "/",
+                async (IMediator mediator, IFormFile file) =>
+                {
+                    var request = new UploadFileRequest { File = file };
+                    var result = await mediator.Send(request);
+                    return result.ToMinimalApiResult();
+                }
+            )
+            .WithSummary("Upload file and generate download url.")
+            .DisableAntiforgery();
+
+        group
+            .MapGet(
+                "generateDownloadUrl/{filePath}",
+                async (IMediator mediator, string filePath) =>
+                {
+                    var result = await mediator.Send(new GenerateSasUriRequest(filePath));
+                    return result.ToMinimalApiResult();
+                }
+            )
+            .WithSummary("Generate download url.");
+    }
+}
