@@ -1,0 +1,32 @@
+{
+    "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+    "version": "0.2",
+    "language": "en",
+    "words": [
+        "Antiforgery",
+        "appsettings.json",
+        "Ardalis",
+        "ASPNETCORE",
+        "Brotli",
+        "efcore",
+        "Hsts",
+        "Logto",
+        "Mapster",
+        "Mediat",
+        "Npgsql",
+        "Otlp",
+        "serilog",
+        "Swashbuckle"
+    ],
+    "ignorePaths": [
+        "**/node_modules/**",
+        "**/vscode-extension/**",
+        "**/.git/**",
+        ".vscode",
+        "package-lock.json",
+        "report",
+        "**/bin/**",
+        "**/obj/**",
+        "**/**.csproj"
+    ]
+}

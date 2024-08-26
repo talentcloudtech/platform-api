@@ -1,8 +1,8 @@
-﻿using Ardalis.Result;
+﻿using System.Text.Json.Serialization;
+using Ardalis.Result;
 using MediatR;
 using Platform.Domain.Entities.Common;
 using Platform.Domain.Entities.Enums;
-using System.Text.Json.Serialization;
 
 namespace Platform.Application.Features.Projects.UpdateProject;
 

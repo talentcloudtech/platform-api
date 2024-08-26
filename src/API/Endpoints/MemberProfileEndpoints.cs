@@ -1,5 +1,8 @@
 ﻿using Ardalis.Result.AspNetCore;
 using MediatR;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Platform.Application.Features.MemberProfiles.CreateMemberProfile;
 using Platform.Application.Features.MemberProfiles.DeleteMemberProfile;
 using Platform.Application.Features.MemberProfiles.GetMemberProfileById;
@@ -25,7 +28,7 @@ public static class MemberProfileEndpoints
         group
             .MapGet(
                 "/",
-                async (IMediator mediator, [AsParameters] SearchMemberProfilesRequest request) =>
+                async (IMediator mediator, HttpContext context, [AsParameters] SearchMemberProfilesRequest request) =>
                 {
                     var result = await mediator.Send(request);
                     return result;
@@ -58,7 +61,7 @@ public static class MemberProfileEndpoints
         group
             .MapPut(
                 "{id}",
-                async (IMediator mediator, Guid id, UpdateMemberProfileRequest request) =>
+                async (IMediator mediator, MemberProfileId id, UpdateMemberProfileRequest request) =>
                 {
                     var result = await mediator.Send(request with { Id = id });
                     return result.ToMinimalApiResult();

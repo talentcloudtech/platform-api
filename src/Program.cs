@@ -1,5 +1,11 @@
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Platform.Api.Common;
 using Platform.Api.Configurations;
+using Platform.API.Configurations;
 using Platform.Api.Endpoints;
 using Platform.API.Endpoints;
 using Platform.Infrastructure;
@@ -38,6 +44,9 @@ builder.Services.AddMediatRSetup();
 // Exception handler
 builder.Services.AddExceptionHandler<ExceptionHandler>();
 
+//IOptionConfigure
+builder.Services.ConfigureAllOptions(builder.Configuration);
+
 builder.Logging.ClearProviders();
 
 // Add serilog
@@ -72,6 +81,7 @@ app.UseAuthorization();
 
 app.MapProjectEndpoints();
 app.MapMemberProfileEndpoints();
+app.MapFileStorageEndpoints();
 
 // app.MapGroup("api/identity").WithTags("Identity").MapIdentityApi<ApplicationUser>();
 app.MapGet("/", () => Results.Redirect("/swagger"));

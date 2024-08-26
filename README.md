@@ -27,8 +27,9 @@ Before pushing the code make sure all are passing
 
 ```bash
 dotnet csharpier .
-dotnet format style
-dotnet format analyzers
+
+## checks spelling
+npx cspell .
 ```
 
 ## Docker build

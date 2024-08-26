@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using MassTransit;
 using Platform.Domain.Entities.Common;
 

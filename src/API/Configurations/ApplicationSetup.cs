@@ -1,5 +1,6 @@
 ﻿using MassTransit;
 using MassTransit.NewIdProviders;
+using Microsoft.Extensions.DependencyInjection;
 using Platform.Application.Common;
 using Platform.Infrastructure;
 

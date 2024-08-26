@@ -1,4 +1,5 @@
-﻿using Platform.Application.Common.Behaviors;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Platform.Application.Common.Behaviors;
 
 namespace Platform.Api.Configurations;
 

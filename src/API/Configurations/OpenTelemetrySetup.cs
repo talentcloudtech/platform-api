@@ -1,8 +1,10 @@
-﻿using OpenTelemetry.Metrics;
+﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Platform.Application.Extensions;
-using System.Diagnostics;
 
 namespace Platform.Api.Configurations;
 

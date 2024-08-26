@@ -1,4 +1,5 @@
-﻿using MassTransit;
+﻿using System;
+using MassTransit;
 using Microsoft.AspNetCore.Identity;
 
 namespace Platform.Infrastructure;
