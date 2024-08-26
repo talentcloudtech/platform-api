@@ -11,3 +11,4 @@ jobs:
       - run: |
           dotnet tool restore
           dotnet csharpier --check .
+          npx cspell .

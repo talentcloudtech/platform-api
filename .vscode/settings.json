@@ -3,19 +3,5 @@
   "[csharp]": {
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "csharpier.csharpier-vscode"
-  },
-  "cSpell.words": [
-    "Ardalis",
-    "ASPNETCORE",
-    "Brotli",
-    "efcore",
-    "Hsts",
-    "Logto",
-    "Mapster",
-    "Mediat",
-    "Npgsql",
-    "Otlp",
-    "serilog",
-    "Swashbuckle"
-  ]
+  }
 }
