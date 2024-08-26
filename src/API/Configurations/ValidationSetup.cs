@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Builder;
 
 namespace Platform.Api.Configurations;
 

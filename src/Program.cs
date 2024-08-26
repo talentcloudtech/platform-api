@@ -1,7 +1,12 @@
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Platform.Api.Common;
 using Platform.Api.Configurations;
-using Platform.Api.Endpoints;
 using Platform.API.Configurations;
+using Platform.Api.Endpoints;
 using Platform.API.Endpoints;
 using Platform.Infrastructure;
 

@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
     <TieredPGO>true</TieredPGO>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <!-- <ImplicitUsings>enable</ImplicitUsings> -->
     <RootNamespace>Platform</RootNamespace>
     <GarbageCollectionAdaptationMode>1</GarbageCollectionAdaptationMode>
     <Features>InterceptorsPreview</Features>

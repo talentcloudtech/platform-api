@@ -1,4 +1,5 @@
-﻿using Platform.Domain.Entities.Common;
+﻿using System;
+using Platform.Domain.Entities.Common;
 
 namespace Platform.Domain.Auth.Interfaces;
 

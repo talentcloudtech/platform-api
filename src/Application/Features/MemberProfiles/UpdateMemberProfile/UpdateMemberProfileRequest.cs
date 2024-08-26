@@ -1,8 +1,9 @@
-﻿using Ardalis.Result;
+﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
+using Ardalis.Result;
 using MediatR;
 using Platform.Domain.Entities;
 using Platform.Domain.Entities.Common;
-using System.Text.Json.Serialization;
 
 namespace Platform.Application.Features.MemberProfiles.UpdateMemberProfile;
 

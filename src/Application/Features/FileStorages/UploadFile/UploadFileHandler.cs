@@ -1,4 +1,8 @@
-﻿using Ardalis.Result;
+﻿using System;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+using Ardalis.Result;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using MediatR;
@@ -39,14 +43,14 @@ public class UploadFileHandler : IRequestHandler<UploadFileRequest, Result<strin
     /// </returns>
     public async Task<Result<string>> Handle(UploadFileRequest request, CancellationToken cancellationToken)
     {
-        var fileExtension = Path.GetExtension(request.File.FileName).ToLowerInvariant();
+        var fileExt = Path.GetExtension(request.File.FileName)?.ToLowerInvariant();
 
-        if (!Array.Exists(AllowedExtensions, ext => ext.Equals(fileExtension, StringComparison.OrdinalIgnoreCase)))
+        if (!Array.Exists(AllowedExtensions, ext => string.Equals(ext, fileExt, StringComparison.OrdinalIgnoreCase)))
             return Result.Error(
                 "Invalid file type. Only image files (.jpg, .jpeg, .png, .gif) and PDFs (.pdf) are allowed."
             );
 
-        var fileName = Guid.NewGuid() + fileExtension;
+        var fileName = Guid.NewGuid() + fileExt;
 
         var tempBlobContainerClient = new BlobContainerClient(
             _azureBlobStorageOptions.ConnectionString,

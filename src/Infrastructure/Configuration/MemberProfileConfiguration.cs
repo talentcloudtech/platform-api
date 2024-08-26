@@ -1,10 +1,10 @@
+using System;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Platform.Application.Common;
 using Platform.Domain.Entities;
 using Platform.Domain.Entities.Common;
-using System;
 
 namespace Platform.Infrastructure.Configuration;
 

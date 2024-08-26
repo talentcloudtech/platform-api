@@ -1,5 +1,8 @@
 ﻿using Ardalis.Result.AspNetCore;
 using MediatR;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Platform.Application.Features.MemberProfiles.CreateMemberProfile;
 using Platform.Application.Features.MemberProfiles.DeleteMemberProfile;
 using Platform.Application.Features.MemberProfiles.GetMemberProfileById;
