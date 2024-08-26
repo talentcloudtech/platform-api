@@ -1,4 +1,6 @@
-﻿using System.Security.Claims;
+﻿using System;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 using Platform.Domain.Entities.Common;
 using ISession = Platform.Domain.Auth.Interfaces.ISession;
 

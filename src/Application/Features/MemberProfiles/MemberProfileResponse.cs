@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Platform.Domain.Entities;
 using Platform.Domain.Entities.Common;
 
