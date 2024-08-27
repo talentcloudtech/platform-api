@@ -55,7 +55,7 @@
     <PackageReference Include="StronglyTypedId.Templates" PrivateAssets="all" ExcludeAssets="runtime" Version="1.0.0-beta08" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="8.0.2" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.7.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.7.3" />
   </ItemGroup>
 
 </Project>
