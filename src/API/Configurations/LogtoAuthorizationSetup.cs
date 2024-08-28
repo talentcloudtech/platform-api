@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
@@ -25,6 +26,8 @@ public static class LogtoAuthorizationSetup
         var authority = configuration["JwtSettings:Authority"];
         var audience = configuration["JwtSettings:Audience"];
 
+        var IsDevelopment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development";
+
         services
             .AddAuthentication(options =>
             {
@@ -38,8 +41,8 @@ public static class LogtoAuthorizationSetup
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
+                    ValidateAudience = IsDevelopment ? false : true,
+                    ValidateLifetime = IsDevelopment ? false : true,
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKeyResolver = (token, securityToken, kid, parameters) =>
                     {

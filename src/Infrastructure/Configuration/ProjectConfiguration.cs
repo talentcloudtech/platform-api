@@ -18,6 +18,6 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Project>
     {
         builder.HasKey(x => x.Id);
 
-        builder.Property(x => x.Id).HasConversion<ProjectId.EfCoreValueConverter>();
+        builder.Property(x => x.Id).HasMaxLength(25).HasConversion<ProjectId.EfCoreValueConverter>();
     }
 }

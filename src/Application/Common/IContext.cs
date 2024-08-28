@@ -18,6 +18,11 @@ public interface IContext : IAsyncDisposable, IDisposable
     public DatabaseFacade Database { get; }
 
     /// <summary>
+    /// Gets or sets the users DbSet.
+    /// </summary>
+    public DbSet<ApplicationUser> Users { get; }
+
+    /// <summary>
     /// Gets or sets the projects DbSet.
     /// </summary>
     public DbSet<Project> Projects { get; }

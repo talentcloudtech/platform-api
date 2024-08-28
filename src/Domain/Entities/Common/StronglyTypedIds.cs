@@ -1,29 +1,45 @@
-﻿using System;
-using StronglyTypedIds;
+﻿using StronglyTypedIds;
 
-[assembly: StronglyTypedIdDefaults(Template.Guid, "guid-efcore")]
+[assembly: StronglyTypedIdDefaults(Template.String, "string-efcore")]
 
 namespace Platform.Domain.Entities.Common;
 
 /// <summary>
-/// Represents a strongly typed identifier for a Guid.
+/// Represents a strongly typed identifier for a string.
 /// </summary>
-public interface IGuid { }
+public interface IStringId { }
 
 /// <summary>
 /// Represents a strongly typed identifier for a user.
 /// </summary>
 [StronglyTypedId]
-public partial struct UserId : IGuid
+public partial struct UserId : IStringId
 {
     /// <summary>
-    /// Implicitly converts a Guid to a UserId.
+    /// Implicitly converts a id to a UserId.
     /// </summary>
-    /// <param name="guid">The Guid value.</param>
+    /// <param name="id">The id value.</param>
     /// <returns>A new instance of UserId.</returns>
-    public static implicit operator UserId(Guid guid)
+    public static implicit operator UserId(string id)
     {
-        return new UserId(guid);
+        return new UserId(id);
+    }
+}
+
+/// <summary>
+/// Represents a strongly typed identifier for a user.
+/// </summary>
+[StronglyTypedId]
+public partial struct RoleId : IStringId
+{
+    /// <summary>
+    /// Implicitly converts a id to a UserId.
+    /// </summary>
+    /// <param name="id">The id value.</param>
+    /// <returns>A new instance of UserId.</returns>
+    public static implicit operator RoleId(string id)
+    {
+        return new RoleId(id);
     }
 }
 
@@ -31,32 +47,15 @@ public partial struct UserId : IGuid
 /// Represents a strongly typed identifier for a project.
 /// </summary>
 [StronglyTypedId]
-public partial struct ProjectId : IGuid
+public partial struct ProjectId : IStringId
 {
     /// <summary>
-    /// Implicitly converts a Guid to a ProjectId.
+    /// Implicitly converts a id to a ProjectId.
     /// </summary>
-    /// <param name="guid">The Guid value.</param>
+    /// <param name="id">The id value.</param>
     /// <returns>A new instance of ProjectId.</returns>
-    public static implicit operator ProjectId(Guid guid)
+    public static implicit operator ProjectId(string id)
     {
-        return new ProjectId(guid);
-    }
-}
-
-/// <summary>
-/// Represents a strongly typed identifier for a member profile.
-/// </summary>
-[StronglyTypedId]
-public partial struct MemberProfileId : IGuid
-{
-    /// <summary>
-    /// Implicitly converts a Guid to a member profile id.
-    /// </summary>
-    /// <param name="guid">The Guid value.</param>
-    /// <returns>A new instance of ProjectId.</returns>
-    public static implicit operator MemberProfileId(Guid guid)
-    {
-        return new MemberProfileId(guid);
+        return new ProjectId(id);
     }
 }

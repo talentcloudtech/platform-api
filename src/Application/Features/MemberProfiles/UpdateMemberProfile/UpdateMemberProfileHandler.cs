@@ -56,14 +56,14 @@ public class UpdateMemberProfileHandler : IRequestHandler<UpdateMemberProfileReq
         if (originalMemberProfile is null)
             return Result.NotFound();
 
-        var existHandleName = await _context
-            .MemberProfiles.AnyAsync(
-                x => x.Id != request.Id && x.HandleName.ToLower().Trim() == request.HandleName.ToLower().Trim(),
-                cancellationToken
-            )
-            .ConfigureAwait(false);
-        if (existHandleName)
-            return Result.Error("Duplicate handle name found");
+        // var existHandleName = await _context
+        //     .MemberProfiles.AnyAsync(
+        //         x => x.Id != request.Id && x.HandleName.ToLower().Trim() == request.HandleName.ToLower().Trim(),
+        //         cancellationToken
+        //     )
+        //     .ConfigureAwait(false);
+        // if (existHandleName)
+        //     return Result.Error("Duplicate handle name found");
 
         string? profilePictureUrl = null;
         if (!string.IsNullOrWhiteSpace(request.ProfilePictureUrl) && UriUtils.IsSasUri(request.ProfilePictureUrl))
@@ -107,7 +107,7 @@ public class UpdateMemberProfileHandler : IRequestHandler<UpdateMemberProfileReq
         var existingResumeFileUrl = originalMemberProfile.ResumeFileUrl;
 
         originalMemberProfile.FullName = request.FullName;
-        originalMemberProfile.HandleName = request.HandleName;
+        // originalMemberProfile.HandleName = request.HandleName;
         originalMemberProfile.ShortBio = request.ShortBio;
         originalMemberProfile.ProfilePictureUrl = profilePictureUrl ?? request.ProfilePictureUrl;
         originalMemberProfile.ResumeFileUrl = resumeFileUrl ?? request.ResumeFileUrl;

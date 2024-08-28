@@ -1,5 +1,3 @@
-using System;
-using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Platform.Application.Common;
@@ -21,13 +19,12 @@ public class MemberProfileConfiguration : IEntityTypeConfiguration<MemberProfile
     {
         builder.HasKey(x => x.Id);
 
-        builder.Property(x => x.Id).HasConversion<MemberProfileId.EfCoreValueConverter>();
-        builder.Property(x => x.FullName).IsRequired().HasMaxLength(StringSizes.Title);
-        builder.Property(x => x.HandleName).IsRequired().HasMaxLength(20);
-        builder.Property(x => x.ShortBio).IsRequired().HasMaxLength(StringSizes.Bio);
-        builder.Property(x => x.ProfilePictureUrl).IsRequired().HasMaxLength(StringSizes.Url);
-        builder.Property(x => x.Timezone).IsRequired().HasMaxLength(50);
-        builder.Property(x => x.ResumeFileUrl).IsRequired().HasMaxLength(StringSizes.Url);
+        builder.Property(x => x.Id).HasMaxLength(25).HasConversion<UserId.EfCoreValueConverter>();
+        builder.Property(x => x.FullName).HasMaxLength(StringSizes.Title);
+        builder.Property(x => x.ShortBio).HasMaxLength(StringSizes.Bio);
+        builder.Property(x => x.ProfilePictureUrl).HasMaxLength(StringSizes.Url);
+        builder.Property(x => x.Timezone).HasMaxLength(50);
+        builder.Property(x => x.ResumeFileUrl).HasMaxLength(StringSizes.Url);
 
         builder.OwnsMany(
             x => x.Skills,
@@ -44,5 +41,7 @@ public class MemberProfileConfiguration : IEntityTypeConfiguration<MemberProfile
             }
         );
         builder.Property(x => x.ExternalLinks).HasColumnType("text[]");
+
+        builder.HasOne(x => x.User).WithOne(p => p.MemberProfile).HasForeignKey<ApplicationUser>(p => p.Id);
     }
 }

@@ -33,7 +33,7 @@ public class Session : ISession
 
         if (nameIdentifier != null)
         {
-            UserId = new Guid(nameIdentifier.Value);
+            UserId = nameIdentifier.Value;
         }
     }
 }
