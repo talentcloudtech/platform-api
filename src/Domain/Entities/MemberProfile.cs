@@ -1,33 +1,28 @@
 using System.Collections.Generic;
-using MassTransit;
 using Platform.Domain.Entities.Common;
+using Platform.Infrastructure;
 
 namespace Platform.Domain.Entities;
 
 /// <summary>
 /// /Represents a member profile entity.
 /// </summary>
-public class MemberProfile : Entity<MemberProfileId>
+public class MemberProfile : Entity<UserId>
 {
     /// <summary>
-    /// Gets or sets the unique identifier of the member profile.
+    /// Gets or sets the unique user identifier of the member profile.
     /// </summary>
-    public override MemberProfileId Id { get; set; } = NewId.NextGuid();
+    public override UserId Id { get; set; } = CustomNewId.GenerateStandardId();
 
     /// <summary>
     /// Gets or sets the full name of the member.
     /// </summary>
-    public required string FullName { get; set; }
-
-    /// <summary>
-    /// Gets or sets the handle name of the member
-    /// </summary>
-    public required string HandleName { get; set; }
+    public string? FullName { get; set; }
 
     /// <summary>
     /// Gets or sets the short biography of the member.
     /// </summary>
-    public required string ShortBio { get; set; }
+    public string? ShortBio { get; set; }
 
     /// <summary>
     /// Gets or sets the URL of the profile picture.
@@ -37,7 +32,7 @@ public class MemberProfile : Entity<MemberProfileId>
     /// <summary>
     /// Gets or sets the timezone of the member.
     /// </summary>
-    public required string Timezone { get; set; }
+    public string? Timezone { get; set; }
 
     /// <summary>
     /// Gets or sets the skills of the member.
@@ -58,4 +53,9 @@ public class MemberProfile : Entity<MemberProfileId>
     /// Gets or sets the URL of the resume file.
     /// </summary>
     public string? ResumeFileUrl { get; set; }
+
+    /// <summary>
+    /// Gets or sets the user associated with the member profile.
+    /// </summary>
+    public ApplicationUser? User { get; set; }
 }

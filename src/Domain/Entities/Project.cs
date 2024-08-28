@@ -1,4 +1,3 @@
-using MassTransit;
 using Platform.Domain.Entities.Common;
 using Platform.Domain.Entities.Enums;
 
@@ -12,7 +11,7 @@ public class Project : Entity<ProjectId>
     /// <summary>
     /// Gets or sets the unique identifier of the project.
     /// </summary>
-    public override ProjectId Id { get; set; } = NewId.NextGuid();
+    public override ProjectId Id { get; set; } = CustomNewId.GenerateStandardId();
 
     /// <summary>
     /// Gets or sets the name of the project.

@@ -22,7 +22,7 @@ namespace Platform.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<Platform.Domain.Entities.Common.UserId>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -36,8 +36,9 @@ namespace Platform.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("text");
 
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("character varying(25)");
 
                     b.HasKey("Id");
 
@@ -46,7 +47,7 @@ namespace Platform.Migrations
                     b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<Platform.Domain.Entities.Common.UserId>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -60,8 +61,9 @@ namespace Platform.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("text");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("character varying(25)");
 
                     b.HasKey("Id");
 
@@ -70,7 +72,7 @@ namespace Platform.Migrations
                     b.ToTable("AspNetUserClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<Platform.Domain.Entities.Common.UserId>", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasColumnType("text");
@@ -81,8 +83,9 @@ namespace Platform.Migrations
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("text");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("character varying(25)");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -91,13 +94,13 @@ namespace Platform.Migrations
                     b.ToTable("AspNetUserLogins", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<Platform.Domain.Entities.Common.UserId>", b =>
                 {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("UserId")
+                        .HasColumnType("character varying(25)");
 
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("RoleId")
+                        .HasColumnType("character varying(25)");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -106,10 +109,10 @@ namespace Platform.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<Platform.Domain.Entities.Common.UserId>", b =>
                 {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("UserId")
+                        .HasColumnType("character varying(25)");
 
                     b.Property<string>("LoginProvider")
                         .HasColumnType("text");
@@ -125,74 +128,11 @@ namespace Platform.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Platform.Domain.Entities.MemberProfile", b =>
+            modelBuilder.Entity("Platform.Domain.Entities.ApplicationRole", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<string[]>("ExternalLinks")
-                        .HasColumnType("text[]");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<string>("HandleName")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<string>("ProfilePictureUrl")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
-
-                    b.Property<string>("ResumeFileUrl")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
-
-                    b.Property<string>("ShortBio")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
-
-                    b.Property<string>("Timezone")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("MemberProfiles");
-                });
-
-            modelBuilder.Entity("Platform.Domain.Entities.Project", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Projects");
-                });
-
-            modelBuilder.Entity("Platform.Infrastructure.ApplicationRole", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                    b.Property<string>("Id")
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -215,11 +155,11 @@ namespace Platform.Migrations
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Platform.Infrastructure.ApplicationUser", b =>
+            modelBuilder.Entity("Platform.Domain.Entities.ApplicationUser", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                    b.Property<string>("Id")
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("integer");
@@ -280,51 +220,106 @@ namespace Platform.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
+            modelBuilder.Entity("Platform.Domain.Entities.MemberProfile", b =>
                 {
-                    b.HasOne("Platform.Infrastructure.ApplicationRole", null)
+                    b.Property<string>("Id")
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.Property<string[]>("ExternalLinks")
+                        .HasColumnType("text[]");
+
+                    b.Property<string>("FullName")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("ProfilePictureUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("ResumeFileUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("ShortBio")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("Timezone")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MemberProfiles");
+                });
+
+            modelBuilder.Entity("Platform.Domain.Entities.Project", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Projects");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<Platform.Domain.Entities.Common.UserId>", b =>
+                {
+                    b.HasOne("Platform.Domain.Entities.ApplicationRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<Platform.Domain.Entities.Common.UserId>", b =>
                 {
-                    b.HasOne("Platform.Infrastructure.ApplicationUser", null)
+                    b.HasOne("Platform.Domain.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<Platform.Domain.Entities.Common.UserId>", b =>
                 {
-                    b.HasOne("Platform.Infrastructure.ApplicationUser", null)
+                    b.HasOne("Platform.Domain.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<Platform.Domain.Entities.Common.UserId>", b =>
                 {
-                    b.HasOne("Platform.Infrastructure.ApplicationRole", null)
+                    b.HasOne("Platform.Domain.Entities.ApplicationRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Platform.Infrastructure.ApplicationUser", null)
+                    b.HasOne("Platform.Domain.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<Platform.Domain.Entities.Common.UserId>", b =>
                 {
-                    b.HasOne("Platform.Infrastructure.ApplicationUser", null)
+                    b.HasOne("Platform.Domain.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -333,10 +328,16 @@ namespace Platform.Migrations
 
             modelBuilder.Entity("Platform.Domain.Entities.MemberProfile", b =>
                 {
+                    b.HasOne("Platform.Domain.Entities.ApplicationUser", "User")
+                        .WithOne("MemberProfile")
+                        .HasForeignKey("Platform.Domain.Entities.MemberProfile", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.OwnsMany("Platform.Domain.Entities.IndustryExperience", "IndustryExperiences", b1 =>
                         {
-                            b1.Property<Guid>("MemberProfileId")
-                                .HasColumnType("uuid");
+                            b1.Property<string>("MemberProfileId")
+                                .HasColumnType("character varying(25)");
 
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
@@ -361,8 +362,8 @@ namespace Platform.Migrations
 
                     b.OwnsMany("Platform.Domain.Entities.Skill", "Skills", b1 =>
                         {
-                            b1.Property<Guid>("MemberProfileId")
-                                .HasColumnType("uuid");
+                            b1.Property<string>("MemberProfileId")
+                                .HasColumnType("character varying(25)");
 
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
@@ -388,6 +389,13 @@ namespace Platform.Migrations
                     b.Navigation("IndustryExperiences");
 
                     b.Navigation("Skills");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Platform.Domain.Entities.ApplicationUser", b =>
+                {
+                    b.Navigation("MemberProfile");
                 });
 #pragma warning restore 612, 618
         }

@@ -91,14 +91,14 @@ public class CreateMemberProfileHandler : IRequestHandler<CreateMemberProfileReq
         created.ProfilePictureUrl = profilePictureUrl;
         created.ResumeFileUrl = resumeFileUrl;
 
-        var existHandleName = await _context
-            .MemberProfiles.AnyAsync(
-                x => x.HandleName.ToLower().Trim() == request.HandleName.ToLower().Trim(),
-                cancellationToken
-            )
-            .ConfigureAwait(false);
-        if (existHandleName)
-            return Result.Error("Duplicate handle name found");
+        // var existHandleName = await _context
+        //     .MemberProfiles.AnyAsync(
+        //         x => x.HandleName.ToLower().Trim() == request.HandleName.ToLower().Trim(),
+        //         cancellationToken
+        //     )
+        //     .ConfigureAwait(false);
+        // if (existHandleName)
+        //     return Result.Error("Duplicate handle name found");
 
         _context.MemberProfiles.Add(created);
         await _context.SaveChangesAsync(cancellationToken);

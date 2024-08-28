@@ -12,17 +12,12 @@ public record MemberProfileResponse
     /// <summary>
     /// Gets or sets the unique identifier of the member profile.
     /// </summary>
-    public MemberProfileId Id { get; set; }
+    public UserId Id { get; set; }
 
     /// <summary>
     /// Gets or sets the full name of the member.
     /// </summary>
     public required string FullName { get; set; }
-
-    /// <summary>
-    /// Gets or sets the handle name of the member
-    /// </summary>
-    public required string HandleName { get; set; }
 
     /// <summary>
     /// Gets or sets the short biography of the member.

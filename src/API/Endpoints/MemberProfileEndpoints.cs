@@ -39,7 +39,7 @@ public static class MemberProfileEndpoints
         group
             .MapGet(
                 "{id}",
-                async (IMediator mediator, MemberProfileId id) =>
+                async (IMediator mediator, UserId id) =>
                 {
                     var result = await mediator.Send(new GetMemberProfileByIdRequest(id));
                     return result.ToMinimalApiResult();
@@ -61,7 +61,7 @@ public static class MemberProfileEndpoints
         group
             .MapPut(
                 "{id}",
-                async (IMediator mediator, MemberProfileId id, UpdateMemberProfileRequest request) =>
+                async (IMediator mediator, UserId id, UpdateMemberProfileRequest request) =>
                 {
                     var result = await mediator.Send(request with { Id = id });
                     return result.ToMinimalApiResult();
@@ -72,7 +72,7 @@ public static class MemberProfileEndpoints
         group
             .MapDelete(
                 "{id}",
-                async (IMediator mediator, MemberProfileId id) =>
+                async (IMediator mediator, UserId id) =>
                 {
                     var result = await mediator.Send(new DeleteMemberProfileRequest(id));
                     return result.ToMinimalApiResult();

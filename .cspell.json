@@ -3,20 +3,26 @@
     "version": "0.2",
     "language": "en",
     "words": [
+        "abcdefghijkmnopqrstuvwxyz",
+        "ABCDEFGHJKLMNPQRSTUVWXY",
+        "ABCDEFGHJKLMNPQRSTUVWXYZ",
         "Antiforgery",
         "appsettings.json",
         "Ardalis",
         "ASPNETCORE",
         "Brotli",
         "efcore",
+        "HMACSHA",
         "Hsts",
         "Logto",
         "Mapster",
         "Mediat",
+        "newtonsoftjson",
         "Npgsql",
         "Otlp",
         "serilog",
-        "Swashbuckle"
+        "Swashbuckle",
+        "Zabcdefghijkmnopqrstuvwxyz"
     ],
     "ignorePaths": [
         "**/node_modules/**",

@@ -16,7 +16,7 @@ public record UpdateMemberProfileRequest : IRequest<Result<MemberProfileResponse
     /// Gets the unique identifier of the member profile to be updated.
     /// </summary>
     [JsonIgnore]
-    public MemberProfileId Id { get; init; }
+    public UserId Id { get; init; }
 
     /// <summary>
     /// Gets or sets the full name of the member.

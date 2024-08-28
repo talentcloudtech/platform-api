@@ -73,14 +73,14 @@ public static class SwaggerSetup
             );
 
             // Maps all structured ids to the guid type to show correctly on swagger
-            var allGuids = typeof(IGuid)
+            var allGuids = typeof(IStringId)
                 .Assembly.GetTypes()
-                .Where(type => typeof(IGuid).IsAssignableFrom(type) && !type.IsInterface)
+                .Where(type => typeof(IStringId).IsAssignableFrom(type) && !type.IsInterface)
                 .ToList();
 
             foreach (var guid in allGuids)
             {
-                c.MapType(guid, () => new OpenApiSchema { Type = "string", Format = "uuid" });
+                c.MapType(guid, () => new OpenApiSchema { Type = "string", Format = "string" });
             }
         });
         return services;

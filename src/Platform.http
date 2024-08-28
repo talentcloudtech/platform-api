@@ -4,3 +4,13 @@ GET {{Platform_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+// get access token from logto
+curl --location \
+  --request POST 'https://rtuyk7.logto.app/oidc/token' \
+  --header 'Content-Type: application/x-www-form-urlencoded' \
+  --data-urlencode 'grant_type=client_credentials' \
+  --data-urlencode 'client_id=63zfr0j6jxn8ygzftn0nc' \
+  --data-urlencode 'client_secret=5lwHKsNkvHcYaKQSLaSPy8stv5ky51nA' \
+  --data-urlencode 'resource=https://rtuyk7.logto.app/api' \
+  --data-urlencode 'scope=all'
