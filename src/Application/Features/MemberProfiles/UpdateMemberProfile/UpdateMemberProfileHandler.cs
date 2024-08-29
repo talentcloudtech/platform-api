@@ -46,15 +46,6 @@ public class UpdateMemberProfileHandler : IRequestHandler<UpdateMemberProfileReq
         if (originalMemberProfile is null)
             return Result.NotFound();
 
-        // var existHandleName = await _context
-        //     .MemberProfiles.AnyAsync(
-        //         x => x.Id != request.Id && x.HandleName.ToLower().Trim() == request.HandleName.ToLower().Trim(),
-        //         cancellationToken
-        //     )
-        //     .ConfigureAwait(false);
-        // if (existHandleName)
-        //     return Result.Error("Duplicate handle name found");
-
         string? profilePictureUrl = null;
         if (!string.IsNullOrWhiteSpace(request.ProfilePictureUrl) && UriUtils.IsSasUri(request.ProfilePictureUrl))
         {
@@ -113,13 +104,17 @@ public class UpdateMemberProfileHandler : IRequestHandler<UpdateMemberProfileReq
             !string.IsNullOrWhiteSpace(existingProfilePictureUrl)
             && originalMemberProfile.ProfilePictureUrl?.ToLower().Trim() != existingProfilePictureUrl.ToLower().Trim()
         )
+        {
             await _mediator.Send(new DeleteFileRequest(existingProfilePictureUrl), cancellationToken);
+        }
 
         if (
             !string.IsNullOrWhiteSpace(existingResumeFileUrl)
             && originalMemberProfile.ProfilePictureUrl?.ToLower().Trim() != existingResumeFileUrl.ToLower().Trim()
         )
+        {
             await _mediator.Send(new DeleteFileRequest(existingResumeFileUrl), cancellationToken);
+        }
 
         return originalMemberProfile.Adapt<MemberProfileResponse>();
     }

@@ -10,6 +10,7 @@
         "appsettings.json",
         "Ardalis",
         "ASPNETCORE",
+        "birthdate",
         "Brotli",
         "efcore",
         "HMACSHA",
@@ -20,10 +21,12 @@
         "Mediat",
         "newtonsoftjson",
         "Npgsql",
+        "oidc",
         "Otlp",
         "serilog",
         "Swashbuckle",
-        "Zabcdefghijkmnopqrstuvwxyz"
+        "Zabcdefghijkmnopqrstuvwxyz",
+        "zoneinfo"
     ],
     "ignorePaths": [
         "**/node_modules/**",

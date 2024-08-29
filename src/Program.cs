@@ -35,7 +35,10 @@ builder.Services.AddApplicationSetup();
 // Add identity stuff
 builder.Services.AddIdentityApiEndpoints<ApplicationUser>().AddEntityFrameworkStores<ApplicationDbContext>();
 
-// Request response compression
+if (!builder.Environment.IsDevelopment())
+{
+    // Request response compression
+}
 builder.Services.AddCompressionSetup();
 
 // HttpContextAccessor
@@ -52,6 +55,8 @@ builder.Services.ConfigureAllOptions(builder.Configuration);
 
 builder.Logging.ClearProviders();
 
+builder.Services.AddLogtoApi(builder.Configuration);
+
 // Add serilog
 if (builder.Environment.EnvironmentName != "Testing")
 {
@@ -64,18 +69,18 @@ if (builder.Environment.EnvironmentName != "Testing")
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-app.UseResponseCompression();
+
 
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
+else { }
 
 app.UseRouting();
 
 app.UseSwaggerSetup();
 app.UseHsts();
-
 app.UseResponseCompression();
 app.UseHttpsRedirection();
 
@@ -86,8 +91,9 @@ app.MapProjectEndpoints();
 app.MapMemberProfileEndpoints();
 app.MapFileStorageEndpoints();
 app.MapWebhookEndpoints();
+app.MapAccountEndpoints();
 
 // app.MapGroup("api/identity").WithTags("Identity").MapIdentityApi<ApplicationUser>();
-app.MapGet("/", () => Results.Redirect("/swagger"));
+// app.MapGet("/", () => Results.Redirect("/swagger"));
 
 await app.RunAsync();
