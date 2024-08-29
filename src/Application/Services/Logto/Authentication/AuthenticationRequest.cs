@@ -1,16 +1,16 @@
 using System.Text.Json.Serialization;
 
-namespace Platform.Infrastructure.LogtoSdk.Authentication;
+namespace Platform.Domain.Services.Logto;
 
 /// <summary>
-/// Represents the response from the Logto authentication endpoint.
+/// Represents the request to the Logto authentication endpoint.
 /// </summary>
-public class AuthenticationResponse
+public class AuthenticationRequest
 {
     /// <summary>
     /// The access token.
     /// </summary>
-    [JsonPropertyName("access_token")]
+    [JsonPropertyName("accessToken")]
     public string AccessToken { get; set; } = null!;
 
     /// <summary>

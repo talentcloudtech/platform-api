@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Platform.Infrastructure.LogtoSdk.Users;
+namespace Platform.Domain.Services.Logto;
 
 /// <summary>
 /// Represents a user in the Logto API.

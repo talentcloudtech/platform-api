@@ -55,8 +55,6 @@ builder.Services.ConfigureAllOptions(builder.Configuration);
 
 builder.Logging.ClearProviders();
 
-builder.Services.AddLogtoApi(builder.Configuration);
-
 // Add serilog
 if (builder.Environment.EnvironmentName != "Testing")
 {

@@ -1,5 +1,7 @@
 using System;
 
+namespace Platform.Domain.Services.Logto;
+
 /// <summary>
 /// Represents a token for the Logto API.
 /// </summary>

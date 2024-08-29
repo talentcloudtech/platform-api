@@ -8,31 +8,31 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Platform.API.Configurations.OptionSetups;
-using Platform.Infrastructure.LogtoSdk.Authentication;
+using Platform.Domain.Interfaces;
 
-namespace Platform.Infrastructure.LogtoSdk;
+namespace Platform.Domain.Services.Logto;
 
 /// <summary>
-/// Represents a client for the Logto API.
+/// Represents a service for interacting with the Logto API.
 /// </summary>
-public class LogtoApiClient
+public class LogtoService : ILogtoService
 {
     /// <summary>
     /// The HTTP client used to send requests to the Logto API.
     /// </summary>
-    protected readonly HttpClient _httpClient;
+    public readonly HttpClient _httpClient;
 
     /// <summary>
     /// The configuration options for the Logto API.
     /// </summary>
-    protected readonly LogtoApiOptions _logtoApiOptions;
+    public readonly LogtoApiOptions _logtoApiOptions;
     private Token? _currentToken;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="LogtoApiClient"/> class.
+    /// Initializes a new instance of the <see cref="LogtoService"/> class.
     /// </summary>
     /// <param name="logtoEndpoint">The configuration options for the Logto API.</param>
-    public LogtoApiClient(IOptions<LogtoApiOptions> logtoEndpoint)
+    public LogtoService(IOptions<LogtoApiOptions> logtoEndpoint)
     {
         _logtoApiOptions = logtoEndpoint.Value;
         _httpClient = new HttpClient { BaseAddress = new Uri(_logtoApiOptions.Url) };
@@ -42,7 +42,7 @@ public class LogtoApiClient
     /// See https://openapi.logto.io/authentication.
     /// </summary>
     /// <exception cref="InvalidOperationException"></exception>
-    protected async Task AuthenticateAsync()
+    public async Task AuthenticateAsync()
     {
         var values = new List<KeyValuePair<string, string>>
         {
@@ -75,7 +75,7 @@ public class LogtoApiClient
     /// <typeparam name="T">The type of the response.</typeparam>
     /// <param name="request">The request to send.</param>
     /// <returns>The deserialized response.</returns>
-    protected async Task<T?> SendRequestAsync<T>(HttpRequestMessage request)
+    public async Task<T?> SendRequestAsync<T>(HttpRequestMessage request)
     {
         if (_currentToken is null || _currentToken.IsExpired)
         {
@@ -92,5 +92,44 @@ public class LogtoApiClient
         var responseContent = await response.Content.ReadAsStringAsync();
 
         return JsonSerializer.Deserialize<T>(responseContent);
+    }
+
+    /// <summary>
+    /// Gets the user by ID.
+    /// </summary>
+    /// <param name="userId">The ID of the user to get.</param>
+    /// <returns>The user with the specified ID.</returns>
+    public Task<LogtoUser?> GetUserAsync(string userId)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get, $"api/users/{userId}");
+
+        return SendRequestAsync<LogtoUser>(request);
+    }
+
+    /// <summary>
+    /// Gets the users.
+    /// </summary>
+    /// <returns>The users.</returns>
+    public Task<IEnumerable<LogtoUser>?> GetUsersAsync()
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get, $"api/users");
+
+        return SendRequestAsync<IEnumerable<LogtoUser>>(request);
+    }
+
+    /// <summary>
+    /// Updates the user.
+    /// </summary>
+    /// <param name="userId">The ID of the user to update.</param>
+    /// <param name="user">The user to update.</param>
+    /// <returns>The updated user.</returns>
+    public Task<LogtoUser?> UpdateUserAsync(string userId, LogtoUser user)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Put, $"api/users/{userId}")
+        {
+            Content = new StringContent(JsonSerializer.Serialize(user), Encoding.UTF8, "application/json"),
+        };
+
+        return SendRequestAsync<LogtoUser>(request);
     }
 }

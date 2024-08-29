@@ -9,8 +9,8 @@ using Microsoft.Extensions.Options;
 using Platform.API.Configurations.OptionSetups;
 using Platform.Application.Common;
 using Platform.Domain.Auth.Interfaces;
-using Platform.Infrastructure.LogtoSdk;
-using Platform.Infrastructure.LogtoSdk.Users;
+using Platform.Domain.Interfaces;
+using Platform.Domain.Services.Logto;
 
 namespace Platform.Application.Features.Accounts.UpdateAvatar;
 
@@ -19,12 +19,12 @@ namespace Platform.Application.Features.Accounts.UpdateAvatar;
 /// </summary>
 /// <param name="session">The session instance.</param>
 /// <param name="context">The context instance.</param>
-/// <param name="logtoEndpoint">The logto endpoint configuration.</param>
-public class UpdateAvatarHandler(ISession session, IContext context, IOptions<LogtoApiOptions> logtoEndpoint)
-    : IRequestHandler<UpdateAvatarRequest, Result<string>>
+/// <param name="logtoService">The logto service.</param>
+public class UpdateAvatarHandler(ISession session, IContext context, ILogtoService logtoService) : IRequestHandler<UpdateAvatarRequest, Result<string>>
 {
     private readonly ISession _session = session;
     private readonly IContext _context = context;
+    private readonly ILogtoService _logtoService = logtoService;
 
     /// <summary>
     /// Handles the request to update the avatar.
@@ -37,13 +37,12 @@ public class UpdateAvatarHandler(ISession session, IContext context, IOptions<Lo
         var userId = _session.UserId;
         var memberProfile = await _context.MemberProfiles.FirstOrDefaultAsync(x => x.Id == userId, cancellationToken);
         if (memberProfile is null)
-            return Result.NotFound();
+            return Result.NotFound("Member profile not found.");
 
-        memberProfile.ProfilePictureUrl = request.FilePath;
+        memberProfile.ProfilePictureUrl = request.Url;
         await _context.SaveChangesAsync(cancellationToken);
 
-        LogtoUsersClient logtoUsersClient = new LogtoUsersClient(logtoEndpoint);
-        var logtoUser = await logtoUsersClient.UpdateUserAsync(userId.ToString(), new LogtoUser { Avatar = request.FilePath });
+        var logtoUser = await _logtoService.UpdateUserAsync(userId.ToString(), new LogtoUser { Avatar = request.Url });
 
         return Result.Success();
     }
