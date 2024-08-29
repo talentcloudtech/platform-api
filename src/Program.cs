@@ -11,6 +11,8 @@ using Platform.API.Endpoints;
 using Platform.Domain.Entities;
 using Platform.Infrastructure;
 
+DotNetEnv.Env.Load();
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Controllers
