@@ -46,16 +46,11 @@ public class UploadFileHandler : IRequestHandler<UploadFileRequest, Result<strin
         var fileExt = Path.GetExtension(request.File.FileName)?.ToLowerInvariant();
 
         if (!Array.Exists(AllowedExtensions, ext => string.Equals(ext, fileExt, StringComparison.OrdinalIgnoreCase)))
-            return Result.Error(
-                "Invalid file type. Only image files (.jpg, .jpeg, .png, .gif) and PDFs (.pdf) are allowed."
-            );
+            return Result.Error("Invalid file type. Only image files (.jpg, .jpeg, .png, .gif) and PDFs (.pdf) are allowed.");
 
         var fileName = Guid.NewGuid() + fileExt;
 
-        var tempBlobContainerClient = new BlobContainerClient(
-            _azureBlobStorageOptions.ConnectionString,
-            _azureBlobStorageOptions.TempContainer
-        );
+        var tempBlobContainerClient = new BlobContainerClient(_azureBlobStorageOptions.ConnectionString, _azureBlobStorageOptions.TempContainer);
         await tempBlobContainerClient.CreateIfNotExistsAsync(PublicAccessType.None);
 
         var tempBlobClient = tempBlobContainerClient.GetBlobClient(fileName);

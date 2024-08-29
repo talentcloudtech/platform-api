@@ -33,15 +33,9 @@ public class GetMemberProfileByIdHandler : IRequestHandler<GetMemberProfileByIdR
     /// A <see cref="Result{T}"/> containing a <see cref="MemberProfileResponse"/> if the member profile is found,
     /// or a not found result if the member profile does not exist.
     /// </returns>
-    public async Task<Result<MemberProfileResponse>> Handle(
-        GetMemberProfileByIdRequest request,
-        CancellationToken cancellationToken
-    )
+    public async Task<Result<MemberProfileResponse>> Handle(GetMemberProfileByIdRequest request, CancellationToken cancellationToken)
     {
-        var memberProfile = await _context.MemberProfiles.FirstOrDefaultAsync(
-            x => x.Id == request.Id,
-            cancellationToken: cancellationToken
-        );
+        var memberProfile = await _context.MemberProfiles.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken: cancellationToken);
 
         if (memberProfile is null)
             return Result.NotFound();

@@ -36,10 +36,7 @@ public class DeleteMemberProfileHandler : IRequestHandler<DeleteMemberProfileReq
     /// <returns>The result of the delete operation.</returns>
     public async Task<Result> Handle(DeleteMemberProfileRequest request, CancellationToken cancellationToken)
     {
-        var memberProfile = await _context.MemberProfiles.FirstOrDefaultAsync(
-            x => x.Id == request.Id,
-            cancellationToken
-        );
+        var memberProfile = await _context.MemberProfiles.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
         if (memberProfile is null)
             return Result.NotFound();
         _context.MemberProfiles.Remove(memberProfile);

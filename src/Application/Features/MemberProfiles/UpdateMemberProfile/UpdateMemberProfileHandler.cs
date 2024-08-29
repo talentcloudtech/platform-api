@@ -27,11 +27,7 @@ public class UpdateMemberProfileHandler : IRequestHandler<UpdateMemberProfileReq
     /// <param name="context">The context.</param>
     /// <param name="mediator">The mediator.</param>
     /// <param name="azureBlobStorageOptions">The Azure Blob Storage options.</param>
-    public UpdateMemberProfileHandler(
-        IContext context,
-        IMediator mediator,
-        IOptions<AzureBlobStorageOptions> azureBlobStorageOptions
-    )
+    public UpdateMemberProfileHandler(IContext context, IMediator mediator, IOptions<AzureBlobStorageOptions> azureBlobStorageOptions)
     {
         _context = context;
         _mediator = mediator;
@@ -44,15 +40,9 @@ public class UpdateMemberProfileHandler : IRequestHandler<UpdateMemberProfileReq
     /// <param name="request">The update member profile request.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The result of the update operation.</returns>
-    public async Task<Result<MemberProfileResponse>> Handle(
-        UpdateMemberProfileRequest request,
-        CancellationToken cancellationToken
-    )
+    public async Task<Result<MemberProfileResponse>> Handle(UpdateMemberProfileRequest request, CancellationToken cancellationToken)
     {
-        var originalMemberProfile = await _context.MemberProfiles.FirstOrDefaultAsync(
-            x => x.Id == request.Id,
-            cancellationToken
-        );
+        var originalMemberProfile = await _context.MemberProfiles.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
         if (originalMemberProfile is null)
             return Result.NotFound();
 
@@ -73,7 +63,7 @@ public class UpdateMemberProfileHandler : IRequestHandler<UpdateMemberProfileReq
                 {
                     DownloadUri = request.ProfilePictureUrl,
                     TempContainerPath = _azureBlobStorageOptions.TempContainer,
-                    ActualContainerPath = _azureBlobStorageOptions.ProfileContainer
+                    ActualContainerPath = _azureBlobStorageOptions.ProfileContainer,
                 },
                 cancellationToken
             );
@@ -92,7 +82,7 @@ public class UpdateMemberProfileHandler : IRequestHandler<UpdateMemberProfileReq
                 {
                     DownloadUri = request.ResumeFileUrl,
                     TempContainerPath = _azureBlobStorageOptions.TempContainer,
-                    ActualContainerPath = _azureBlobStorageOptions.ResumeContainer
+                    ActualContainerPath = _azureBlobStorageOptions.ResumeContainer,
                 },
                 cancellationToken
             );
@@ -141,11 +131,7 @@ public class UpdateMemberProfileHandler : IRequestHandler<UpdateMemberProfileReq
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <param name="errorMessage">The error message to return if the move fails.</param>
     /// <returns>The new URL of the moved file, or null if the move fails.</returns>
-    private async Task<string?> MoveFileIfNotNullAsync(
-        string? fileUrl,
-        CancellationToken cancellationToken,
-        string errorMessage
-    )
+    private async Task<string?> MoveFileIfNotNullAsync(string? fileUrl, CancellationToken cancellationToken, string errorMessage)
     {
         if (!string.IsNullOrEmpty(fileUrl))
         {
@@ -154,7 +140,7 @@ public class UpdateMemberProfileHandler : IRequestHandler<UpdateMemberProfileReq
                 {
                     DownloadUri = fileUrl,
                     TempContainerPath = _azureBlobStorageOptions.TempContainer,
-                    ActualContainerPath = _azureBlobStorageOptions.ProfileContainer
+                    ActualContainerPath = _azureBlobStorageOptions.ProfileContainer,
                 },
                 cancellationToken
             );

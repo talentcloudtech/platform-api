@@ -20,6 +20,7 @@ public static class UriUtils
         "st", // Start time
         "spr", // Protocol
         "sig" // Signature
+        ,
     };
 
     /// <summary>

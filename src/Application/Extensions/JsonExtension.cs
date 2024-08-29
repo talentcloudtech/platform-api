@@ -57,10 +57,7 @@ public static class JsonExtension
     /// <returns>A list of string values, or null if the property is not found or is not an array.</returns>
     public static List<string>? GetArrayValues(this JsonElement element, string arrayName, string propertyName)
     {
-        if (
-            element.TryGetProperty(arrayName, out JsonElement arrayElement)
-            && arrayElement.ValueKind == JsonValueKind.Array
-        )
+        if (element.TryGetProperty(arrayName, out JsonElement arrayElement) && arrayElement.ValueKind == JsonValueKind.Array)
         {
             var values = new List<string>();
             foreach (JsonElement item in arrayElement.EnumerateArray())

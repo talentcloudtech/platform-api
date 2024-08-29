@@ -18,10 +18,7 @@ public static class LogtoAuthorizationSetup
     /// <param name="services">The IServiceCollection to add the services to.</param>
     /// <param name="configuration">The application's configuration.</param>
     /// <returns>The IServiceCollection with persistence services added.</returns>
-    public static IServiceCollection AddLogtoAuthorizationSetup(
-        this IServiceCollection services,
-        IConfiguration configuration
-    )
+    public static IServiceCollection AddLogtoAuthorizationSetup(this IServiceCollection services, IConfiguration configuration)
     {
         var authority = configuration["JwtSettings:Authority"];
         var audience = configuration["JwtSettings:Audience"];
@@ -56,7 +53,7 @@ public static class LogtoAuthorizationSetup
 
                         var keys = new JsonWebKeySet(json).GetSigningKeys();
                         return keys;
-                    }
+                    },
                 };
             });
 

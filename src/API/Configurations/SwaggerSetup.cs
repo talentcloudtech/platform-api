@@ -33,16 +33,8 @@ public static class SwaggerSetup
                     Title = "Platform.Api",
                     Version = "v1",
                     Description = "API Platform",
-                    Contact = new OpenApiContact
-                    {
-                        Name = "Talent Cloud",
-                        Url = new Uri("https://www.talentcloudtech.com")
-                    },
-                    License = new OpenApiLicense
-                    {
-                        Name = "Copyright to Talent Cloud",
-                        Url = new Uri("https://www.talentcloudtech.com")
-                    }
+                    Contact = new OpenApiContact { Name = "Talent Cloud", Url = new Uri("https://www.talentcloudtech.com") },
+                    License = new OpenApiLicense { Name = "Copyright to Talent Cloud", Url = new Uri("https://www.talentcloudtech.com") },
                 }
             );
             c.DescribeAllParametersInCamelCase();
@@ -67,16 +59,12 @@ public static class SwaggerSetup
                     Type = SecuritySchemeType.ApiKey,
                     BearerFormat = "JWT",
                     In = ParameterLocation.Header,
-                    Description =
-                        "Enter your valid token in the text input below.\r\n\r\nExample: \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVcJ9\"",
+                    Description = "Enter your valid token in the text input below.\r\n\r\nExample: \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVcJ9\"",
                 }
             );
 
             // Maps all structured ids to the guid type to show correctly on swagger
-            var allGuids = typeof(IStringId)
-                .Assembly.GetTypes()
-                .Where(type => typeof(IStringId).IsAssignableFrom(type) && !type.IsInterface)
-                .ToList();
+            var allGuids = typeof(IStringId).Assembly.GetTypes().Where(type => typeof(IStringId).IsAssignableFrom(type) && !type.IsInterface).ToList();
 
             foreach (var guid in allGuids)
             {

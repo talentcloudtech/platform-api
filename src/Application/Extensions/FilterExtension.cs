@@ -17,11 +17,7 @@ public static class FilterExtension
     /// <param name="condition">The condition to check.</param>
     /// <param name="predicate">A function to test each element for a condition.</param>
     /// <returns>The filtered sequence if the condition is true; otherwise, the original sequence.</returns>
-    public static IQueryable<TSource> WhereIf<TSource>(
-        this IQueryable<TSource> source,
-        bool condition,
-        Expression<Func<TSource, bool>> predicate
-    )
+    public static IQueryable<TSource> WhereIf<TSource>(this IQueryable<TSource> source, bool condition, Expression<Func<TSource, bool>> predicate)
     {
         if (condition)
             return source.Where(predicate);

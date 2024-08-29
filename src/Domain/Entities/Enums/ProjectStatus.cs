@@ -23,5 +23,5 @@ public enum ProjectStatus
     /// <summary>
     /// Represents a canceled project.
     /// </summary>
-    Canceled = 3
+    Canceled = 3,
 }

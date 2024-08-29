@@ -32,13 +32,7 @@ public static class WebhookEndpoints
 
                     var signature = context.Request.Headers["logto-signature-sha-256"].FirstOrDefault();
 
-                    var result = await mediator.Send(
-                        new LogtoWebhookRequest() with
-                        {
-                            RawBody = rawBody,
-                            Signature = signature
-                        }
-                    );
+                    var result = await mediator.Send(new LogtoWebhookRequest() with { RawBody = rawBody, Signature = signature });
                     return result.ToMinimalApiResult();
                 }
             )

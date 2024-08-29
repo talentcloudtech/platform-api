@@ -13,8 +13,7 @@ namespace Platform.Application.Features.MemberProfiles.SearchMemberProfiles;
 /// <summary>
 /// Handles the request to search for member profiles with optional filtering and pagination.
 /// </summary>
-public class SearchMemberProfilesHandler
-    : IRequestHandler<SearchMemberProfilesRequest, PaginatedList<MemberProfileResponse>>
+public class SearchMemberProfilesHandler : IRequestHandler<SearchMemberProfilesRequest, PaginatedList<MemberProfileResponse>>
 {
     private readonly IContext _context;
 
@@ -33,21 +32,12 @@ public class SearchMemberProfilesHandler
     /// <param name="request">The search criteria for filtering and paginating member profiles.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A paginated list of <see cref="MemberProfileResponse"/> matching the search criteria.</returns>
-    public async Task<PaginatedList<MemberProfileResponse>> Handle(
-        SearchMemberProfilesRequest request,
-        CancellationToken cancellationToken
-    )
+    public async Task<PaginatedList<MemberProfileResponse>> Handle(SearchMemberProfilesRequest request, CancellationToken cancellationToken)
     {
         var memberProfiles = _context
-            .MemberProfiles.WhereIf(
-                !string.IsNullOrEmpty(request.Name),
-                x => EF.Functions.Like(x.FullName, $"%{request.Name}%")
-            )
+            .MemberProfiles.WhereIf(!string.IsNullOrEmpty(request.Name), x => EF.Functions.Like(x.FullName, $"%{request.Name}%"))
             .AsNoTracking();
 
-        return await memberProfiles
-            .ProjectToType<MemberProfileResponse>()
-            .OrderBy(x => x.FullName)
-            .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
+        return await memberProfiles.ProjectToType<MemberProfileResponse>().OrderBy(x => x.FullName).ToPaginatedListAsync(request.CurrentPage, request.PageSize);
     }
 }

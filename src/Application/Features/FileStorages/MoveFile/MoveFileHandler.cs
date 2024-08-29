@@ -37,17 +37,10 @@ public class MoveFileHandler : IRequestHandler<MoveFileRequest, Result<string>>
     {
         var fileName = new Uri(request.DownloadUri).Segments.Last();
 
-        var actualBlobContainerClient = new BlobContainerClient(
-            _azureBlobStorageOptions.ConnectionString,
-            request.ActualContainerPath
-        );
+        var actualBlobContainerClient = new BlobContainerClient(_azureBlobStorageOptions.ConnectionString, request.ActualContainerPath);
         await actualBlobContainerClient.CreateIfNotExistsAsync(PublicAccessType.None);
 
-        var tempBlobClient = new BlobClient(
-            _azureBlobStorageOptions.ConnectionString,
-            request.TempContainerPath,
-            fileName
-        );
+        var tempBlobClient = new BlobClient(_azureBlobStorageOptions.ConnectionString, request.TempContainerPath, fileName);
         var destinationBlobClient = actualBlobContainerClient.GetBlobClient(fileName);
         await destinationBlobClient.StartCopyFromUriAsync(tempBlobClient.Uri);
 

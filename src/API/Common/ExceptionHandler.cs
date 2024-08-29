@@ -33,11 +33,7 @@ public sealed class ExceptionHandler : IExceptionHandler
     /// <param name="exception">The exception that occurred.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains a boolean indicating whether the exception was handled successfully.</returns>
-    public async ValueTask<bool> TryHandleAsync(
-        HttpContext httpContext,
-        Exception exception,
-        CancellationToken cancellationToken
-    )
+    public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
         var ex = exception.Demystify();
         _logger.LogError(ex, "An error occurred: {Message}", ex.Message);

@@ -76,11 +76,7 @@ public static class PaginatedListHelper
     /// <param name="currentPage">The current page number.</param>
     /// <param name="pageSize">The number of items per page.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the paginated list of items.</returns>
-    public static async Task<PaginatedList<T>> ToPaginatedListAsync<T>(
-        this IQueryable<T> source,
-        int currentPage,
-        int pageSize
-    )
+    public static async Task<PaginatedList<T>> ToPaginatedListAsync<T>(this IQueryable<T> source, int currentPage, int pageSize)
     {
         currentPage = currentPage > 0 ? currentPage : DefaultCurrentPage;
         pageSize = pageSize > 0 ? pageSize : DefaultPageSize;

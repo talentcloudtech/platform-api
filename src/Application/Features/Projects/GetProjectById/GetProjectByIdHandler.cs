@@ -33,15 +33,9 @@ public class GetProjectByIdHandler : IRequestHandler<GetProjectByIdRequest, Resu
     /// A <see cref="Result{T}"/> containing a <see cref="ProjectResponse"/> if the project is found,
     /// or a not found result if the project does not exist.
     /// </returns>
-    public async Task<Result<ProjectResponse>> Handle(
-        GetProjectByIdRequest request,
-        CancellationToken cancellationToken
-    )
+    public async Task<Result<ProjectResponse>> Handle(GetProjectByIdRequest request, CancellationToken cancellationToken)
     {
-        var project = await _context.Projects.FirstOrDefaultAsync(
-            x => x.Id == request.Id,
-            cancellationToken: cancellationToken
-        );
+        var project = await _context.Projects.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken: cancellationToken);
 
         if (project is null)
             return Result.NotFound();

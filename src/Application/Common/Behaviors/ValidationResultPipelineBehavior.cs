@@ -35,11 +35,7 @@ public class ValidationResultPipelineBehavior<TRequest, TResponse> : IPipelineBe
     /// <param name="next">The delegate representing the next action in the pipeline.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation, containing the response.</returns>
-    public async Task<TResponse> Handle(
-        TRequest request,
-        RequestHandlerDelegate<TResponse> next,
-        CancellationToken cancellationToken
-    )
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         var validator = _serviceProvider.GetService<IValidator<TRequest>>();
 

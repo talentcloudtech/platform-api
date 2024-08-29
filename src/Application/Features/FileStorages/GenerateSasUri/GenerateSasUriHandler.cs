@@ -52,11 +52,9 @@ public class GenerateDownloadUriHandler : IRequestHandler<GenerateSasUriRequest,
             Resource = "b",
             BlobContainerName = containerName,
             ExpiresOn = DateTimeOffset.UtcNow.AddHours(24),
-            BlobName = resourcePath
+            BlobName = resourcePath,
         };
-        builder.SetPermissions(
-            BlobAccountSasPermissions.Read | BlobAccountSasPermissions.Write | BlobAccountSasPermissions.Delete
-        );
+        builder.SetPermissions(BlobAccountSasPermissions.Read | BlobAccountSasPermissions.Write | BlobAccountSasPermissions.Delete);
 
         var blobClient = new BlobClient(_azureBlobStorageOptions.ConnectionString, containerName, resourcePath);
         var uri = blobClient.GenerateSasUri(builder);

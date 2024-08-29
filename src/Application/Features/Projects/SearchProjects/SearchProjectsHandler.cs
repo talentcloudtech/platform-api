@@ -32,18 +32,12 @@ public class SearchProjectsHandler : IRequestHandler<SearchProjectsRequest, Pagi
     /// <param name="request">The search criteria for filtering and paginating projects.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A paginated list of <see cref="ProjectResponse"/> matching the search criteria.</returns>
-    public async Task<PaginatedList<ProjectResponse>> Handle(
-        SearchProjectsRequest request,
-        CancellationToken cancellationToken
-    )
+    public async Task<PaginatedList<ProjectResponse>> Handle(SearchProjectsRequest request, CancellationToken cancellationToken)
     {
         var projects = _context
             .Projects.WhereIf(!string.IsNullOrEmpty(request.Name), x => EF.Functions.Like(x.Name, $"%{request.Name}%"))
             .WhereIf(request.Status != null, x => x.Status == request.Status);
 
-        return await projects
-            .ProjectToType<ProjectResponse>()
-            .OrderBy(x => x.Name)
-            .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
+        return await projects.ProjectToType<ProjectResponse>().OrderBy(x => x.Name).ToPaginatedListAsync(request.CurrentPage, request.PageSize);
     }
 }

@@ -11,5 +11,5 @@ public enum ProjectUserRole
     /// <summary>
     /// The member role.
     /// </summary>
-    Member = 2
+    Member = 2,
 }
