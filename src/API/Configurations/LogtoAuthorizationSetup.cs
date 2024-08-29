@@ -41,12 +41,12 @@ public static class LogtoAuthorizationSetup
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
-                    ValidateAudience = IsDevelopment ? false : true,
-                    ValidateLifetime = IsDevelopment ? false : true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKeyResolver = (token, securityToken, kid, parameters) =>
                     {
-                        var jwksUri = "https://rtuyk7.logto.app/oidc/jwks";
+                        var jwksUri = $"{authority}/jwks";
                         string json;
 
                         using (var httpClient = new HttpClient())

@@ -28,10 +28,19 @@ public static class WebhookEndpoints
         group
             .MapPost(
                 "/logto",
-                async (HttpContext context) =>
+                async (
+                    IMediator mediator,
+                    [FromHeader(Name = "logto-signature-sha-256")] string signature,
+                    [FromBody] LogtoWebhookRequest body
+                ) =>
                 {
-                    var mediator = context.RequestServices.GetRequiredService<IMediator>();
-                    return await mediator.Send(new CreateAccountRequest() with { Context = context });
+                    return await mediator.Send(
+                        new CreateAccountRequest() with
+                        {
+                            LogtoWebhookRequest = body,
+                            Signature = signature
+                        }
+                    );
                 }
             )
             .WithSummary("Logto webhook");

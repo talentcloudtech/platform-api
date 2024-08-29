@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.Result;
@@ -63,42 +65,40 @@ public class CreateAccountHandler : IRequestHandler<CreateAccountRequest, Result
     /// <returns>The result of the member profile creation.</returns>
     public async Task<Result> Handle(CreateAccountRequest request, CancellationToken cancellationToken)
     {
-        var context = request.Context;
-        if (context is null)
-            return Result.Error("Context is null");
-
-        var receivedSecret = context.Request.Headers["logto-signature-sha-256"].FirstOrDefault();
+        // var receivedSecret = context.Request.Headers["logto-signature-sha-256"].FirstOrDefault();
         var singingKey = _configuration["WebhookSecret:LogtoSecretKey"];
-        var requestBody = await new StreamReader(context.Request.Body).ReadToEndAsync();
+        var requestBody = JsonSerializer.Serialize(request.LogtoWebhookRequest);
 
         if (
-            string.IsNullOrEmpty(receivedSecret)
+            string.IsNullOrEmpty(request.Signature)
             || string.IsNullOrEmpty(singingKey)
-            || !SecurityHelper.VerifyHMACSHA256Signature(singingKey, requestBody, receivedSecret)
+            || !SecurityHelper.VerifyHMACSHA256Signature(singingKey, requestBody, request.Signature)
         )
         {
-            return Result.Unauthorized();
+            // return Result.Unauthorized();
         }
-        var webhookRequestBody = JsonSerializer.Deserialize<LogtoWebhookRequest>(requestBody);
+        // var webhookRequestBody = JsonSerializer.Deserialize<LogtoWebhookRequest>(requestBody);
+        var webhookRequestBody = request.LogtoWebhookRequest;
         switch (webhookRequestBody?.Event)
         {
             case "PostSignIn":
+                var userExists = await _userManager.FindByIdAsync(webhookRequestBody.UserId);
                 var user = webhookRequestBody?.User;
                 if (user is null)
                     return Result.Error("User is null");
 
                 // add Identity user table as well if not exists
-                var userExists = await _userManager.FindByIdAsync(user.Id);
-                if (userExists is null)
+
+                if (userExists is not null)
                 {
-                    var identityUser = new ApplicationUser
-                    {
-                        Id = user.Id,
-                        UserName = user.Username,
-                        Email = user.PrimaryEmail,
-                    };
-                    await _userManager.CreateAsync(identityUser);
+                    return Result.Success();
                 }
+                var identityUser = new ApplicationUser
+                {
+                    Id = user.Id,
+                    UserName = user.Username ?? user.Id,
+                    Email = user.PrimaryEmail,
+                };
 
                 var memberProfile = new MemberProfile
                 {
@@ -106,9 +106,15 @@ public class CreateAccountHandler : IRequestHandler<CreateAccountRequest, Result
                     FullName = user.Name,
                     ProfilePictureUrl = user.Avatar
                 };
+                EnhanceUserDetails(identityUser, memberProfile, user);
+
+                var result = await _userManager.CreateAsync(identityUser);
+                if (!result.Succeeded)
+                    return Result.Error("Failed to create user");
+
                 _context.MemberProfiles.Add(memberProfile);
                 await _context.SaveChangesAsync(cancellationToken);
-                return Result.Success();
+                break;
             case "user.created":
                 break;
             case "user.suspended":
@@ -120,5 +126,101 @@ public class CreateAccountHandler : IRequestHandler<CreateAccountRequest, Result
         }
 
         return Result.Success();
+    }
+
+    private void EnhanceUserDetails(
+        ApplicationUser applicationUser,
+        MemberProfile memberProfile,
+        LogtoUserEntityResponse userEntity
+    )
+    {
+        if (userEntity.Identities == null)
+        {
+            throw new ArgumentNullException(nameof(userEntity.Identities));
+        }
+
+        try
+        {
+            using (
+                JsonDocument document = JsonDocument.Parse(
+                    json: userEntity.Identities.ToString()
+                        ?? throw new ArgumentNullException(nameof(userEntity.Identities))
+                )
+            )
+            {
+                var root = document.RootElement;
+                if (TryGetProperty(root, "github.details.rawData.userInfo", out JsonElement githubRawUserInfo))
+                {
+                    var githubLink = GetStringValue(githubRawUserInfo, "html_url");
+                    memberProfile.ExternalLinks = !string.IsNullOrEmpty(githubLink)
+                        ? [githubLink]
+                        : Array.Empty<string>();
+
+                    var githubUsername = GetStringValue(githubRawUserInfo, "login");
+
+                    applicationUser.UserName = !string.IsNullOrEmpty(githubUsername)
+                        ? githubUsername
+                        : applicationUser.UserName;
+
+                    // assume email is confirmed
+                    applicationUser.EmailConfirmed = true;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to enhance user details");
+        }
+    }
+
+    private bool TryGetProperty(JsonElement element, string propertyPath, out JsonElement value)
+    {
+        value = element;
+        foreach (var propertyName in propertyPath.Split('.'))
+        {
+            if (value.TryGetProperty(propertyName, out JsonElement temp))
+            {
+                value = temp;
+            }
+            else
+            {
+                value = default;
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private string? GetStringValue(JsonElement element, string propertyName)
+    {
+        if (element.TryGetProperty(propertyName, out JsonElement propertyValue))
+        {
+            return propertyValue.GetString();
+        }
+        return null;
+    }
+
+    private List<string>? GetArrayValues(JsonElement element, string arrayName, string propertyName)
+    {
+        if (
+            element.TryGetProperty(arrayName, out JsonElement arrayElement)
+            && arrayElement.ValueKind == JsonValueKind.Array
+        )
+        {
+            var values = new List<string>();
+            foreach (JsonElement item in arrayElement.EnumerateArray())
+            {
+                if (item.TryGetProperty(propertyName, out JsonElement value))
+                {
+                    var stringValue = value.GetString();
+                    if (stringValue != null)
+                    {
+                        values.Add(stringValue);
+                    }
+                }
+            }
+            return values;
+        }
+        return null;
     }
 }

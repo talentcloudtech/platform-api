@@ -14,6 +14,7 @@
         "efcore",
         "HMACSHA",
         "Hsts",
+        "jwks",
         "Logto",
         "Mapster",
         "Mediat",

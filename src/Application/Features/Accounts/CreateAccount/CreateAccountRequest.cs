@@ -15,4 +15,8 @@ public record CreateAccountRequest : IRequest<Result>
     /// Gets or sets the user entity.
     /// </summary>
     public HttpContext? Context { get; init; }
+
+    public string? Signature { get; init; }
+
+    public LogtoWebhookRequest? LogtoWebhookRequest { get; init; }
 }
