@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Platform.Domain.Entities.Common;
-using Platform.Infrastructure;
 
 namespace Platform.Domain.Entities;
 

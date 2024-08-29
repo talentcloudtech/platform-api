@@ -24,7 +24,7 @@ public static class SecurityHelper
         // Compute the hash.
         byte[] hashMessage = hmacsha256.ComputeHash(messageBytes);
 
-        return Convert.ToBase64String(hashMessage);
+        return BitConverter.ToString(hashMessage).Replace("-", "").ToLower();
     }
 
     /// <summary>

@@ -1,14 +1,11 @@
 using System.IO;
 using System.Linq;
+using Ardalis.Result.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Platform.Application.Features.Accounts.CreateAccount;
+using Platform.Application.Features.WebhookProcessors.LogtoWebhook;
 
 namespace Platform.Api.Endpoints;
 
@@ -28,19 +25,21 @@ public static class WebhookEndpoints
         group
             .MapPost(
                 "/logto",
-                async (
-                    IMediator mediator,
-                    [FromHeader(Name = "logto-signature-sha-256")] string signature,
-                    [FromBody] LogtoWebhookRequest body
-                ) =>
+                async (IMediator mediator, HttpContext context) =>
                 {
-                    return await mediator.Send(
-                        new CreateAccountRequest() with
+                    using var reader = new StreamReader(context.Request.Body);
+                    var rawBody = await reader.ReadToEndAsync();
+
+                    var signature = context.Request.Headers["logto-signature-sha-256"].FirstOrDefault();
+
+                    var result = await mediator.Send(
+                        new LogtoWebhookRequest() with
                         {
-                            LogtoWebhookRequest = body,
+                            RawBody = rawBody,
                             Signature = signature
                         }
                     );
+                    return result.ToMinimalApiResult();
                 }
             )
             .WithSummary("Logto webhook");

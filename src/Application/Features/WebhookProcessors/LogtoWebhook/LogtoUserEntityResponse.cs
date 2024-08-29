@@ -1,5 +1,6 @@
 using System;
-using System.Text.Json.Serialization;
+
+namespace Platform.Application.Features.WebhookProcessors.LogtoWebhook;
 
 /// <summary>
 /// Represents a user entity as returned by Logto.
@@ -71,17 +72,17 @@ public class LogtoUserEntityResponse
 /// <summary>
 /// Represents a Logto webhook request.
 /// </summary>
-public class LogtoWebhookRequest
+public class LogtoWebhookRequestBody
 {
     /// <summary>
     /// Gets or sets the event type of the webhook.
     /// </summary>
-    public required string Event { get; set; }
+    public string? Event { get; set; }
 
     /// <summary>
     /// Gets or sets the user ID associated with the webhook event.
     /// </summary>
-    public required string UserId { get; set; }
+    public string? UserId { get; set; }
 
     /// <summary>
     /// Gets or sets the user data associated with the webhook event.

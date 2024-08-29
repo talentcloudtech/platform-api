@@ -1,6 +1,5 @@
 using Platform.Domain.Entities;
 using Platform.Domain.Entities.Common;
-using Platform.Infrastructure;
 
 namespace Domain.Entities;
 

@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Platform.Application.Auth;
 using Platform.Infrastructure;
 
 namespace Platform.Api.Configurations;
@@ -20,7 +19,7 @@ public static class PersistenceSetup
     /// <returns>The IServiceCollection with persistence services added.</returns>
     public static IServiceCollection AddPersistenceSetup(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped<Domain.Auth.Interfaces.ISession, Session>();
+        // services.AddScoped<Domain.Auth.Interfaces.ISession, Session>();
         services.AddHostedService<ApplicationDbInitializer>();
         services.AddDbContextPool<ApplicationDbContext>(o =>
         {

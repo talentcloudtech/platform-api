@@ -16,10 +16,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Controllers
 builder.AddValidationSetup();
 
+builder.Services.AddAuthorization();
+
 // add logto authorization
 builder.Services.AddLogtoAuthorizationSetup(builder.Configuration);
-
-builder.Services.AddAuthorization();
 
 // Swagger
 builder.Services.AddSwaggerSetup();

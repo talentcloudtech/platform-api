@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Ardalis.Result;
 using Mapster;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Platform.API.Configurations.OptionSetups;
 using Platform.Application.Common;
