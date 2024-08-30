@@ -132,4 +132,24 @@ public class LogtoService : ILogtoService
 
         return SendRequestAsync<LogtoUser>(request);
     }
+
+    /// <summary>
+    /// Deletes the user.
+    /// </summary>
+    /// <param name="userId">The ID of the user to delete.</param>
+    /// <returns>The deleted user.</returns>
+    public async Task DeleteUserAsync(string userId)
+    {
+        try
+        {
+            var request = new HttpRequestMessage(HttpMethod.Delete, $"api/users/{userId}");
+
+            await SendRequestAsync<object>(request);
+        }
+        catch (Exception ex)
+        {
+            // Log the exception
+            throw new Exception($"Failed to delete user from Logto: {ex.Message}", ex);
+        }
+    }
 }

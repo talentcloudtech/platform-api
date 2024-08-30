@@ -20,9 +20,9 @@ namespace Platform.Application.Features.Accounts.UpdateAvatar;
 /// <param name="session">The session instance.</param>
 /// <param name="context">The context instance.</param>
 /// <param name="logtoService">The logto service.</param>
-public class UpdateAvatarHandler(ISession session, IContext context, ILogtoService logtoService) : IRequestHandler<UpdateAvatarRequest, Result<string>>
+public class UpdateAvatarHandler(ICurrentSession session, IContext context, ILogtoService logtoService) : IRequestHandler<UpdateAvatarRequest, Result<string>>
 {
-    private readonly ISession _session = session;
+    private readonly ICurrentSession _session = session;
     private readonly IContext _context = context;
     private readonly ILogtoService _logtoService = logtoService;
 

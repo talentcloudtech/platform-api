@@ -3,7 +3,9 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Platform.Application.Features.Accounts.DeleteAccount; // Add this line
 using Platform.Application.Features.Accounts.UpdateAvatar;
+using Platform.Domain.Auth.Interfaces;
 
 namespace Platform.Api.Endpoints;
 
@@ -30,5 +32,16 @@ public static class AccountEndpoints
                 }
             )
             .WithSummary("Update avatar.");
+
+        group
+            .MapDelete(
+                "/",
+                async (IMediator mediator, ICurrentSession currentUser) =>
+                {
+                    var result = await mediator.Send(new DeleteAccountRequest() with { UserId = currentUser.UserId });
+                    return result.ToMinimalApiResult();
+                }
+            )
+            .WithSummary("Delete user account from the database and Logto.");
     }
 }

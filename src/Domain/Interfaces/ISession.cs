@@ -6,7 +6,7 @@ namespace Platform.Domain.Auth.Interfaces;
 /// <summary>
 /// Represents a session that provides information about the current user and the current time.
 /// </summary>
-public interface ISession
+public interface ICurrentSession
 {
     /// <summary>
     /// Gets the ID of the current user.

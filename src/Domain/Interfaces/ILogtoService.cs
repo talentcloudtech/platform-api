@@ -29,4 +29,11 @@ public interface ILogtoService
     /// <param name="user">The user to update.</param>
     /// <returns>The updated user.</returns>
     Task<LogtoUser?> UpdateUserAsync(string userId, LogtoUser user);
+
+    /// <summary>
+    /// Deletes the user.
+    /// </summary>
+    /// <param name="userId">The ID of the user to delete.</param>
+    /// <returns>A task that represents the deletion operation.</returns>
+    Task DeleteUserAsync(string userId);
 }
