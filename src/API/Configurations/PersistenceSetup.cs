@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Platform.Application.Auth;
+using Platform.Domain.Auth.Interfaces;
 using Platform.Domain.Interfaces;
 using Platform.Domain.Services.Logto;
 using Platform.Infrastructure;
@@ -23,7 +24,7 @@ public static class PersistenceSetup
     public static IServiceCollection AddPersistenceSetup(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<ILogtoService, LogtoService>();
-        services.AddScoped<Domain.Auth.Interfaces.ISession, Session>();
+        services.AddScoped<ICurrentSession, CurrentSession>();
         services.AddHostedService<ApplicationDbInitializer>();
         services.AddDbContextPool<ApplicationDbContext>(o =>
         {
