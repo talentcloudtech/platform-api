@@ -1,26 +1,27 @@
 using Ardalis.Result.AspNetCore;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Platform.Application.Features.Accounts.DeleteAccount; // Add this line
+using Platform.Application.Features.Accounts.DeleteAccount;
 using Platform.Application.Features.Accounts.UpdateAvatar;
 using Platform.Domain.Auth.Interfaces;
 
 namespace Platform.Api.Endpoints;
 
 /// <summary>
-/// Represents the endpoints for account.
+/// Represents the endpoints for account-related operations.
 /// </summary>
 public static class AccountEndpoints
 {
     /// <summary>
-    /// Maps the endpoints for account.
+    /// Maps the endpoints for account-related operations.
     /// </summary>
     /// <param name="builder">The endpoint route builder.</param>
     public static void MapAccountEndpoints(this IEndpointRouteBuilder builder)
     {
-        var group = builder.MapGroup("api/account").WithTags("Account").RequireAuthorization();
+        var group = builder.MapGroup("api/account").WithTags("Account");
 
         group
             .MapPut(
@@ -31,7 +32,8 @@ public static class AccountEndpoints
                     return result.ToMinimalApiResult();
                 }
             )
-            .WithSummary("Update avatar.");
+            .WithSummary("Update avatar.")
+            .RequireAuthorization();
 
         group
             .MapDelete(
@@ -42,6 +44,7 @@ public static class AccountEndpoints
                     return result.ToMinimalApiResult();
                 }
             )
-            .WithSummary("Delete user account from the database and Logto.");
+            .WithSummary("Delete user account from the database.")
+            .RequireAuthorization();
     }
 }

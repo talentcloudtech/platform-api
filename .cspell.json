@@ -16,7 +16,6 @@
         "HMACSHA",
         "Hsts",
         "jwks",
-        "Logto",
         "Mapster",
         "Mediat",
         "newtonsoftjson",
@@ -24,6 +23,7 @@
         "oidc",
         "Otlp",
         "serilog",
+        "signin",
         "Swashbuckle",
         "Zabcdefghijkmnopqrstuvwxyz",
         "zoneinfo"

@@ -13,11 +13,6 @@ public class ApplicationUser : IdentityUser<UserId>
     /// </summary>
     public override UserId Id { get; set; } = CustomNewId.GenerateStandardId();
 
-    // /// <summary>
-    // /// Gets the list of project users.
-    // /// </summary>
-    // public List<ProjectUser> ProjectUsers { get; } = [];
-
     /// <summary>
     /// Gets or sets the member profile associated with the user.
     /// </summary>

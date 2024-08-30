@@ -16,14 +16,12 @@ namespace Platform.Application.Features.Accounts.DeleteAccount;
 /// </summary>
 /// <param name="session">The current session.</param>
 /// <param name="context">The database context.</param>
-/// <param name="logtoService">The Logto service.</param>
 /// <param name="logger">The logger.</param>
-public class DeleteAccountHandler(ICurrentSession session, IContext context, ILogtoService logtoService, ILogger<DeleteAccountHandler> logger)
+public class DeleteAccountHandler(ICurrentSession session, IContext context, ILogger<DeleteAccountHandler> logger)
     : IRequestHandler<DeleteAccountRequest, Result>
 {
     private readonly ICurrentSession _session = session;
     private readonly IContext _context = context;
-    private readonly ILogtoService _logtoService = logtoService;
     private readonly ILogger<DeleteAccountHandler> _logger = logger;
 
     /// <summary>
@@ -52,9 +50,6 @@ public class DeleteAccountHandler(ICurrentSession session, IContext context, ILo
         {
             // Delete user from the database
             _context.Users.Remove(user);
-
-            // Delete user from Logto
-            await _logtoService.DeleteUserAsync(request.UserId.ToString());
 
             // Save changes after both operations
             await _context.SaveChangesAsync(cancellationToken);

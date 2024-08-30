@@ -10,7 +10,6 @@ using Platform.API.Configurations.OptionSetups;
 using Platform.Application.Common;
 using Platform.Domain.Auth.Interfaces;
 using Platform.Domain.Interfaces;
-using Platform.Domain.Services.Logto;
 
 namespace Platform.Application.Features.Accounts.UpdateAvatar;
 
@@ -19,12 +18,10 @@ namespace Platform.Application.Features.Accounts.UpdateAvatar;
 /// </summary>
 /// <param name="session">The session instance.</param>
 /// <param name="context">The context instance.</param>
-/// <param name="logtoService">The logto service.</param>
-public class UpdateAvatarHandler(ICurrentSession session, IContext context, ILogtoService logtoService) : IRequestHandler<UpdateAvatarRequest, Result<string>>
+public class UpdateAvatarHandler(ICurrentSession session, IContext context) : IRequestHandler<UpdateAvatarRequest, Result<string>>
 {
     private readonly ICurrentSession _session = session;
     private readonly IContext _context = context;
-    private readonly ILogtoService _logtoService = logtoService;
 
     /// <summary>
     /// Handles the request to update the avatar.
@@ -41,8 +38,6 @@ public class UpdateAvatarHandler(ICurrentSession session, IContext context, ILog
 
         memberProfile.ProfilePictureUrl = request.Url;
         await _context.SaveChangesAsync(cancellationToken);
-
-        var logtoUser = await _logtoService.UpdateUserAsync(userId.ToString(), new LogtoUser { Avatar = request.Url });
 
         return Result.Success();
     }

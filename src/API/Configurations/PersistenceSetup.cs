@@ -1,11 +1,13 @@
 ﻿using EntityFramework.Exceptions.PostgreSQL;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Platform.Application.Auth;
+using Platform.Application.Services.Email;
 using Platform.Domain.Auth.Interfaces;
+using Platform.Domain.Entities;
 using Platform.Domain.Interfaces;
-using Platform.Domain.Services.Logto;
 using Platform.Infrastructure;
 
 namespace Platform.Api.Configurations;
@@ -23,8 +25,10 @@ public static class PersistenceSetup
     /// <returns>The IServiceCollection with persistence services added.</returns>
     public static IServiceCollection AddPersistenceSetup(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped<ILogtoService, LogtoService>();
         services.AddScoped<ICurrentSession, CurrentSession>();
+        services.AddTransient<IEmailService, AzureEmailService>();
+        services.AddTransient<IEmailSender<ApplicationUser>, EmailSender>();
+
         services.AddHostedService<ApplicationDbInitializer>();
         services.AddDbContextPool<ApplicationDbContext>(o =>
         {
