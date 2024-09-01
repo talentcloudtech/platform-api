@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Platform.Application.Features.Accounts.DeleteAccount;
+using Platform.Application.Features.Accounts.GetAccountDetails;
 using Platform.Application.Features.Accounts.UpdateAvatar;
 using Platform.Domain.Auth.Interfaces;
 
@@ -21,7 +22,7 @@ public static class AccountEndpoints
     /// <param name="builder">The endpoint route builder.</param>
     public static void MapAccountEndpoints(this IEndpointRouteBuilder builder)
     {
-        var group = builder.MapGroup("api/account").WithTags("Account");
+        var group = builder.MapGroup("api/accounts").WithTags("Account");
 
         group
             .MapPut(
@@ -45,6 +46,18 @@ public static class AccountEndpoints
                 }
             )
             .WithSummary("Delete user account from the database.")
+            .RequireAuthorization();
+
+        group
+            .MapGet(
+                "/me",
+                async (IMediator mediator, ICurrentSession currentUser) =>
+                {
+                    var result = await mediator.Send(new GetAccountDetailsRequest { UserId = currentUser.UserId });
+                    return result.ToMinimalApiResult();
+                }
+            )
+            .WithSummary("Get current user account details.")
             .RequireAuthorization();
     }
 }
