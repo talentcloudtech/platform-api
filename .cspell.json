@@ -16,6 +16,7 @@
         "HMACSHA",
         "Hsts",
         "jwks",
+        "LINQ",
         "Mapster",
         "Mediat",
         "newtonsoftjson",
