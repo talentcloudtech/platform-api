@@ -1,5 +1,9 @@
+using System;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -20,9 +24,6 @@ builder.AddValidationSetup();
 
 builder.Services.AddAuthorization();
 
-// add logto authorization
-builder.Services.AddLogtoAuthorizationSetup(builder.Configuration);
-
 // Swagger
 builder.Services.AddSwaggerSetup();
 
@@ -32,13 +33,40 @@ builder.Services.AddPersistenceSetup(builder.Configuration);
 // Application layer setup
 builder.Services.AddApplicationSetup();
 
-// Add identity stuff
-builder.Services.AddIdentityApiEndpoints<ApplicationUser>().AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddDataProtection().PersistKeysToDbContext<ApplicationDbContext>();
 
-if (!builder.Environment.IsDevelopment())
+// Add identity stuff
+builder
+    .Services.AddIdentityApiEndpoints<ApplicationUser>(opt =>
+    {
+        opt.Password.RequiredLength = 8;
+        opt.User.RequireUniqueEmail = true;
+        opt.Password.RequireNonAlphanumeric = false;
+        opt.SignIn.RequireConfirmedEmail = true;
+    })
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.Configure<IdentityOptions>(options =>
 {
-    // Request response compression
-}
+    // Password settings.
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequiredLength = 6;
+    options.Password.RequiredUniqueChars = 1;
+
+    // Lockout settings.
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.AllowedForNewUsers = true;
+
+    // User settings.
+    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+    options.User.RequireUniqueEmail = false;
+});
+
 builder.Services.AddCompressionSetup();
 
 // HttpContextAccessor
@@ -64,16 +92,24 @@ if (builder.Environment.EnvironmentName != "Testing")
     builder.AddOpenTelemetrySetup();
 }
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+        "AllowAll",
+        policy =>
+        {
+            policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+        }
+    );
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-
-
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
-else { }
 
 app.UseRouting();
 
@@ -85,13 +121,16 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseCors("AllowAll");
+
 app.MapProjectEndpoints();
 app.MapMemberProfileEndpoints();
 app.MapFileStorageEndpoints();
 app.MapWebhookEndpoints();
 app.MapAccountEndpoints();
 
-// app.MapGroup("api/identity").WithTags("Identity").MapIdentityApi<ApplicationUser>();
-// app.MapGet("/", () => Results.Redirect("/swagger"));
+app.MapGroup("api/identity").WithTags("Identity").MapIdentityApi<ApplicationUser>();
+
+app.MapGet("/", () => Results.Redirect("/swagger"));
 
 await app.RunAsync();

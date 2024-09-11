@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Platform.Domain.Entities;
@@ -10,7 +11,7 @@ namespace Platform.Application.Common;
 /// <summary>
 /// Represents the context interface.
 /// </summary>
-public interface IContext : IAsyncDisposable, IDisposable
+public interface IContext : IDataProtectionKeyContext, IAsyncDisposable, IDisposable
 {
     /// <summary>
     /// Gets the database facade.

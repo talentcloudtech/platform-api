@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
 using Platform.Domain.Entities;
@@ -33,6 +34,11 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     /// Gets or sets the Member profiles DbSet.
     /// </summary>
     public DbSet<MemberProfile> MemberProfiles { get; set; } = null!;
+
+    /// <summary>
+    /// Gets or sets the data protection keys DbSet.
+    /// </summary>
+    public DbSet<DataProtectionKey> DataProtectionKeys { get; set; } = null!;
 
     // /// <summary>
     // /// Gets or sets the DbSet of ProjectUser entities.
