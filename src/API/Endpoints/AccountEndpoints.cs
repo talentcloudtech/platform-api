@@ -2,12 +2,17 @@ using Ardalis.Result.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Routing;
 using Platform.Application.Features.Accounts.DeleteAccount;
 using Platform.Application.Features.Accounts.GetAccountDetails;
 using Platform.Application.Features.Accounts.UpdateAvatar;
+using Platform.Application.Features.Accounts.UserRegister;
 using Platform.Domain.Auth.Interfaces;
+using Platform.Domain.Entities;
 
 namespace Platform.Api.Endpoints;
 
@@ -23,6 +28,15 @@ public static class AccountEndpoints
     public static void MapAccountEndpoints(this IEndpointRouteBuilder builder)
     {
         var group = builder.MapGroup("api/accounts").WithTags("Account");
+
+        group.MapPost(
+            "/register",
+            async (IMediator mediator, UserRegisterRequest request) =>
+            {
+                var result = await mediator.Send(request);
+                return result.ToMinimalApiResult();
+            }
+        );
 
         group
             .MapPut(

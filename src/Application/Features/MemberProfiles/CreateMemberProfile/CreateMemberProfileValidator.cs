@@ -16,7 +16,6 @@ public class CreateMemberProfileValidator : AbstractValidator<CreateMemberProfil
         RuleLevelCascadeMode = ClassLevelCascadeMode;
 
         RuleFor(x => x.FullName).NotEmpty().MaximumLength(StringSizes.Title);
-        RuleFor(x => x.HandleName).NotEmpty().MaximumLength(20);
         RuleFor(x => x.ShortBio).NotEmpty().MaximumLength(StringSizes.Bio);
         RuleFor(x => x.Timezone).NotEmpty();
         RuleFor(x => x.ProfilePictureUrl).NotEmpty();

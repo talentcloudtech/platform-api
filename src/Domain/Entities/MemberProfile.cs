@@ -19,6 +19,11 @@ public class MemberProfile : Entity<UserId>
     public string? FullName { get; set; }
 
     /// <summary>
+    /// Gets or sets the user name of the member.
+    /// </summary>
+    public string? UserName { get; set; }
+
+    /// <summary>
     /// Gets or sets the short biography of the member.
     /// </summary>
     public string? ShortBio { get; set; }
@@ -29,9 +34,24 @@ public class MemberProfile : Entity<UserId>
     public string? ProfilePictureUrl { get; set; }
 
     /// <summary>
+    /// Gets or sets the subtitle or designation of the member.
+    /// </summary>
+    public string? Subtitle { get; set; }
+
+    /// <summary>
     /// Gets or sets the timezone of the member.
     /// </summary>
     public string? Timezone { get; set; }
+
+    /// <summary>
+    /// Gets or sets the address of the member.
+    /// </summary>
+    public string? Address { get; set; }
+
+    /// <summary>
+    /// Gets or sets the languages known by the member.
+    /// </summary>
+    public List<string>? Languages { get; set; }
 
     /// <summary>
     /// Gets or sets the skills of the member.
@@ -39,9 +59,24 @@ public class MemberProfile : Entity<UserId>
     public List<Skill>? Skills { get; set; }
 
     /// <summary>
-    /// Gets or sets the skills of the member.
+    /// Gets or sets the work experiences of the member.
     /// </summary>
-    public List<IndustryExperience>? IndustryExperiences { get; set; }
+    public List<Experience>? Experiences { get; set; }
+
+    /// <summary>
+    /// Gets or sets the educational background of the member.
+    /// </summary>
+    public List<Education>? Educations { get; set; }
+
+    /// <summary>
+    /// Gets or sets the certifications of the member.
+    /// </summary>
+    public List<Certification>? Certifications { get; set; }
+
+    /// <summary>
+    /// Gets or sets the project info of the member.
+    /// </summary>
+    public List<ProjectInfo>? ProjectInfos { get; set; }
 
     /// <summary>
     /// Gets or sets the external links associated with the member.

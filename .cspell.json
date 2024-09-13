@@ -27,7 +27,8 @@
         "signin",
         "Swashbuckle",
         "Zabcdefghijkmnopqrstuvwxyz",
-        "zoneinfo"
+        "zoneinfo",
+        "aspnet"
     ],
     "ignorePaths": [
         "**/node_modules/**",
