@@ -1,0 +1,29 @@
+﻿using System.Collections.Generic;
+
+namespace Platform.Domain.Entities;
+
+/// <summary>
+/// Represents information about a project.
+/// </summary>
+public class ProjectInfo
+{
+    /// <summary>
+    /// Gets or sets the title of the project.
+    /// </summary>
+    public string? Title { get; set; }
+
+    /// <summary>
+    /// Gets or sets the link to the project.
+    /// </summary>
+    public string? Link { get; set; }
+
+    /// <summary>
+    /// Gets or sets a short description of the project.
+    /// </summary>
+    public string? ShortDescription { get; set; }
+
+    /// <summary>
+    /// Gets or sets a list of technologies used in the project.
+    /// </summary>
+    public List<string>? Technologies { get; set; }
+}

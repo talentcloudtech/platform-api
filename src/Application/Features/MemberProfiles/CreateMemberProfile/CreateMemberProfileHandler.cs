@@ -1,8 +1,10 @@
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.Result;
 using Mapster;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Platform.API.Configurations.OptionSetups;
 using Platform.Application.Common;
@@ -82,16 +84,6 @@ public class CreateMemberProfileHandler : IRequestHandler<CreateMemberProfileReq
         var created = request.Adapt<MemberProfile>();
         created.ProfilePictureUrl = profilePictureUrl;
         created.ResumeFileUrl = resumeFileUrl;
-
-        // var existHandleName = await _context
-        //     .MemberProfiles.AnyAsync(
-        //         x => x.HandleName.ToLower().Trim() == request.HandleName.ToLower().Trim(),
-        //         cancellationToken
-        //     )
-        //     .ConfigureAwait(false);
-        // if (existHandleName)
-        //     return Result.Error("Duplicate handle name found");
-
         _context.MemberProfiles.Add(created);
         await _context.SaveChangesAsync(cancellationToken);
 

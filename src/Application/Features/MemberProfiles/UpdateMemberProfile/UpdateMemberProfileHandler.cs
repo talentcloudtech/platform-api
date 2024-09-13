@@ -9,6 +9,7 @@ using Platform.API.Configurations.OptionSetups;
 using Platform.Application.Common;
 using Platform.Application.Features.FileStorages.DeleteFile;
 using Platform.Application.Features.FileStorages.MoveFile;
+using Platform.Domain.Auth.Interfaces;
 
 namespace Platform.Application.Features.MemberProfiles.UpdateMemberProfile;
 
@@ -17,6 +18,7 @@ namespace Platform.Application.Features.MemberProfiles.UpdateMemberProfile;
 /// </summary>
 public class UpdateMemberProfileHandler : IRequestHandler<UpdateMemberProfileRequest, Result<MemberProfileResponse>>
 {
+    private readonly ICurrentSession _session;
     private readonly IContext _context;
     private readonly IMediator _mediator;
     private readonly AzureBlobStorageOptions _azureBlobStorageOptions;
@@ -24,11 +26,13 @@ public class UpdateMemberProfileHandler : IRequestHandler<UpdateMemberProfileReq
     /// <summary>
     /// Initializes a new instance of the <see cref="UpdateMemberProfileHandler"/> class.
     /// </summary>
+    /// <param name="session">The session.</param>
     /// <param name="context">The context.</param>
     /// <param name="mediator">The mediator.</param>
     /// <param name="azureBlobStorageOptions">The Azure Blob Storage options.</param>
-    public UpdateMemberProfileHandler(IContext context, IMediator mediator, IOptions<AzureBlobStorageOptions> azureBlobStorageOptions)
+    public UpdateMemberProfileHandler(ICurrentSession session, IContext context, IMediator mediator, IOptions<AzureBlobStorageOptions> azureBlobStorageOptions)
     {
+        _session = session;
         _context = context;
         _mediator = mediator;
         _azureBlobStorageOptions = azureBlobStorageOptions.Value;
@@ -42,6 +46,7 @@ public class UpdateMemberProfileHandler : IRequestHandler<UpdateMemberProfileReq
     /// <returns>The result of the update operation.</returns>
     public async Task<Result<MemberProfileResponse>> Handle(UpdateMemberProfileRequest request, CancellationToken cancellationToken)
     {
+        var userId = _session.UserId;
         var originalMemberProfile = await _context.MemberProfiles.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
         if (originalMemberProfile is null)
             return Result.NotFound();
@@ -88,14 +93,20 @@ public class UpdateMemberProfileHandler : IRequestHandler<UpdateMemberProfileReq
         var existingResumeFileUrl = originalMemberProfile.ResumeFileUrl;
 
         originalMemberProfile.FullName = request.FullName;
-        // originalMemberProfile.HandleName = request.HandleName;
+        originalMemberProfile.UserName = request.UserName;
+        originalMemberProfile.Subtitle = request.Subtitle;
         originalMemberProfile.ShortBio = request.ShortBio;
         originalMemberProfile.ProfilePictureUrl = profilePictureUrl ?? request.ProfilePictureUrl;
+        originalMemberProfile.Address = request.Address;
         originalMemberProfile.ResumeFileUrl = resumeFileUrl ?? request.ResumeFileUrl;
         originalMemberProfile.Timezone = request.Timezone;
         originalMemberProfile.ExternalLinks = request.ExternalLinks;
         originalMemberProfile.Skills = request.Skills;
-        originalMemberProfile.IndustryExperiences = request.IndustryExperiences;
+        originalMemberProfile.Educations = request.Educations;
+        originalMemberProfile.Experiences = request.Experiences;
+        originalMemberProfile.Certifications = request.Certifications;
+        originalMemberProfile.Languages = request.Languages;
+        originalMemberProfile.ProjectInfos = request.ProjectInfos;
 
         _context.MemberProfiles.Update(originalMemberProfile);
 
