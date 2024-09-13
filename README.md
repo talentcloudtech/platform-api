@@ -14,6 +14,7 @@ Following the are configurations to be made
 
 1. **ConnectionStrings\_\_DefaultConnection**: The database connection string to PostgreSQL database
 1. **AzureBlobStorage\_\_ConnectionString**: The connection string to Azure Blob Storage
+1. **COMMUNICATION_SERVICES_CONNECTION_STRING**: The connection string to Azure communication service
 
 ## Environment variables
 
@@ -21,6 +22,8 @@ Copy `.env.example` to `.env` and fill in the following values, which are used b
 
 1. **ConnectionStrings\_\_DefaultConnection**: The database connection string to PostgreSQL database
 1. **AzureBlobStorage\_\_ConnectionString**: The connection string to Azure Blob Storage
+1. **COMMUNICATION_SERVICES_CONNECTION_STRING**: The connection string to Azure communication service
+
 
 ## Running locally
 
