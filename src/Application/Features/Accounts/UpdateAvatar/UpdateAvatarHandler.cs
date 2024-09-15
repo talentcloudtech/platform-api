@@ -1,15 +1,10 @@
-using System;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.Result;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using Platform.API.Configurations.OptionSetups;
 using Platform.Application.Common;
 using Platform.Domain.Auth.Interfaces;
-using Platform.Domain.Interfaces;
 
 namespace Platform.Application.Features.Accounts.UpdateAvatar;
 

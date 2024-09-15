@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Platform.Application.Common;
 using Platform.Domain.Auth.Interfaces;
-using Platform.Domain.Interfaces;
 
 namespace Platform.Application.Features.Accounts.DeleteAccount;
 

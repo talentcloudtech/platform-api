@@ -1,12 +1,20 @@
 using Ardalis.Result.AspNetCore;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Platform.Application.Features.Accounts.ConfirmEmail;
 using Platform.Application.Features.Accounts.DeleteAccount;
+using Platform.Application.Features.Accounts.ForgotPassword;
 using Platform.Application.Features.Accounts.GetAccountDetails;
+using Platform.Application.Features.Accounts.Login;
+using Platform.Application.Features.Accounts.Logout;
+using Platform.Application.Features.Accounts.RefreshToken;
+using Platform.Application.Features.Accounts.RegisterAccount;
+using Platform.Application.Features.Accounts.ResendEmailConfirmation;
+using Platform.Application.Features.Accounts.ResetPassword;
 using Platform.Application.Features.Accounts.UpdateAvatar;
+using Platform.Application.Features.Accounts.UpdateUserName;
 using Platform.Domain.Auth.Interfaces;
 
 namespace Platform.Api.Endpoints;
@@ -23,6 +31,103 @@ public static class AccountEndpoints
     public static void MapAccountEndpoints(this IEndpointRouteBuilder builder)
     {
         var group = builder.MapGroup("api/accounts").WithTags("Account");
+
+        group
+            .MapPost(
+                "/login",
+                async (IMediator mediator, LoginRequest request) =>
+                {
+                    var result = await mediator.Send(request);
+                    return result.ToMinimalApiResult();
+                }
+            )
+            .WithSummary("Login user.")
+            .AllowAnonymous();
+
+        group
+            .MapPost(
+                "/confirmEmail",
+                async (IMediator mediator, ConfirmEmailRequest request) =>
+                {
+                    var result = await mediator.Send(request);
+                    return result.ToMinimalApiResult();
+                }
+            )
+            .WithSummary("Confirm email.")
+            .AllowAnonymous();
+
+        group
+            .MapPost(
+                "/resendEmailConfirmation",
+                async (IMediator mediator, ResendEmailConfirmationRequest request) =>
+                {
+                    var result = await mediator.Send(request);
+                    return result.ToMinimalApiResult();
+                }
+            )
+            .WithSummary("Resend email confirmation.")
+            .AllowAnonymous();
+
+        // register account
+        group
+            .MapPost(
+                "/register",
+                async (IMediator mediator, RegisterAccountRequest request) =>
+                {
+                    var result = await mediator.Send(request);
+                    return result.ToMinimalApiResult();
+                }
+            )
+            .WithSummary("Register account.")
+            .AllowAnonymous();
+
+        group
+            .MapPost(
+                "/forgotPassword",
+                async (IMediator mediator, ForgotPasswordRequest request) =>
+                {
+                    var result = await mediator.Send(request);
+                    return result.ToMinimalApiResult();
+                }
+            )
+            .WithSummary("Forgot password.")
+            .AllowAnonymous();
+
+        group
+            .MapPost(
+                "/resetPassword",
+                async (IMediator mediator, ResetPasswordRequest request) =>
+                {
+                    var result = await mediator.Send(request);
+                    return result.ToMinimalApiResult();
+                }
+            )
+            .WithSummary("Reset password.")
+            .AllowAnonymous();
+
+        group
+            .MapPost(
+                "/refresh",
+                async (IMediator mediator, RefreshTokenRequest request) =>
+                {
+                    var result = await mediator.Send(request);
+                    return result.ToMinimalApiResult();
+                }
+            )
+            .WithSummary("Refresh token.")
+            .AllowAnonymous();
+
+        group
+            .MapPost(
+                "/logout",
+                async (IMediator mediator, ICurrentSession currentUser, LogoutRequest request) =>
+                {
+                    var result = await mediator.Send(request with { UserId = currentUser.UserId });
+                    return result.ToMinimalApiResult();
+                }
+            )
+            .WithSummary("Logout user.")
+            .RequireAuthorization();
 
         group
             .MapPut(
@@ -58,6 +163,18 @@ public static class AccountEndpoints
                 }
             )
             .WithSummary("Get current user account details.")
+            .RequireAuthorization();
+
+        group
+            .MapPut(
+                "/username",
+                async (IMediator mediator, ICurrentSession currentUser, UpdateUsernameRequest request) =>
+                {
+                    var result = await mediator.Send(request with { UserId = currentUser.UserId });
+                    return result.ToMinimalApiResult();
+                }
+            )
+            .WithSummary("Update username.")
             .RequireAuthorization();
     }
 }

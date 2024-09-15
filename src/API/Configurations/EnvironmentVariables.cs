@@ -15,10 +15,17 @@ public static class EnvironmentVariables
     /// <summary>
     /// Gets the backend URL from environment variables.
     /// </summary>
-    public static string BackendUrl => Environment.GetEnvironmentVariable("BACKEND_URL") ?? throw new ArgumentNullException("BACKEND_URL");
+    public static string JWT_SECRET => Environment.GetEnvironmentVariable("JWT_SECRET") ?? throw new ArgumentNullException("JWT_SECRET");
 
     /// <summary>
     /// Gets the communication services connection string from environment variables.
     /// </summary>
-    public static string CommunicationServicesConnectionString => Environment.GetEnvironmentVariable("COMMUNICATION_SERVICES_CONNECTION_STRING") ?? throw new ArgumentNullException("COMMUNICATION_SERVICES_CONNECTION_STRING");
+    public static string CommunicationServicesConnectionString =>
+        Environment.GetEnvironmentVariable("COMMUNICATION_SERVICES_CONNECTION_STRING")
+        ?? throw new ArgumentNullException("COMMUNICATION_SERVICES_CONNECTION_STRING");
+
+    /// <summary>
+    /// Gets the backend URL from environment variables.
+    /// </summary>
+    public static string BackendUrl => Environment.GetEnvironmentVariable("BACKEND_URL") ?? throw new ArgumentNullException("BACKEND_URL");
 }

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Platform.Application.Auth;
+using Platform.Application.Services;
 using Platform.Application.Services.Email;
 using Platform.Domain.Auth.Interfaces;
 using Platform.Domain.Entities;
@@ -26,6 +27,7 @@ public static class PersistenceSetup
     public static IServiceCollection AddPersistenceSetup(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<ICurrentSession, CurrentSession>();
+        services.AddScoped<ITokenService, TokenService>();
         services.AddTransient<IEmailService, AzureEmailService>();
         services.AddTransient<IEmailSender<ApplicationUser>, EmailSender>();
 

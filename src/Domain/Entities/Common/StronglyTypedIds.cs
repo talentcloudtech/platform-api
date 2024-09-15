@@ -59,3 +59,20 @@ public partial struct ProjectId : IStringId
         return new ProjectId(id);
     }
 }
+
+/// <summary>
+/// Represents a strongly typed identifier for a refresh token.
+/// </summary>
+[StronglyTypedId]
+public partial struct RefreshTokenId : IStringId
+{
+    /// <summary>
+    /// Implicitly converts a id to a RefreshTokenId.
+    /// </summary>
+    /// <param name="id">The id value.</param>
+    /// <returns>A new instance of RefreshTokenId.</returns>
+    public static implicit operator RefreshTokenId(string id)
+    {
+        return new RefreshTokenId(id);
+    }
+}

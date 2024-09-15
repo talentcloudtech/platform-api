@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
 using Platform.Api.Configurations;
 using Platform.Domain.Entities;
 using Platform.Domain.Interfaces;

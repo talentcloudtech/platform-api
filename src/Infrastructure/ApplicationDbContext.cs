@@ -21,6 +21,11 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
         : base(options) { }
 
     /// <summary>
+    /// Gets or sets the refresh tokens DbSet.
+    /// </summary>
+    public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
+
+    /// <summary>
     /// Gets or sets the users DbSet.
     /// </summary>
     public DbSet<ApplicationUser> ApplicationUsers { get; set; } = null!;

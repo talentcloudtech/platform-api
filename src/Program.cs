@@ -22,6 +22,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Controllers
 builder.AddValidationSetup();
 
+// identity
+builder.Services.ConfigureIdentity(builder.Configuration);
 builder.Services.AddAuthorization();
 
 // Swagger
@@ -32,40 +34,6 @@ builder.Services.AddPersistenceSetup(builder.Configuration);
 
 // Application layer setup
 builder.Services.AddApplicationSetup();
-
-builder.Services.AddDataProtection().PersistKeysToDbContext<ApplicationDbContext>();
-
-// Add identity stuff
-builder
-    .Services.AddIdentityApiEndpoints<ApplicationUser>(opt =>
-    {
-        opt.Password.RequiredLength = 8;
-        opt.User.RequireUniqueEmail = true;
-        opt.Password.RequireNonAlphanumeric = false;
-        opt.SignIn.RequireConfirmedEmail = true;
-    })
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
-
-builder.Services.Configure<IdentityOptions>(options =>
-{
-    // Password settings.
-    options.Password.RequireDigit = true;
-    options.Password.RequireLowercase = true;
-    options.Password.RequireNonAlphanumeric = true;
-    options.Password.RequireUppercase = true;
-    options.Password.RequiredLength = 6;
-    options.Password.RequiredUniqueChars = 1;
-
-    // Lockout settings.
-    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-    options.Lockout.MaxFailedAccessAttempts = 5;
-    options.Lockout.AllowedForNewUsers = true;
-
-    // User settings.
-    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-    options.User.RequireUniqueEmail = false;
-});
 
 builder.Services.AddCompressionSetup();
 
@@ -129,7 +97,7 @@ app.MapFileStorageEndpoints();
 app.MapWebhookEndpoints();
 app.MapAccountEndpoints();
 
-app.MapGroup("api/identity").WithTags("Identity").MapIdentityApi<ApplicationUser>();
+// app.MapGroup("api/identity").WithTags("Identity").MapIdentityApi<ApplicationUser>();
 
 app.MapGet("/", () => Results.Redirect("/swagger"));
 

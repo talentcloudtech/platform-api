@@ -4,8 +4,6 @@ using Ardalis.Result;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
-using Platform.Domain.Entities;
-using Platform.Domain.Interfaces;
 
 namespace Platform.Application.Features.Accounts.GetAccountDetails;
 
