@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -48,7 +49,6 @@ builder.Services.AddExceptionHandler<ExceptionHandler>();
 
 //IOptionConfigure
 builder.Services.ConfigureAllOptions(builder.Configuration);
-
 builder.Logging.ClearProviders();
 
 // Add serilog

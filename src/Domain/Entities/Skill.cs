@@ -11,7 +11,7 @@ public class Skill
     public required string Name { get; set; }
 
     /// <summary>
-    /// Gets or sets the experience year.
+    /// Gets or sets the number of months of experience in the skill.
     /// </summary>
-    public int ExperienceYear { get; set; }
+    public int MonthsOfExperience { get; set; }
 }
