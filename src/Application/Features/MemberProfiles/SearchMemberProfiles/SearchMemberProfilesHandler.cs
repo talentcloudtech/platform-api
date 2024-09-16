@@ -13,19 +13,8 @@ namespace Platform.Application.Features.MemberProfiles.SearchMemberProfiles;
 /// <summary>
 /// Handles the request to search for member profiles with optional filtering and pagination.
 /// </summary>
-public class SearchMemberProfilesHandler : IRequestHandler<SearchMemberProfilesRequest, PaginatedList<MemberProfileResponse>>
+public class SearchMemberProfilesHandler(IContext context) : IRequestHandler<SearchMemberProfilesRequest, PaginatedList<MemberProfileResponse>>
 {
-    private readonly IContext _context;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SearchMemberProfilesHandler"/> class.
-    /// </summary>
-    /// <param name="context">The context to access the database.</param>
-    public SearchMemberProfilesHandler(IContext context)
-    {
-        _context = context;
-    }
-
     /// <summary>
     /// Handles the request to search for member profiles based on the provided filtering and pagination options.
     /// </summary>
@@ -34,7 +23,7 @@ public class SearchMemberProfilesHandler : IRequestHandler<SearchMemberProfilesR
     /// <returns>A paginated list of <see cref="MemberProfileResponse"/> matching the search criteria.</returns>
     public async Task<PaginatedList<MemberProfileResponse>> Handle(SearchMemberProfilesRequest request, CancellationToken cancellationToken)
     {
-        var memberProfiles = _context
+        var memberProfiles = context
             .MemberProfiles.WhereIf(!string.IsNullOrEmpty(request.Name), x => EF.Functions.Like(x.FullName, $"%{request.Name}%"))
             .AsNoTracking();
 

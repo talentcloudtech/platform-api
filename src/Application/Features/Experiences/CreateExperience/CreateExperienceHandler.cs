@@ -5,7 +5,6 @@ using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
-using Platform.Domain.Auth.Interfaces;
 using Platform.Domain.Entities;
 using Platform.Domain.Entities.Common;
 
@@ -14,10 +13,9 @@ namespace Platform.Application.Features.Experiences.CreateExperience;
 /// <summary>
 /// Handles the creation of an experience.
 /// </summary>
-/// <param name="session">The current session.</param>
 /// <param name="context">The database context.</param>
 /// <returns>The result of the operation.</returns>
-public class CreateExperienceHandler(ICurrentSession session, IContext context) : IRequestHandler<CreateExperienceRequest, Result<ExperienceResponse>>
+public class CreateExperienceHandler(IContext context) : IRequestHandler<CreateExperienceRequest, Result<ExperienceResponse>>
 {
     /// <summary>
     /// Handles the creation of an experience.
@@ -32,11 +30,6 @@ public class CreateExperienceHandler(ICurrentSession session, IContext context) 
         if (memberProfile == null)
         {
             return Result.NotFound("Member profile not found.");
-        }
-
-        if (memberProfile.Id != session.UserId)
-        {
-            return Result.Forbidden();
         }
 
         var newExperience = new Experience

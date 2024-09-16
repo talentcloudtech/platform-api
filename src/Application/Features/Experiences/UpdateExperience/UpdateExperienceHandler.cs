@@ -5,19 +5,15 @@ using Ardalis.Result;
 using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Platform.Application.Auth;
 using Platform.Application.Common;
-using Platform.Domain.Auth.Interfaces;
-using Platform.Infrastructure;
 
 namespace Platform.Application.Features.Experiences.UpdateExperience;
 
 /// <summary>
 /// Handles the update of an experience.
-/// <param name="session">The current session.</param>
 /// <param name="context">The database context.</param>
 /// </summary>
-public class UpdateExperienceHandler(ICurrentSession session, IContext context) : IRequestHandler<UpdateExperienceRequest, Result<ExperienceResponse>>
+public class UpdateExperienceHandler(IContext context) : IRequestHandler<UpdateExperienceRequest, Result<ExperienceResponse>>
 {
     /// <summary>
     /// Handles the update of an experience.
@@ -32,11 +28,6 @@ public class UpdateExperienceHandler(ICurrentSession session, IContext context) 
         if (memberProfile == null)
         {
             return Result.NotFound();
-        }
-
-        if (memberProfile.Id != session.UserId)
-        {
-            return Result.Forbidden();
         }
 
         var experience = memberProfile.Experiences.FirstOrDefault(e => e.Identifier == request.ExperienceId);

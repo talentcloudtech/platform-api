@@ -3,6 +3,10 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Platform.Application.Features.Educations.CreateEducation;
+using Platform.Application.Features.Educations.DeleteEducation;
+using Platform.Application.Features.Educations.GetEducationById;
+using Platform.Application.Features.Educations.UpdateEducation;
 using Platform.Application.Features.Experiences.CreateExperience;
 using Platform.Application.Features.Experiences.DeleteExperience;
 using Platform.Application.Features.Experiences.GetExperienceById;
@@ -12,6 +16,7 @@ using Platform.Application.Features.MemberProfiles.DeleteMemberProfile;
 using Platform.Application.Features.MemberProfiles.GetMemberProfileById;
 using Platform.Application.Features.MemberProfiles.SearchMemberProfiles;
 using Platform.Application.Features.MemberProfiles.UpdateMemberProfile;
+using Platform.Domain.Auth.Interfaces;
 using Platform.Domain.Entities.Common;
 
 namespace Platform.API.Endpoints;
@@ -32,7 +37,7 @@ public static class MemberProfileEndpoints
         group
             .MapGet(
                 "/",
-                async (IMediator mediator, HttpContext context, [AsParameters] SearchMemberProfilesRequest request) =>
+                async (IMediator mediator, [AsParameters] SearchMemberProfilesRequest request) =>
                 {
                     var result = await mediator.Send(request);
                     return result;
@@ -85,7 +90,10 @@ public static class MemberProfileEndpoints
             .WithSummary("Deletes a member profile by its unique identifier.");
 
         // Experience endpoints
-        group.MapGroup("{id}/experiences").WithTags("Experience").RequireAuthorization().MapExperienceEndpoints();
+        group.MapGroup("experiences").WithTags("Experience").MapExperienceEndpoints();
+
+        // Education endpoints
+        group.MapGroup("educations").WithTags("Education").MapEducationEndpoints();
     }
 
     private static RouteGroupBuilder MapExperienceEndpoints(this RouteGroupBuilder group)
@@ -93,9 +101,9 @@ public static class MemberProfileEndpoints
         group
             .MapGet(
                 "{experienceId}",
-                async (IMediator mediator, UserId id, string experienceId) =>
+                async (IMediator mediator, ICurrentSession currentSession, string experienceId) =>
                 {
-                    var result = await mediator.Send(new GetExperienceByIdRequest(id, experienceId));
+                    var result = await mediator.Send(new GetExperienceByIdRequest(currentSession.UserId, experienceId));
                     return result.ToMinimalApiResult();
                 }
             )
@@ -104,9 +112,9 @@ public static class MemberProfileEndpoints
         group
             .MapPost(
                 "/",
-                async (IMediator mediator, UserId id, CreateExperienceRequest request) =>
+                async (IMediator mediator, ICurrentSession currentSession, CreateExperienceRequest request) =>
                 {
-                    var result = await mediator.Send(request with { MemberProfileId = id });
+                    var result = await mediator.Send(request with { MemberProfileId = currentSession.UserId });
                     return result.ToMinimalApiResult();
                 }
             )
@@ -115,9 +123,9 @@ public static class MemberProfileEndpoints
         group
             .MapPut(
                 "{experienceId}",
-                async (IMediator mediator, UserId id, string experienceId, UpdateExperienceRequest request) =>
+                async (IMediator mediator, ICurrentSession currentSession, string experienceId, UpdateExperienceRequest request) =>
                 {
-                    var result = await mediator.Send(request with { MemberProfileId = id, ExperienceId = experienceId });
+                    var result = await mediator.Send(request with { MemberProfileId = currentSession.UserId, ExperienceId = experienceId });
                     return result.ToMinimalApiResult();
                 }
             )
@@ -126,13 +134,62 @@ public static class MemberProfileEndpoints
         group
             .MapDelete(
                 "{experienceId}",
-                async (IMediator mediator, UserId id, string experienceId) =>
+                async (IMediator mediator, ICurrentSession currentSession, string experienceId) =>
                 {
-                    var result = await mediator.Send(new DeleteExperienceRequest(id, experienceId));
+                    var result = await mediator.Send(new DeleteExperienceRequest(currentSession.UserId, experienceId));
                     return result.ToMinimalApiResult();
                 }
             )
             .WithSummary("Deletes an experience from a member profile.");
+
+        return group;
+    }
+
+    private static RouteGroupBuilder MapEducationEndpoints(this RouteGroupBuilder group)
+    {
+        group
+            .MapGet(
+                "{educationId}",
+                async (IMediator mediator, ICurrentSession currentSession, string educationId) =>
+                {
+                    var result = await mediator.Send(new GetEducationByIdRequest(currentSession.UserId, educationId));
+                    return result.ToMinimalApiResult();
+                }
+            )
+            .WithSummary("Retrieves a specific education for a member profile.");
+
+        group
+            .MapPost(
+                "/",
+                async (IMediator mediator, ICurrentSession currentSession, CreateEducationRequest request) =>
+                {
+                    var result = await mediator.Send(request with { MemberProfileId = currentSession.UserId });
+                    return result.ToMinimalApiResult();
+                }
+            )
+            .WithSummary("Creates a new education for a member profile.");
+
+        group
+            .MapPut(
+                "{educationId}",
+                async (IMediator mediator, ICurrentSession currentSession, string educationId, UpdateEducationRequest request) =>
+                {
+                    var result = await mediator.Send(request with { MemberProfileId = currentSession.UserId, EducationId = educationId });
+                    return result.ToMinimalApiResult();
+                }
+            )
+            .WithSummary("Updates an education for a member profile.");
+
+        group
+            .MapDelete(
+                "{educationId}",
+                async (IMediator mediator, ICurrentSession currentSession, string educationId) =>
+                {
+                    var result = await mediator.Send(new DeleteEducationRequest(currentSession.UserId, educationId));
+                    return result.ToMinimalApiResult();
+                }
+            )
+            .WithSummary("Deletes an education from a member profile.");
 
         return group;
     }

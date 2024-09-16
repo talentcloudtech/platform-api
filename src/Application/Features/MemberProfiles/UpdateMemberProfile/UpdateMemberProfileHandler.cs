@@ -14,28 +14,8 @@ namespace Platform.Application.Features.MemberProfiles.UpdateMemberProfile;
 /// <summary>
 /// Handles the update member profile request.
 /// </summary>
-public class UpdateMemberProfileHandler : IRequestHandler<UpdateMemberProfileRequest, Result<MemberProfileResponse>>
+public class UpdateMemberProfileHandler(IContext context) : IRequestHandler<UpdateMemberProfileRequest, Result<MemberProfileResponse>>
 {
-    private readonly ICurrentSession _session;
-    private readonly IContext _context;
-    private readonly IMediator _mediator;
-    private readonly AzureBlobStorageOptions _azureBlobStorageOptions;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="UpdateMemberProfileHandler"/> class.
-    /// </summary>
-    /// <param name="session">The session.</param>
-    /// <param name="context">The context.</param>
-    /// <param name="mediator">The mediator.</param>
-    /// <param name="azureBlobStorageOptions">The Azure Blob Storage options.</param>
-    public UpdateMemberProfileHandler(ICurrentSession session, IContext context, IMediator mediator, IOptions<AzureBlobStorageOptions> azureBlobStorageOptions)
-    {
-        _session = session;
-        _context = context;
-        _mediator = mediator;
-        _azureBlobStorageOptions = azureBlobStorageOptions.Value;
-    }
-
     /// <summary>
     /// Handles the update member profile request.
     /// </summary>
@@ -44,8 +24,7 @@ public class UpdateMemberProfileHandler : IRequestHandler<UpdateMemberProfileReq
     /// <returns>The result of the update operation.</returns>
     public async Task<Result<MemberProfileResponse>> Handle(UpdateMemberProfileRequest request, CancellationToken cancellationToken)
     {
-        var userId = _session.UserId;
-        var originalMemberProfile = await _context.MemberProfiles.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+        var originalMemberProfile = await context.MemberProfiles.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
         if (originalMemberProfile is null)
             return Result.NotFound();
 
@@ -61,9 +40,9 @@ public class UpdateMemberProfileHandler : IRequestHandler<UpdateMemberProfileReq
         originalMemberProfile.ExternalLinks = request.ExternalLinks;
         originalMemberProfile.Languages = request.Languages;
 
-        _context.MemberProfiles.Update(originalMemberProfile);
+        context.MemberProfiles.Update(originalMemberProfile);
 
-        await _context.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
         return originalMemberProfile.Adapt<MemberProfileResponse>();
     }
 }

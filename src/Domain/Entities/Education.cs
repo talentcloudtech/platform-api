@@ -16,12 +16,17 @@ public class Education
     /// <summary>
     /// Gets or sets the name of the educational institute.
     /// </summary>
-    public string? InstituteName { get; set; }
+    public string? InstitutionName { get; set; }
 
     /// <summary>
     /// Gets or sets the degree with major.
     /// </summary>
-    public string? DegreeWithMajor { get; set; }
+    public string? Degree { get; set; }
+
+    /// <summary>
+    /// Gets or sets the field of study.
+    /// </summary>
+    public string? FieldOfStudy { get; set; }
 
     /// <summary>
     /// Gets or sets the start date of the education.
@@ -31,5 +36,5 @@ public class Education
     /// <summary>
     /// Gets or sets the end date of the education.
     /// </summary>
-    public DateTime EndDate { get; set; }
+    public DateTime? EndDate { get; set; }
 }

@@ -12,10 +12,9 @@ namespace Platform.Application.Features.Experiences.DeleteExperience;
 /// <summary>
 /// Handles the deletion of an experience.
 /// </summary>
-/// <param name="session">The current session.</param>
 /// <param name="context">The database context.</param>
 /// <returns>The result of the operation.</returns>
-public class DeleteExperienceHandler(ICurrentSession session, IContext context) : IRequestHandler<DeleteExperienceRequest, Result>
+public class DeleteExperienceHandler(IContext context) : IRequestHandler<DeleteExperienceRequest, Result>
 {
     /// <summary>
     /// Handles the deletion of an experience.
@@ -30,11 +29,6 @@ public class DeleteExperienceHandler(ICurrentSession session, IContext context) 
         if (memberProfile == null)
         {
             return Result.NotFound("Member profile not found.");
-        }
-
-        if (memberProfile.Id != session.UserId)
-        {
-            return Result.Forbidden();
         }
 
         var experience = memberProfile.Experiences?.FirstOrDefault(e => e.Identifier == request.ExperienceId);
