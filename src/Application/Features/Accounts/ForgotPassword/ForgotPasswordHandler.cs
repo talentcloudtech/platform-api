@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using Ardalis.Result;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -28,7 +29,8 @@ public class ForgotPasswordHandler(UserManager<ApplicationUser> userManager, IEm
         }
 
         var token = await userManager.GeneratePasswordResetTokenAsync(user);
-        await emailSender.SendPasswordResetCodeAsync(user, user.Email!, token);
+        var encodedToken = HttpUtility.UrlEncode(token);
+        await emailSender.SendPasswordResetCodeAsync(user, user.Email!, encodedToken);
 
         return Result.Success();
     }

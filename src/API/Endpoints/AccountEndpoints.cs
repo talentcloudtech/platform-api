@@ -58,7 +58,7 @@ public static class AccountEndpoints
 
         group
             .MapPost(
-                "/resendEmailConfirmation",
+                "/resendConfirmationEmail",
                 async (IMediator mediator, ResendEmailConfirmationRequest request) =>
                 {
                     var result = await mediator.Send(request);

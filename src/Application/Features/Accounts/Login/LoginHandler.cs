@@ -47,6 +47,18 @@ public class LoginHandler(
             return Result.Invalid(new ValidationError("Invalid credentials."));
         }
 
+        if (!user.EmailConfirmed)
+        {
+            return Result.Invalid(
+                new ValidationError
+                {
+                    Identifier = "root",
+                    ErrorMessage = "Email not confirmed.",
+                    ErrorCode = "email_not_confirmed",
+                }
+            );
+        }
+
         var result = await signInManager.PasswordSignInAsync(user, request.Password, false, true);
 
         if (!result.Succeeded)

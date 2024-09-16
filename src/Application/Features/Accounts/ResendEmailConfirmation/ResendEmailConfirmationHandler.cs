@@ -1,5 +1,7 @@
+using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using Ardalis.Result;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -29,7 +31,8 @@ public class ResendEmailConfirmationHandler(UserManager<ApplicationUser> userMan
         }
 
         var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-        var confirmationLink = $"{EnvironmentVariables.BackendUrl}/api/accounts/confirmEmail?userId={user.Id}&code={token}";
+        var encodedToken = HttpUtility.UrlEncode(token);
+        var confirmationLink = $"{EnvironmentVariables.BackendUrl}/api/accounts/confirmEmail?userId={user.Id}&code={encodedToken}";
         await emailSender.SendConfirmationLinkAsync(user, user.Email!, confirmationLink);
 
         return Result.Success();
