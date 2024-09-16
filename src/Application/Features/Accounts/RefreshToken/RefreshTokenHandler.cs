@@ -28,7 +28,9 @@ public class RefreshTokenHandler(IContext context, ITokenService tokenService, I
     /// <returns>A Result indicating the success or failure of the operation.</returns>
     public async Task<Result<LoginResponse>> Handle(RefreshTokenRequest request, CancellationToken cancellationToken)
     {
-        var existingRefreshToken = await context.RefreshTokens.Include(x => x.User).FirstOrDefaultAsync(x => x.Token == request.Token, cancellationToken);
+        var existingRefreshToken = await context
+            .RefreshTokens.Include(x => x.User)
+            .FirstOrDefaultAsync(x => x.Token == request.RefreshToken, cancellationToken);
         if (existingRefreshToken == null || !existingRefreshToken.IsActive || existingRefreshToken.User == null)
         {
             return Result.Unauthorized();

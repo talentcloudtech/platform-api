@@ -1,12 +1,11 @@
 using System;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Platform.Api.Configurations;
 using Platform.Domain.Entities;
@@ -72,16 +71,7 @@ public static class IdentitySetup
                     ValidIssuer = jwtSettings["Issuer"],
                     ValidAudience = jwtSettings["Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(EnvironmentVariables.JWT_SECRET)),
-                    // ClockSkew = TimeSpan.FromMinutes(1),
-                };
-                opt.Events = new JwtBearerEvents
-                {
-                    OnAuthenticationFailed = context =>
-                    {
-                        var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
-                        logger.LogError(context.Exception, context.Exception.Message);
-                        return Task.CompletedTask;
-                    },
+                    ClockSkew = TimeSpan.Zero,
                 };
             });
     }
