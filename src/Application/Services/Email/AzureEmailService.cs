@@ -1,9 +1,11 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using Azure.Communication.Email;
 using Microsoft.Extensions.Options;
+using Platform.Api.Configurations;
 using Platform.Api.Configurations.OptionSetups;
 using Platform.Domain.Interfaces;
 
@@ -24,7 +26,7 @@ public class AzureEmailService : IEmailService
     public AzureEmailService(IOptions<EmailConfigurationOptions> mailOptions)
     {
         _mailOptions = mailOptions.Value;
-        string? connectionString = Environment.GetEnvironmentVariable("COMMUNICATION_SERVICES_CONNECTION_STRING");
+        string? connectionString = EnvironmentVariables.CommunicationServicesConnectionString;
         if (connectionString != null)
         {
             _emailClient = new EmailClient(connectionString);
@@ -72,7 +74,13 @@ public class AzureEmailService : IEmailService
 
         var emailRecipients = new EmailRecipients(toRecipients, bccRecipients, ccRecipients);
 
-        var emailContent = new EmailContent(mailRequest.Subject) { PlainText = mailRequest.Body, Html = mailRequest.Body };
+        string FilePath = Path.Combine(Directory.GetCurrentDirectory(), Path.Combine("Templates", "DefaultTemplate.html"));
+        using StreamReader str = new(FilePath);
+        string htmlBody = str.ReadToEnd();
+
+        htmlBody = htmlBody.Replace("[content]", mailRequest.Body);
+
+        var emailContent = new EmailContent(mailRequest.Subject) { PlainText = mailRequest.Body, Html = htmlBody };
 
         var emailMessage = new EmailMessage(senderAddress: _mailOptions.From, emailRecipients, emailContent);
 

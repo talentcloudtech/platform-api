@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Platform.Api.Configurations;
 using Platform.Domain.Entities;
 using Platform.Domain.Interfaces;
 
@@ -66,8 +67,11 @@ public class EmailSender : IEmailSender<ApplicationUser>
     /// <returns>A task representing the asynchronous operation.</returns>
     public async Task SendPasswordResetCodeAsync(ApplicationUser user, string email, string resetCode)
     {
-        var mailRequest = new MailRequest(to: [email], subject: "Your password reset code", body: $"Your password reset code is: {resetCode}");
-
+        // create a link to the reset password page with the reset code as a parameter
+        var resetLink = $"{EnvironmentVariables.FrontendUrl}/reset-password?code={resetCode}";
+        var body =
+            $"Please reset your password by <a href='{resetLink}'>clicking here</a>. If link does not work, copy and paste the following code into the password reset form: <b>{resetCode}</b>.<br/>If you did not request a password reset, please ignore this email.";
+        var mailRequest = new MailRequest(to: [email], subject: "Your password reset code", body: body);
         await _emailService.SendEmailAsync(mailRequest);
     }
 }

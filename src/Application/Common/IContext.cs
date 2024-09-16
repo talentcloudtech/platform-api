@@ -19,6 +19,11 @@ public interface IContext : IDataProtectionKeyContext, IAsyncDisposable, IDispos
     public DatabaseFacade Database { get; }
 
     /// <summary>
+    /// Gets or sets the refresh tokens DbSet.
+    /// </summary>
+    public DbSet<RefreshToken> RefreshTokens { get; }
+
+    /// <summary>
     /// Gets or sets the users DbSet.
     /// </summary>
     public DbSet<ApplicationUser> Users { get; }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 using Platform.Domain.Entities.Common;
 
 namespace Platform.Domain.Entities;
@@ -17,6 +18,11 @@ public class ApplicationUser : IdentityUser<UserId>
     /// Gets or sets the member profile associated with the user.
     /// </summary>
     public MemberProfile? MemberProfile { get; set; }
+
+    /// <summary>
+    /// Gets or sets the refresh tokens associated with the user.
+    /// </summary>
+    public List<RefreshToken>? RefreshTokens { get; set; }
 }
 
 /// <summary>
