@@ -11,11 +11,19 @@ using Platform.Application.Features.Experiences.CreateExperience;
 using Platform.Application.Features.Experiences.DeleteExperience;
 using Platform.Application.Features.Experiences.GetExperienceById;
 using Platform.Application.Features.Experiences.UpdateExperience;
-using Platform.Application.Features.MemberProfiles.CreateMemberProfile;
+using Platform.Application.Features.Languages.CreateLanguage;
+using Platform.Application.Features.Languages.DeleteLanguage;
+using Platform.Application.Features.Languages.GetLanguageById;
+using Platform.Application.Features.Languages.UpdateLanguage;
 using Platform.Application.Features.MemberProfiles.DeleteMemberProfile;
 using Platform.Application.Features.MemberProfiles.GetMemberProfileById;
 using Platform.Application.Features.MemberProfiles.SearchMemberProfiles;
+using Platform.Application.Features.MemberProfiles.UpdateAvatar;
 using Platform.Application.Features.MemberProfiles.UpdateMemberProfile;
+using Platform.Application.Features.ProjectInfos.CreateProjectInfo;
+using Platform.Application.Features.ProjectInfos.DeleteProjectInfo;
+using Platform.Application.Features.ProjectInfos.GetProjectInfoById;
+using Platform.Application.Features.ProjectInfos.UpdateProjectInfo;
 using Platform.Domain.Auth.Interfaces;
 using Platform.Domain.Entities.Common;
 
@@ -57,17 +65,6 @@ public static class MemberProfileEndpoints
             .WithSummary("Retrieves a member profile by its unique identifier.");
 
         group
-            .MapPost(
-                "/",
-                async (IMediator mediator, CreateMemberProfileRequest request) =>
-                {
-                    var result = await mediator.Send(request);
-                    return result.ToMinimalApiResult();
-                }
-            )
-            .WithSummary("Creates a new member profile.");
-
-        group
             .MapPut(
                 "{id}",
                 async (IMediator mediator, UserId id, UpdateMemberProfileRequest request) =>
@@ -77,6 +74,18 @@ public static class MemberProfileEndpoints
                 }
             )
             .WithSummary("Updates a member profile by its unique identifier.");
+
+        group
+            .MapPatch(
+                "/",
+                async (IMediator mediator, ICurrentSession currentSession, IFormFile file) =>
+                {
+                    var result = await mediator.Send(new UpdateAvatarRequest { Id = currentSession.UserId, File = file });
+                    return result.ToMinimalApiResult();
+                }
+            )
+            .WithSummary("Update user avatar.")
+            .DisableAntiforgery();
 
         group
             .MapDelete(
@@ -94,6 +103,12 @@ public static class MemberProfileEndpoints
 
         // Education endpoints
         group.MapGroup("educations").WithTags("Education").MapEducationEndpoints();
+
+        // Language endpoints
+        group.MapGroup("languages").WithTags("Language").MapLanguageEndpoints();
+
+        // ProjectInfo endpoints
+        group.MapGroup("projects").WithTags("ProjectInfo").MapProjectInfoEndpoints();
     }
 
     private static RouteGroupBuilder MapExperienceEndpoints(this RouteGroupBuilder group)
@@ -190,6 +205,104 @@ public static class MemberProfileEndpoints
                 }
             )
             .WithSummary("Deletes an education from a member profile.");
+
+        return group;
+    }
+
+    private static RouteGroupBuilder MapLanguageEndpoints(this RouteGroupBuilder group)
+    {
+        group
+            .MapGet(
+                "{languageId}",
+                async (IMediator mediator, ICurrentSession currentSession, string languageId) =>
+                {
+                    var result = await mediator.Send(new GetLanguageByIdRequest(currentSession.UserId, languageId));
+                    return result.ToMinimalApiResult();
+                }
+            )
+            .WithSummary("Retrieves a specific language for a member profile.");
+
+        group
+            .MapPost(
+                "/",
+                async (IMediator mediator, ICurrentSession currentSession, CreateLanguageRequest request) =>
+                {
+                    var result = await mediator.Send(request with { MemberProfileId = currentSession.UserId });
+                    return result.ToMinimalApiResult();
+                }
+            )
+            .WithSummary("Creates a new language for a member profile.");
+
+        group
+            .MapPut(
+                "{languageId}",
+                async (IMediator mediator, ICurrentSession currentSession, string languageId, UpdateLanguageRequest request) =>
+                {
+                    var result = await mediator.Send(request with { MemberProfileId = currentSession.UserId, LanguageId = languageId });
+                    return result.ToMinimalApiResult();
+                }
+            )
+            .WithSummary("Updates a language for a member profile.");
+
+        group
+            .MapDelete(
+                "{languageId}",
+                async (IMediator mediator, ICurrentSession currentSession, string languageId) =>
+                {
+                    var result = await mediator.Send(new DeleteLanguageRequest(currentSession.UserId, languageId));
+                    return result.ToMinimalApiResult();
+                }
+            )
+            .WithSummary("Deletes a language from a member profile.");
+
+        return group;
+    }
+
+    private static RouteGroupBuilder MapProjectInfoEndpoints(this RouteGroupBuilder group)
+    {
+        group
+            .MapGet(
+                "{projectId}",
+                async (IMediator mediator, ICurrentSession currentSession, string projectId) =>
+                {
+                    var result = await mediator.Send(new GetProjectInfoByIdRequest(currentSession.UserId, projectId));
+                    return result.ToMinimalApiResult();
+                }
+            )
+            .WithSummary("Retrieves a specific project for a member profile.");
+
+        group
+            .MapPost(
+                "/",
+                async (IMediator mediator, ICurrentSession currentSession, CreateProjectInfoRequest request) =>
+                {
+                    var result = await mediator.Send(request with { MemberProfileId = currentSession.UserId });
+                    return result.ToMinimalApiResult();
+                }
+            )
+            .WithSummary("Creates a new project for a member profile.");
+
+        group
+            .MapPut(
+                "{projectId}",
+                async (IMediator mediator, ICurrentSession currentSession, string projectId, UpdateProjectInfoRequest request) =>
+                {
+                    var result = await mediator.Send(request with { MemberProfileId = currentSession.UserId, ProjectInfoId = projectId });
+                    return result.ToMinimalApiResult();
+                }
+            )
+            .WithSummary("Updates a project for a member profile.");
+
+        group
+            .MapDelete(
+                "{projectId}",
+                async (IMediator mediator, ICurrentSession currentSession, string projectId) =>
+                {
+                    var result = await mediator.Send(new DeleteProjectInfoRequest(currentSession.UserId, projectId));
+                    return result.ToMinimalApiResult();
+                }
+            )
+            .WithSummary("Deletes a project from a member profile.");
 
         return group;
     }

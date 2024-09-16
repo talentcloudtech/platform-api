@@ -29,7 +29,7 @@ public class UpdateEducationHandler(IContext context) : IRequestHandler<UpdateEd
         {
             return Result.NotFound("Member profile not found.");
         }
-        var education = memberProfile.Educations.FirstOrDefault(e => e.Identifier == request.EducationId);
+        var education = memberProfile.Educations?.FirstOrDefault(e => e.Identifier == request.EducationId);
 
         if (education == null)
         {

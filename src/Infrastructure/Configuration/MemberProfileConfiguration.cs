@@ -28,7 +28,14 @@ public class MemberProfileConfiguration : IEntityTypeConfiguration<MemberProfile
         builder.Property(x => x.Timezone).HasMaxLength(50);
         builder.Property(x => x.Address).HasMaxLength(StringSizes.Bio);
         builder.Property(x => x.ResumeFileUrl).HasMaxLength(StringSizes.Url);
-        builder.Property(x => x.Languages).HasColumnType("text[]");
+
+        builder.OwnsMany(
+            x => x.Languages,
+            x =>
+            {
+                x.ToJson();
+            }
+        );
 
         builder.OwnsMany(
             x => x.Skills,
@@ -69,7 +76,7 @@ public class MemberProfileConfiguration : IEntityTypeConfiguration<MemberProfile
             }
         );
 
-        builder.Property(x => x.ExternalLinks).HasColumnType("text[]");
+        builder.Property(x => x.ExternalLinks).HasColumnType("text[]").IsRequired(false);
 
         builder.HasOne(x => x.User).WithOne(p => p.MemberProfile).HasForeignKey<ApplicationUser>(p => p.Id);
     }

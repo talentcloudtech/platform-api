@@ -30,7 +30,7 @@ public class UpdateExperienceHandler(IContext context) : IRequestHandler<UpdateE
             return Result.NotFound();
         }
 
-        var experience = memberProfile.Experiences.FirstOrDefault(e => e.Identifier == request.ExperienceId);
+        var experience = memberProfile.Experiences?.FirstOrDefault(e => e.Identifier == request.ExperienceId);
 
         if (experience == null)
         {

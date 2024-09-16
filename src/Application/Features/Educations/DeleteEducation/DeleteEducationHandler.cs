@@ -29,14 +29,14 @@ public class DeleteEducationHandler(IContext context) : IRequestHandler<DeleteEd
             return Result.NotFound("Member profile not found.");
         }
 
-        var education = memberProfile.Educations.FirstOrDefault(e => e.Identifier == request.EducationId);
+        var education = memberProfile.Educations?.FirstOrDefault(e => e.Identifier == request.EducationId);
 
         if (education == null)
         {
             return Result.NotFound("Education not found.");
         }
 
-        memberProfile.Educations.Remove(education);
+        memberProfile.Educations?.Remove(education);
         await context.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

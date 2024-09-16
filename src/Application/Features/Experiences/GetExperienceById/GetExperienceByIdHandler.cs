@@ -29,7 +29,7 @@ public class GetExperienceByIdHandler(IContext context) : IRequestHandler<GetExp
         {
             return Result.NotFound("Member profile not found.");
         }
-        var experience = memberProfile.Experiences.FirstOrDefault(x => x.Identifier == request.ExperienceId);
+        var experience = memberProfile.Experiences?.FirstOrDefault(x => x.Identifier == request.ExperienceId);
         if (experience == null)
         {
             return Result.NotFound("Experience not found.");

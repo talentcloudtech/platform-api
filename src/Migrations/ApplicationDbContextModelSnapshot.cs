@@ -251,16 +251,11 @@ namespace Platform.Migrations
                         .HasColumnType("character varying(500)");
 
                     b.Property<string[]>("ExternalLinks")
-                        .IsRequired()
                         .HasColumnType("text[]");
 
                     b.Property<string>("FullName")
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
-
-                    b.Property<List<string>>("Languages")
-                        .IsRequired()
-                        .HasColumnType("text[]");
 
                     b.Property<string>("ProfilePictureUrl")
                         .HasMaxLength(500)
@@ -461,17 +456,20 @@ namespace Platform.Migrations
                                 .ValueGeneratedOnAdd()
                                 .HasColumnType("integer");
 
-                            b1.Property<string>("DegreeWithMajor")
+                            b1.Property<string>("Degree")
                                 .HasColumnType("text");
 
-                            b1.Property<DateTime>("EndDate")
+                            b1.Property<DateTime?>("EndDate")
                                 .HasColumnType("timestamp with time zone");
+
+                            b1.Property<string>("FieldOfStudy")
+                                .HasColumnType("text");
 
                             b1.Property<string>("Identifier")
                                 .IsRequired()
                                 .HasColumnType("text");
 
-                            b1.Property<string>("InstituteName")
+                            b1.Property<string>("InstitutionName")
                                 .HasColumnType("text");
 
                             b1.Property<DateTime>("StartDate")
@@ -520,6 +518,35 @@ namespace Platform.Migrations
                             b1.ToTable("MemberProfiles");
 
                             b1.ToJson("Experiences");
+
+                            b1.WithOwner()
+                                .HasForeignKey("MemberProfileId");
+                        });
+
+                    b.OwnsMany("Platform.Domain.Entities.Language", "Languages", b1 =>
+                        {
+                            b1.Property<string>("MemberProfileId")
+                                .HasColumnType("character varying(25)");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("Identifier")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<string>("Name")
+                                .HasColumnType("text");
+
+                            b1.Property<int>("ProficiencyLevel")
+                                .HasColumnType("integer");
+
+                            b1.HasKey("MemberProfileId", "Id");
+
+                            b1.ToTable("MemberProfiles");
+
+                            b1.ToJson("Languages");
 
                             b1.WithOwner()
                                 .HasForeignKey("MemberProfileId");
@@ -591,6 +618,8 @@ namespace Platform.Migrations
                     b.Navigation("Educations");
 
                     b.Navigation("Experiences");
+
+                    b.Navigation("Languages");
 
                     b.Navigation("ProjectInfos");
 

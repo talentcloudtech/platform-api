@@ -54,6 +54,22 @@ namespace Platform.Migrations
             );
 
             migrationBuilder.CreateTable(
+                name: "DataProtectionKeys",
+                columns: table => new
+                {
+                    Id = table
+                        .Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    FriendlyName = table.Column<string>(type: "text", nullable: true),
+                    Xml = table.Column<string>(type: "text", nullable: true),
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DataProtectionKeys", x => x.Id);
+                }
+            );
+
+            migrationBuilder.CreateTable(
                 name: "Projects",
                 columns: table => new
                 {
@@ -65,6 +81,19 @@ namespace Platform.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Projects", x => x.Id);
+                }
+            );
+
+            migrationBuilder.CreateTable(
+                name: "Skills",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "character varying(25)", maxLength: 25, nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Skills", x => x.Id);
                 }
             );
 
@@ -201,12 +230,19 @@ namespace Platform.Migrations
                 {
                     Id = table.Column<string>(type: "character varying(25)", maxLength: 25, nullable: false),
                     FullName = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
+                    UserName = table.Column<string>(type: "character varying(25)", maxLength: 25, nullable: true),
                     ShortBio = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                     ProfilePictureUrl = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    Subtitle = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
                     Timezone = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    Address = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                     ExternalLinks = table.Column<string[]>(type: "text[]", nullable: true),
                     ResumeFileUrl = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
-                    IndustryExperiences = table.Column<string>(type: "jsonb", nullable: true),
+                    Certifications = table.Column<string>(type: "jsonb", nullable: true),
+                    Educations = table.Column<string>(type: "jsonb", nullable: true),
+                    Experiences = table.Column<string>(type: "jsonb", nullable: true),
+                    Languages = table.Column<string>(type: "jsonb", nullable: true),
+                    ProjectInfos = table.Column<string>(type: "jsonb", nullable: true),
                     Skills = table.Column<string>(type: "jsonb", nullable: true),
                 },
                 constraints: table =>
@@ -215,6 +251,30 @@ namespace Platform.Migrations
                     table.ForeignKey(
                         name: "FK_MemberProfiles_AspNetUsers_Id",
                         column: x => x.Id,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade
+                    );
+                }
+            );
+
+            migrationBuilder.CreateTable(
+                name: "RefreshTokens",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "character varying(25)", maxLength: 25, nullable: false),
+                    Token = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: false),
+                    Expires = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Revoked = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    UserId = table.Column<string>(type: "character varying(25)", nullable: false),
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefreshTokens", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RefreshTokens_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade
@@ -235,6 +295,8 @@ namespace Platform.Migrations
             migrationBuilder.CreateIndex(name: "EmailIndex", table: "AspNetUsers", column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(name: "UserNameIndex", table: "AspNetUsers", column: "NormalizedUserName", unique: true);
+
+            migrationBuilder.CreateIndex(name: "IX_RefreshTokens_UserId", table: "RefreshTokens", column: "UserId");
         }
 
         /// <inheritdoc />
@@ -250,9 +312,15 @@ namespace Platform.Migrations
 
             migrationBuilder.DropTable(name: "AspNetUserTokens");
 
+            migrationBuilder.DropTable(name: "DataProtectionKeys");
+
             migrationBuilder.DropTable(name: "MemberProfiles");
 
             migrationBuilder.DropTable(name: "Projects");
+
+            migrationBuilder.DropTable(name: "RefreshTokens");
+
+            migrationBuilder.DropTable(name: "Skills");
 
             migrationBuilder.DropTable(name: "AspNetRoles");
 

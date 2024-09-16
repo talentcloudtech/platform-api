@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Platform.Application.Features.MemberProfiles.DeleteMemberProfile;
 
 namespace Platform.Application.Features.Experiences.DeleteExperience;
 
@@ -9,7 +8,7 @@ namespace Platform.Application.Features.Experiences.DeleteExperience;
 public class DeleteExperienceValidator : AbstractValidator<DeleteExperienceRequest>
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="DeleteMemberProfileValidator"/> class.
+    /// Initializes a new instance of the <see cref="DeleteExperienceValidator"/> class.
     /// </summary>
     public DeleteExperienceValidator()
     {

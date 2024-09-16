@@ -8,6 +8,11 @@ namespace Platform.Domain.Entities;
 public class ProjectInfo
 {
     /// <summary>
+    /// Gets or sets the unique identifier of the project entry.
+    /// </summary>
+    public string Identifier { get; set; } = null!;
+
+    /// <summary>
     /// Gets or sets the title of the project.
     /// </summary>
     public string? Title { get; set; }

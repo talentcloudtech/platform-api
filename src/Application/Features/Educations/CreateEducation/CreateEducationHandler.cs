@@ -41,7 +41,7 @@ public class CreateEducationHandler(IContext context) : IRequestHandler<CreateEd
             EndDate = request.EndDate,
         };
 
-        memberProfile.Educations.Add(newEducation);
+        memberProfile.Educations?.Add(newEducation);
         await context.SaveChangesAsync(cancellationToken);
 
         return Result.Success(newEducation.Adapt<EducationResponse>());

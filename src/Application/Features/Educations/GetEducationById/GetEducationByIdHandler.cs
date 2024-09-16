@@ -30,7 +30,7 @@ public class GetEducationByIdHandler(IContext context) : IRequestHandler<GetEduc
             return Result.NotFound("Member profile not found.");
         }
 
-        var education = memberProfile.Educations.FirstOrDefault(x => x.Identifier == request.EducationId);
+        var education = memberProfile.Educations?.FirstOrDefault(x => x.Identifier == request.EducationId);
         if (education == null)
         {
             return Result.NotFound("Education not found.");
