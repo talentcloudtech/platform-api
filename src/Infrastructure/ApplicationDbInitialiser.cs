@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Platform.Domain.Entities;
+using Platform.Domain.Entities.Enums;
 
 namespace Platform.Infrastructure;
 
@@ -41,7 +44,7 @@ public class ApplicationDbInitializer : IHostedService
         var strategy = context.Database.CreateExecutionStrategy();
         _logger.LogInformation("Running migrations for {Context}", nameof(ApplicationDbContext));
         await strategy.ExecuteAsync(async () => await context.Database.MigrateAsync(cancellationToken: cancellationToken));
-        await context.Database.MigrateAsync(cancellationToken: cancellationToken);
+        await SeedDataAsync(context, cancellationToken);
 
         _logger.LogInformation("Migrations applied successfully");
     }
@@ -52,4 +55,27 @@ public class ApplicationDbInitializer : IHostedService
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
+    /// <summary>
+    /// Seeds the default data into the database.
+    /// </summary>
+    /// <param name="context">The application database context.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    private async Task SeedDataAsync(ApplicationDbContext context, CancellationToken cancellationToken)
+    {
+        if (!await context.Roles.AnyAsync(cancellationToken))
+        {
+            var roles = new List<ApplicationRole>
+            {
+                new ApplicationRole { Name = UserRole.Admin.Name, NormalizedName = UserRole.Admin.Name.ToUpperInvariant() },
+                new ApplicationRole { Name = UserRole.User.Name, NormalizedName = UserRole.User.Name.ToUpperInvariant() },
+                new ApplicationRole { Name = UserRole.Customer.Name, NormalizedName = UserRole.Customer.Name.ToUpperInvariant() },
+            };
+
+            await context.Roles.AddRangeAsync(roles, cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
+            _logger.LogInformation("Default roles seeded successfully");
+        }
+    }
 }
