@@ -45,9 +45,9 @@ public static class AccountEndpoints
             .AllowAnonymous();
 
         group
-            .MapPost(
+            .MapGet(
                 "/confirmEmail",
-                async (IMediator mediator, ConfirmEmailRequest request) =>
+                async (IMediator mediator, [AsParameters] ConfirmEmailRequest request) =>
                 {
                     var result = await mediator.Send(request);
                     return result.ToMinimalApiResult();
