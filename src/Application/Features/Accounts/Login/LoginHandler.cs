@@ -55,7 +55,6 @@ public class LoginHandler(
             {
                 return Result.Invalid(new ValidationError("User is locked out."));
             }
-            if(result.)
 
             return Result.Invalid(new ValidationError("Invalid credentials."));
         }
