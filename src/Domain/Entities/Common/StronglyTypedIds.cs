@@ -1,4 +1,5 @@
-﻿using StronglyTypedIds;
+﻿using System;
+using StronglyTypedIds;
 
 [assembly: StronglyTypedIdDefaults(Template.String, "string-efcore")]
 
@@ -74,5 +75,78 @@ public partial struct RefreshTokenId : IStringId
     public static implicit operator RefreshTokenId(string id)
     {
         return new RefreshTokenId(id);
+    }
+}
+
+/// <summary>
+/// Represents a strongly typed identifier for a skill.
+/// </summary>
+[StronglyTypedId]
+public partial struct SkillId : IStringId
+{
+    /// <summary>
+    /// Implicitly converts a id to a SkillId.
+    /// </summary>
+    /// <param name="id">The id value.</param>
+    /// <returns>A new instance of  SkillId.</returns>
+    public static implicit operator SkillId(string id)
+    {
+        return new SkillId(id);
+    }
+}
+
+/// <summary>
+/// Represents a strongly typed identifier for a experience.
+/// </summary>
+[StronglyTypedId]
+public partial struct ExperienceId : IStringId
+{
+    internal static ExperienceId New()
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Implicitly converts a id to a ExperienceId.
+    /// </summary>
+    /// <param name="id">The id value.</param>
+    /// <returns>A new instance of ExperienceId.</returns>
+    public static implicit operator ExperienceId(string id)
+    {
+        return new ExperienceId(id);
+    }
+}
+
+/// <summary>
+/// Represents a strongly typed identifier for a education.
+/// </summary>
+[StronglyTypedId]
+public partial struct EducationId : IStringId
+{
+    /// <summary>
+    /// Implicitly converts a id to a EducationId.
+    /// </summary>
+    /// <param name="id">The id value.</param>
+    /// <returns>A new instance of EducationId.</returns>
+    public static implicit operator EducationId(string id)
+    {
+        return new EducationId(id);
+    }
+}
+
+/// <summary>
+/// Represents a strongly typed identifier for a certification.
+/// </summary>
+[StronglyTypedId]
+public partial struct CertificationId : IStringId
+{
+    /// <summary>
+    /// Implicitly converts a id to a CertificationId.
+    /// </summary>
+    /// <param name="id">The id value.</param>
+    /// <returns>A new instance of CertificationId.</returns>
+    public static implicit operator CertificationId(string id)
+    {
+        return new CertificationId(id);
     }
 }

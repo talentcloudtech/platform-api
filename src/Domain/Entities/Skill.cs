@@ -1,17 +1,19 @@
+using Platform.Domain.Entities.Common;
+
 namespace Platform.Domain.Entities;
 
 /// <summary>
 /// Represents a set of skills.
 /// </summary>
-public class Skill
+public class Skill : Entity<SkillId>
 {
+    /// <summary>
+    /// Gets or sets the unique identifier of the skill.
+    /// </summary>
+    public override SkillId Id { get; set; } = CustomNewId.GenerateStandardId();
+
     /// <summary>
     /// Gets or sets the name.
     /// </summary>
     public required string Name { get; set; }
-
-    /// <summary>
-    /// Gets or sets the number of months of experience in the skill.
-    /// </summary>
-    public int MonthsOfExperience { get; set; }
 }

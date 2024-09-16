@@ -36,6 +36,11 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<Project> Projects { get; set; } = null!;
 
     /// <summary>
+    /// Gets or sets the skills DbSet.
+    /// </summary>
+    public DbSet<Skill> Skills { get; set; } = null!;
+
+    /// <summary>
     /// Gets or sets the Member profiles DbSet.
     /// </summary>
     public DbSet<MemberProfile> MemberProfiles { get; set; } = null!;

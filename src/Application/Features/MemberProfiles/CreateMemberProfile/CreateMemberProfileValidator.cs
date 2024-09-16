@@ -18,7 +18,5 @@ public class CreateMemberProfileValidator : AbstractValidator<CreateMemberProfil
         RuleFor(x => x.FullName).NotEmpty().MaximumLength(StringSizes.Title);
         RuleFor(x => x.ShortBio).NotEmpty().MaximumLength(StringSizes.Bio);
         RuleFor(x => x.Timezone).NotEmpty();
-        RuleFor(x => x.ProfilePictureUrl).NotEmpty();
-        RuleFor(x => x.ResumeFileUrl).NotEmpty();
     }
 }

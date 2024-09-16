@@ -1,4 +1,5 @@
 using System;
+using Platform.Domain.Entities.Common;
 
 namespace Platform.Domain.Entities;
 
@@ -7,6 +8,11 @@ namespace Platform.Domain.Entities;
 /// </summary>
 public class Education
 {
+    /// <summary>
+    /// Gets or sets the unique identifier of the education.
+    /// </summary>
+    public string Identifier { get; set; } = null!;
+
     /// <summary>
     /// Gets or sets the name of the educational institute.
     /// </summary>

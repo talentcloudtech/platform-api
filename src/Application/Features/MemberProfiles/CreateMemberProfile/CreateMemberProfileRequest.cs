@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Ardalis.Result;
 using MediatR;
-using Platform.Domain.Entities;
 
 namespace Platform.Application.Features.MemberProfiles.CreateMemberProfile;
 
@@ -26,11 +25,6 @@ public record CreateMemberProfileRequest : IRequest<Result<MemberProfileResponse
     public string? ShortBio { get; set; }
 
     /// <summary>
-    /// Gets or sets the URL of the profile picture.
-    /// </summary>
-    public string? ProfilePictureUrl { get; set; }
-
-    /// <summary>
     /// Gets or sets the subtitle or designation of the member.
     /// </summary>
     public string? Subtitle { get; set; }
@@ -51,37 +45,7 @@ public record CreateMemberProfileRequest : IRequest<Result<MemberProfileResponse
     public List<string>? Languages { get; set; }
 
     /// <summary>
-    /// Gets or sets the skills of the member.
-    /// </summary>
-    public List<Skill>? Skills { get; set; }
-
-    /// <summary>
-    /// Gets or sets the work experiences of the member.
-    /// </summary>
-    public List<Experience>? Experiences { get; set; }
-
-    /// <summary>
-    /// Gets or sets the educational background of the member.
-    /// </summary>
-    public List<Education>? Education { get; set; }
-
-    /// <summary>
-    /// Gets or sets the certifications of the member.
-    /// </summary>
-    public List<Certification>? Certifications { get; set; }
-
-    /// <summary>
-    /// Gets or sets the project info of the member.
-    /// </summary>
-    public List<ProjectInfo>? ProjectInfos { get; set; }
-
-    /// <summary>
     /// Gets or sets the external links associated with the member.
     /// </summary>
     public string[]? ExternalLinks { get; set; }
-
-    /// <summary>
-    /// Gets or sets the URL of the resume file.
-    /// </summary>
-    public string? ResumeFileUrl { get; set; }
 }

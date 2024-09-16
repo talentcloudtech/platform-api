@@ -251,6 +251,7 @@ namespace Platform.Migrations
                         .HasColumnType("character varying(500)");
 
                     b.Property<string[]>("ExternalLinks")
+                        .IsRequired()
                         .HasColumnType("text[]");
 
                     b.Property<string>("FullName")
@@ -258,6 +259,7 @@ namespace Platform.Migrations
                         .HasColumnType("character varying(200)");
 
                     b.Property<List<string>>("Languages")
+                        .IsRequired()
                         .HasColumnType("text[]");
 
                     b.Property<string>("ProfilePictureUrl")
@@ -341,6 +343,21 @@ namespace Platform.Migrations
                     b.ToTable("RefreshTokens");
                 });
 
+            modelBuilder.Entity("Platform.Domain.Entities.Skill", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Skills");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<Platform.Domain.Entities.Common.UserId>", b =>
                 {
                     b.HasOne("Platform.Domain.Entities.ApplicationRole", null)
@@ -412,6 +429,10 @@ namespace Platform.Migrations
                             b1.Property<DateTime?>("ExpiryDate")
                                 .HasColumnType("timestamp with time zone");
 
+                            b1.Property<string>("Identifier")
+                                .IsRequired()
+                                .HasColumnType("text");
+
                             b1.Property<DateTime>("IssuedDate")
                                 .HasColumnType("timestamp with time zone");
 
@@ -446,6 +467,10 @@ namespace Platform.Migrations
                             b1.Property<DateTime>("EndDate")
                                 .HasColumnType("timestamp with time zone");
 
+                            b1.Property<string>("Identifier")
+                                .IsRequired()
+                                .HasColumnType("text");
+
                             b1.Property<string>("InstituteName")
                                 .HasColumnType("text");
 
@@ -477,6 +502,10 @@ namespace Platform.Migrations
                             b1.Property<DateTime?>("EndDate")
                                 .HasColumnType("timestamp with time zone");
 
+                            b1.Property<string>("Identifier")
+                                .IsRequired()
+                                .HasColumnType("text");
+
                             b1.Property<string>("Industry")
                                 .HasColumnType("text");
 
@@ -491,6 +520,36 @@ namespace Platform.Migrations
                             b1.ToTable("MemberProfiles");
 
                             b1.ToJson("Experiences");
+
+                            b1.WithOwner()
+                                .HasForeignKey("MemberProfileId");
+                        });
+
+                    b.OwnsMany("Platform.Domain.Entities.MemberSkill", "Skills", b1 =>
+                        {
+                            b1.Property<string>("MemberProfileId")
+                                .HasColumnType("character varying(25)");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("Identifier")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<int>("MonthsOfExperience")
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("SkillId")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.HasKey("MemberProfileId", "Id");
+
+                            b1.ToTable("MemberProfiles");
+
+                            b1.ToJson("Skills");
 
                             b1.WithOwner()
                                 .HasForeignKey("MemberProfileId");
@@ -522,32 +581,6 @@ namespace Platform.Migrations
                             b1.ToTable("MemberProfiles");
 
                             b1.ToJson("ProjectInfos");
-
-                            b1.WithOwner()
-                                .HasForeignKey("MemberProfileId");
-                        });
-
-                    b.OwnsMany("Platform.Domain.Entities.Skill", "Skills", b1 =>
-                        {
-                            b1.Property<string>("MemberProfileId")
-                                .HasColumnType("character varying(25)");
-
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("integer");
-
-                            b1.Property<int>("MonthsOfExperience")
-                                .HasColumnType("integer");
-
-                            b1.Property<string>("Name")
-                                .IsRequired()
-                                .HasColumnType("text");
-
-                            b1.HasKey("MemberProfileId", "Id");
-
-                            b1.ToTable("MemberProfiles");
-
-                            b1.ToJson("Skills");
 
                             b1.WithOwner()
                                 .HasForeignKey("MemberProfileId");

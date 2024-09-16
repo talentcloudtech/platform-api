@@ -51,37 +51,37 @@ public class MemberProfile : Entity<UserId>
     /// <summary>
     /// Gets or sets the languages known by the member.
     /// </summary>
-    public List<string>? Languages { get; set; }
+    public List<string> Languages { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the skills of the member.
     /// </summary>
-    public List<Skill>? Skills { get; set; }
+    public List<MemberSkill> Skills { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the work experiences of the member.
     /// </summary>
-    public List<Experience>? Experiences { get; set; }
+    public List<Experience> Experiences { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the educational background of the member.
     /// </summary>
-    public List<Education>? Educations { get; set; }
+    public List<Education> Educations { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the certifications of the member.
     /// </summary>
-    public List<Certification>? Certifications { get; set; }
+    public List<Certification> Certifications { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the project info of the member.
     /// </summary>
-    public List<ProjectInfo>? ProjectInfos { get; set; }
+    public List<ProjectInfo> ProjectInfos { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the external links associated with the member.
     /// </summary>
-    public string[]? ExternalLinks { get; set; }
+    public string[] ExternalLinks { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the URL of the resume file.

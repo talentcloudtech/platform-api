@@ -1,0 +1,23 @@
+﻿using FluentValidation;
+
+namespace Platform.Application.Features.Experiences.CreateExperience;
+
+/// <summary>
+/// Validator for the <see cref="CreateExperienceRequest"/> class, ensuring that the necessary fields are provided and correctly formatted.
+/// </summary>
+public class CreateExperienceValidator : AbstractValidator<CreateExperienceRequest>
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CreateExperienceValidator"/> class.
+    /// </summary>
+    public CreateExperienceValidator()
+    {
+        RuleFor(x => x.CompanyName).NotEmpty().WithMessage("Company name is required.");
+        RuleFor(x => x.JobTitle).NotEmpty().WithMessage("Title is required.");
+        RuleFor(x => x.Industry).NotEmpty().WithMessage("Industry is required.");
+        RuleFor(x => x.StartDate).NotEmpty().WithMessage("Start date is required.");
+        RuleFor(x => x.EndDate)
+            .Must((request, endDate) => !endDate.HasValue || endDate.Value >= request.StartDate)
+            .WithMessage("End date must be greater than or equal to the start date.");
+    }
+}
