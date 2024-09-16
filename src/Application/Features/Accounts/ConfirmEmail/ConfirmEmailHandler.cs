@@ -13,7 +13,7 @@ namespace Platform.Application.Features.Accounts.ConfirmEmail;
 /// <summary>
 /// Handles the confirmation of an email address.
 /// </summary>
-public class ConfirmEmailHandler(UserManager<ApplicationUser> userManager, ILogger<ConfirmEmailHandler> logger) : IRequestHandler<ConfirmEmailRequest, Result>
+public class ConfirmEmailHandler(UserManager<ApplicationUser> userManager) : IRequestHandler<ConfirmEmailRequest, Result>
 {
     /// <summary>
     /// Handles the confirmation of an email address.
@@ -32,7 +32,7 @@ public class ConfirmEmailHandler(UserManager<ApplicationUser> userManager, ILogg
         var result = await userManager.ConfirmEmailAsync(user, request.Code);
         if (!result.Succeeded)
         {
-            return Result.Error(new ErrorList(result.Errors.Select(e => e.Description).ToList()));
+            return Result.Invalid(new ValidationError("Invalid confirmation code."));
         }
 
         return Result.Success();

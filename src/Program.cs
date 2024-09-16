@@ -90,7 +90,6 @@ app.MapFileStorageEndpoints();
 app.MapWebhookEndpoints();
 app.MapAccountEndpoints();
 
-
 app.MapGet("/", () => Results.Redirect("/swagger"));
 
 await app.RunAsync();
