@@ -6,6 +6,7 @@ using Ardalis.Result;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Platform.Api.Configurations;
+using Platform.Application.Common;
 using Platform.Domain.Entities;
 using Platform.Domain.Entities.Enums;
 
@@ -14,9 +15,10 @@ namespace Platform.Application.Features.Accounts.RegisterAccount;
 /// <summary>
 /// Handler for registering a new user account.
 /// </summary>
+/// <param name="context">The context.</param>
 /// <param name="userManager">The user manager to use for creating the user.</param>
 /// <param name="emailSender">The email sender to use for sending the confirmation email.</param>
-public class RegisterAccountHandler(UserManager<ApplicationUser> userManager, IEmailSender<ApplicationUser> emailSender)
+public class RegisterAccountHandler(IContext context, UserManager<ApplicationUser> userManager, IEmailSender<ApplicationUser> emailSender)
     : IRequestHandler<RegisterAccountRequest, Result>
 {
     /// <summary>
@@ -38,6 +40,11 @@ public class RegisterAccountHandler(UserManager<ApplicationUser> userManager, IE
 
         // assign role to user
         await userManager.AddToRoleAsync(user, UserRole.User.Name);
+
+        var memberProfile = new MemberProfile { Id = user.Id, UserName = user.UserName };
+
+        await context.MemberProfiles.AddAsync(memberProfile, cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
 
         // send email to user
         var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
