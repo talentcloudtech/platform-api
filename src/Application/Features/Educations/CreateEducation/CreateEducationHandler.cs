@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.Result;
@@ -31,6 +33,14 @@ public class CreateEducationHandler(IContext context) : IRequestHandler<CreateEd
             return Result.NotFound("Member profile not found.");
         }
 
+        var existEducation = memberProfile.Educations?.FirstOrDefault(predicate: x =>
+            x.InstitutionName?.ToLower().Trim() == request.InstitutionName?.ToLower().Trim() && x.Degree?.ToLower().Trim() == request.Degree?.ToLower().Trim()
+        );
+        if (existEducation != null)
+        {
+            return Result.Conflict("Duplicate education found");
+        }
+
         var newEducation = new Education
         {
             Identifier = CustomNewId.GenerateStandardId(),
@@ -40,6 +50,9 @@ public class CreateEducationHandler(IContext context) : IRequestHandler<CreateEd
             StartDate = request.StartDate,
             EndDate = request.EndDate,
         };
+
+        if (memberProfile.Educations == null)
+            memberProfile.Educations = new List<Education>();
 
         memberProfile.Educations?.Add(newEducation);
         await context.SaveChangesAsync(cancellationToken);

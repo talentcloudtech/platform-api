@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.Result;
@@ -31,12 +33,21 @@ public class CreateLanguageHandler(IContext context) : IRequestHandler<CreateLan
             return Result.NotFound("Member profile not found.");
         }
 
+        var existLanguage = memberProfile.Languages?.FirstOrDefault(x => x.Name?.ToLower().Trim() == request.Name?.ToLower().Trim());
+        if (existLanguage != null)
+        {
+            return Result.Conflict("Duplicate language found");
+        }
+
         var newLanguage = new Language
         {
             Identifier = CustomNewId.GenerateStandardId(),
             Name = request.Name,
             ProficiencyLevel = request.ProficiencyLevel,
         };
+
+        if (memberProfile.Languages == null)
+            memberProfile.Languages = new List<Language>();
 
         memberProfile.Languages?.Add(newLanguage);
         await context.SaveChangesAsync(cancellationToken);

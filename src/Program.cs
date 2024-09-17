@@ -1,9 +1,5 @@
-using System;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -13,8 +9,6 @@ using Platform.Api.Configurations;
 using Platform.API.Configurations;
 using Platform.Api.Endpoints;
 using Platform.API.Endpoints;
-using Platform.Domain.Entities;
-using Platform.Infrastructure;
 
 DotNetEnv.Env.Load();
 
@@ -96,6 +90,7 @@ app.MapMemberProfileEndpoints();
 app.MapFileStorageEndpoints();
 app.MapWebhookEndpoints();
 app.MapAccountEndpoints();
+app.MapSkillsEndpoints();
 
 // app.MapGroup("api/identity").WithTags("Identity").MapIdentityApi<ApplicationUser>();
 

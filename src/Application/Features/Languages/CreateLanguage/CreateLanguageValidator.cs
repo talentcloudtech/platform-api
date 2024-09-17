@@ -1,4 +1,5 @@
 using FluentValidation;
+using Platform.Application.Common;
 
 namespace Platform.Application.Features.Languages.CreateLanguage;
 
@@ -12,11 +13,7 @@ public class CreateLanguageValidator : AbstractValidator<CreateLanguageRequest>
     /// </summary>
     public CreateLanguageValidator()
     {
-        RuleFor(x => x.Name)
-            .NotEmpty()
-            .WithMessage("Language name is required.")
-            .MaximumLength(100)
-            .WithMessage("Language name must not exceed 100 characters.");
+        RuleFor(x => x.Name).NotEmpty().WithMessage("Language name is required.").MaximumLength(StringSizes.Title);
 
         RuleFor(x => x.ProficiencyLevel).IsInEnum().WithMessage("Invalid proficiency level.");
     }

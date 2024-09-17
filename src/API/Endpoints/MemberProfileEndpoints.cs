@@ -20,11 +20,16 @@ using Platform.Application.Features.MemberProfiles.GetMemberProfileById;
 using Platform.Application.Features.MemberProfiles.SearchMemberProfiles;
 using Platform.Application.Features.MemberProfiles.UpdateAvatar;
 using Platform.Application.Features.MemberProfiles.UpdateMemberProfile;
+using Platform.Application.Features.MemberSkills.CreateMemberSkill;
+using Platform.Application.Features.MemberSkills.DeleteMemberSkill;
+using Platform.Application.Features.MemberSkills.GetMemberSkillById;
+using Platform.Application.Features.MemberSkills.UpdateMemberSkill;
 using Platform.Application.Features.ProjectInfos.CreateProjectInfo;
 using Platform.Application.Features.ProjectInfos.DeleteProjectInfo;
 using Platform.Application.Features.ProjectInfos.GetProjectInfoById;
 using Platform.Application.Features.ProjectInfos.UpdateProjectInfo;
 using Platform.Domain.Auth.Interfaces;
+using Platform.Domain.Entities;
 using Platform.Domain.Entities.Common;
 
 namespace Platform.API.Endpoints;
@@ -109,8 +114,16 @@ public static class MemberProfileEndpoints
 
         // ProjectInfo endpoints
         group.MapGroup("projects").WithTags("ProjectInfo").MapProjectInfoEndpoints();
+
+        // MemberSkill endpoints
+        group.MapGroup("skills").WithTags("MemberSkill").MapMemberSkillEndpoints();
     }
 
+    /// <summary>
+    /// Maps the endpoints for experience.
+    /// </summary>
+    /// <param name="group">The route group builder.</param>
+    /// <returns>The route group builder with experience endpoints.</returns>
     private static RouteGroupBuilder MapExperienceEndpoints(this RouteGroupBuilder group)
     {
         group
@@ -160,6 +173,11 @@ public static class MemberProfileEndpoints
         return group;
     }
 
+    /// <summary>
+    /// Maps the endpoints for education.
+    /// </summary>
+    /// <param name="group">The route group builder.</param>
+    /// <returns>The route group builder with education endpoints.</returns>
     private static RouteGroupBuilder MapEducationEndpoints(this RouteGroupBuilder group)
     {
         group
@@ -208,6 +226,12 @@ public static class MemberProfileEndpoints
 
         return group;
     }
+
+    /// <summary>
+    /// Maps the endpoints for languages.
+    /// </summary>
+    /// <param name="group">The route group builder.</param>
+    /// <returns>The route group builder with language endpoints.</returns>
 
     private static RouteGroupBuilder MapLanguageEndpoints(this RouteGroupBuilder group)
     {
@@ -258,6 +282,11 @@ public static class MemberProfileEndpoints
         return group;
     }
 
+    /// <summary>
+    /// Maps the endpoints for project information.
+    /// </summary>
+    /// <param name="group">The route group builder.</param>
+    /// <returns></returns>
     private static RouteGroupBuilder MapProjectInfoEndpoints(this RouteGroupBuilder group)
     {
         group
@@ -303,6 +332,60 @@ public static class MemberProfileEndpoints
                 }
             )
             .WithSummary("Deletes a project from a member profile.");
+
+        return group;
+    }
+
+    /// <summary>
+    /// Maps the endpoints for member skills.
+    /// </summary>
+    /// <param name="group">The route group builder.</param>
+    /// <returns>The route group builder with member skill endpoints.</returns>
+    private static RouteGroupBuilder MapMemberSkillEndpoints(this RouteGroupBuilder group)
+    {
+        group
+            .MapGet(
+                "{memberSkillId}",
+                async (IMediator mediator, ICurrentSession currentSession, string memberSkillId) =>
+                {
+                    var result = await mediator.Send(new GetMemberSkillByIdRequest(currentSession.UserId, memberSkillId));
+                    return result.ToMinimalApiResult();
+                }
+            )
+            .WithSummary("Retrieves a specific skill for a member profile.");
+
+        group
+            .MapPost(
+                "/",
+                async (IMediator mediator, ICurrentSession currentSession, CreateMemberSkillRequest request) =>
+                {
+                    var result = await mediator.Send(request with { MemberProfileId = currentSession.UserId });
+                    return result.ToMinimalApiResult();
+                }
+            )
+            .WithSummary("Creates a new skill for a member profile.");
+
+        group
+            .MapPut(
+                "{memberSkillId}",
+                async (IMediator mediator, ICurrentSession currentSession, string memberSkillId, UpdateMemberSkillRequest request) =>
+                {
+                    var result = await mediator.Send(request with { MemberProfileId = currentSession.UserId, SkillId = memberSkillId });
+                    return result.ToMinimalApiResult();
+                }
+            )
+            .WithSummary("Updates a skill for a member profile.");
+
+        group
+            .MapDelete(
+                "{memberSkillId}",
+                async (IMediator mediator, ICurrentSession currentSession, string memberSkillId) =>
+                {
+                    var result = await mediator.Send(new DeleteMemberSkillRequest(currentSession.UserId, memberSkillId));
+                    return result.ToMinimalApiResult();
+                }
+            )
+            .WithSummary("Deletes a skill from a member profile.");
 
         return group;
     }

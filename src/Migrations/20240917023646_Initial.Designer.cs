@@ -13,7 +13,7 @@ using Platform.Infrastructure;
 namespace Platform.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240916162622_Initial")]
+    [Migration("20240917023646_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -571,6 +571,10 @@ namespace Platform.Migrations
                             b1.Property<int>("MonthsOfExperience")
                                 .HasColumnType("integer");
 
+                            b1.Property<string>("Name")
+                                .IsRequired()
+                                .HasColumnType("text");
+
                             b1.Property<string>("SkillId")
                                 .IsRequired()
                                 .HasColumnType("text");
@@ -593,6 +597,10 @@ namespace Platform.Migrations
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
                                 .HasColumnType("integer");
+
+                            b1.Property<string>("Identifier")
+                                .IsRequired()
+                                .HasColumnType("text");
 
                             b1.Property<string>("Link")
                                 .HasColumnType("text");

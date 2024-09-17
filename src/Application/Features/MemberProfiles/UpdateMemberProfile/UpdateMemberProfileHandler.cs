@@ -5,6 +5,7 @@ using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
+using Platform.Domain.Entities;
 
 namespace Platform.Application.Features.MemberProfiles.UpdateMemberProfile;
 
@@ -21,23 +22,36 @@ public class UpdateMemberProfileHandler(IContext context) : IRequestHandler<Upda
     /// <returns>The result of the update operation.</returns>
     public async Task<Result<MemberProfileResponse>> Handle(UpdateMemberProfileRequest request, CancellationToken cancellationToken)
     {
-        var originalMemberProfile = await context.MemberProfiles.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
-        if (originalMemberProfile is null)
-            return Result.NotFound();
+        MemberProfile? memberProfile = null;
+        memberProfile = await context.MemberProfiles.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+        if (memberProfile is null)
+        {
+            memberProfile = new MemberProfile
+            {
+                Id = request.Id,
+                FullName = request.FullName,
+                Subtitle = request.Subtitle,
+                ShortBio = request.ShortBio,
+                Address = request.Address,
+                Timezone = request.Timezone,
+                ExternalLinks = request.ExternalLinks,
+            };
 
-        var existingProfilePictureUrl = originalMemberProfile.ProfilePictureUrl;
-        var existingResumeFileUrl = originalMemberProfile.ResumeFileUrl;
+            context.MemberProfiles.Add(memberProfile);
+        }
+        else
+        {
+            memberProfile.FullName = request.FullName;
+            memberProfile.Subtitle = request.Subtitle;
+            memberProfile.ShortBio = request.ShortBio;
+            memberProfile.Address = request.Address;
+            memberProfile.Timezone = request.Timezone;
+            memberProfile.ExternalLinks = request.ExternalLinks;
 
-        originalMemberProfile.FullName = request.FullName;
-        originalMemberProfile.Subtitle = request.Subtitle;
-        originalMemberProfile.ShortBio = request.ShortBio;
-        originalMemberProfile.Address = request.Address;
-        originalMemberProfile.Timezone = request.Timezone;
-        originalMemberProfile.ExternalLinks = request.ExternalLinks;
-
-        context.MemberProfiles.Update(originalMemberProfile);
+            context.MemberProfiles.Update(memberProfile);
+        }
 
         await context.SaveChangesAsync(cancellationToken);
-        return originalMemberProfile.Adapt<MemberProfileResponse>();
+        return memberProfile.Adapt<MemberProfileResponse>();
     }
 }

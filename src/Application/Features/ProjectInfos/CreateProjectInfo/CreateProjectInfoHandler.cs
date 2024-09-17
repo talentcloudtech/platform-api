@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.Result;
@@ -40,6 +41,9 @@ public class CreateProjectInfoHandler(IContext context) : IRequestHandler<Create
             ShortDescription = request.ShortDescription,
             Technologies = request.Technologies,
         };
+
+        if (memberProfile.ProjectInfos == null)
+            memberProfile.ProjectInfos = new List<ProjectInfo>();
 
         memberProfile.ProjectInfos?.Add(project);
 

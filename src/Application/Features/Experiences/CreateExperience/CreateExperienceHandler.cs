@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.Result;
@@ -41,6 +42,8 @@ public class CreateExperienceHandler(IContext context) : IRequestHandler<CreateE
             StartDate = request.StartDate,
             EndDate = request.EndDate,
         };
+        if (memberProfile.Experiences == null)
+            memberProfile.Experiences = new List<Experience>();
 
         memberProfile.Experiences?.Add(newExperience);
         await context.SaveChangesAsync(cancellationToken);
