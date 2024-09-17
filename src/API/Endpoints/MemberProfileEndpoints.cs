@@ -29,7 +29,6 @@ using Platform.Application.Features.ProjectInfos.DeleteProjectInfo;
 using Platform.Application.Features.ProjectInfos.GetProjectInfoById;
 using Platform.Application.Features.ProjectInfos.UpdateProjectInfo;
 using Platform.Domain.Auth.Interfaces;
-using Platform.Domain.Entities;
 using Platform.Domain.Entities.Common;
 
 namespace Platform.API.Endpoints;
@@ -71,10 +70,10 @@ public static class MemberProfileEndpoints
 
         group
             .MapPut(
-                "{id}",
-                async (IMediator mediator, UserId id, UpdateMemberProfileRequest request) =>
+                "/",
+                async (IMediator mediator, ICurrentSession currentSession, UpdateMemberProfileRequest request) =>
                 {
-                    var result = await mediator.Send(request with { Id = id });
+                    var result = await mediator.Send(request with { Id = currentSession.UserId });
                     return result.ToMinimalApiResult();
                 }
             )
@@ -82,7 +81,7 @@ public static class MemberProfileEndpoints
 
         group
             .MapPatch(
-                "/",
+                "/avatar",
                 async (IMediator mediator, ICurrentSession currentSession, IFormFile file) =>
                 {
                     var result = await mediator.Send(new UpdateAvatarRequest { Id = currentSession.UserId, File = file });
@@ -94,10 +93,10 @@ public static class MemberProfileEndpoints
 
         group
             .MapDelete(
-                "{id}",
-                async (IMediator mediator, UserId id) =>
+                "/",
+                async (IMediator mediator, ICurrentSession currentSession) =>
                 {
-                    var result = await mediator.Send(new DeleteMemberProfileRequest(id));
+                    var result = await mediator.Send(new DeleteMemberProfileRequest(currentSession.UserId));
                     return result.ToMinimalApiResult();
                 }
             )
