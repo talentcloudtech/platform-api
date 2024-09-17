@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Platform.API.Configurations.OptionSetups;
 using Platform.Application.Common;
-using Platform.Application.Features.FileStorages.GenerateSasUri;
+using Platform.Application.Features.FileStorages.DeleteFile;
 using Platform.Domain.Entities.Common;
 
 namespace Platform.Application.Features.MemberProfiles.UpdateAvatar;
@@ -61,7 +61,8 @@ public class UpdateAvatarHandler : IRequestHandler<UpdateAvatarRequest, Result<s
         var fileName = CustomNewId.GenerateShortId() + fileExt;
 
         var containerClient = new BlobContainerClient(_azureBlobStorageOptions.ConnectionString, _azureBlobStorageOptions.ProfileContainer);
-        await containerClient.CreateIfNotExistsAsync(PublicAccessType.None);
+
+        await containerClient.CreateIfNotExistsAsync(PublicAccessType.Blob);
 
         var containerBlob = containerClient.GetBlobClient(fileName);
         await using (var stream = request.File.OpenReadStream())
@@ -69,11 +70,16 @@ public class UpdateAvatarHandler : IRequestHandler<UpdateAvatarRequest, Result<s
             await containerBlob.UploadAsync(stream, cancellationToken);
         }
 
+        var existingProfilePictureUrl = memberProfile.ProfilePictureUrl;
+
         memberProfile.ProfilePictureUrl = containerBlob.Uri.ToString();
         await context.SaveChangesAsync(cancellationToken);
 
-        var result = await mediator.Send(new GenerateSasUriRequest(containerBlob.Uri.ToString()), cancellationToken);
+        if (!string.IsNullOrEmpty(existingProfilePictureUrl))
+        {
+            var result = await mediator.Send(new DeleteFileRequest(existingProfilePictureUrl), cancellationToken);
+        }
 
-        return Result.Success(result);
+        return Result.Success(memberProfile.ProfilePictureUrl);
     }
 }
