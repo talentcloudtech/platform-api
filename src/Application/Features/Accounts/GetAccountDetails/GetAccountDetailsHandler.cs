@@ -39,15 +39,15 @@ public class GetAccountDetailsHandler : IRequestHandler<GetAccountDetailsRequest
             return Result.NotFound("User not found.");
         }
 
-        // Map the user and member profile data to the DTO
+        var nameParts = user.MemberProfile?.FullName?.Split(' ');
         var accountDetails = new GetAccountDetailsResponse
         {
             Id = user.Id,
             Email = user.Email,
             UserName = user.UserName,
             EmailConfirmed = user.EmailConfirmed,
-            FirstName = user.MemberProfile?.FullName?.Split(' ')[0],
-            LastName = user.MemberProfile?.FullName?.Split(' ')[1],
+            FirstName = nameParts?.Length > 0 ? nameParts[0] : null,
+            LastName = nameParts?.Length > 1 ? nameParts[1] : null,
             ProfilePictureUrl = user.MemberProfile?.ProfilePictureUrl,
         };
 

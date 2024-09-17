@@ -12,9 +12,7 @@ using Platform.Application.Features.Experiences.UpdateExperience;
 using Platform.Application.Features.Languages.CreateLanguage;
 using Platform.Application.Features.Languages.DeleteLanguage;
 using Platform.Application.Features.Languages.UpdateLanguage;
-using Platform.Application.Features.MemberProfiles.DeleteMemberProfile;
 using Platform.Application.Features.MemberProfiles.GetMemberProfileById;
-using Platform.Application.Features.MemberProfiles.SearchMemberProfiles;
 using Platform.Application.Features.MemberProfiles.UpdateAvatar;
 using Platform.Application.Features.MemberProfiles.UpdateMemberProfile;
 using Platform.Application.Features.MemberSkills.CreateMemberSkill;
@@ -24,7 +22,6 @@ using Platform.Application.Features.ProjectInfos.CreateProjectInfo;
 using Platform.Application.Features.ProjectInfos.DeleteProjectInfo;
 using Platform.Application.Features.ProjectInfos.UpdateProjectInfo;
 using Platform.Domain.Auth.Interfaces;
-using Platform.Domain.Entities.Common;
 
 namespace Platform.API.Endpoints;
 
@@ -41,23 +38,23 @@ public static class MemberProfileEndpoints
     {
         var group = builder.MapGroup("api/memberProfiles").WithTags("MemberProfile").RequireAuthorization();
 
-        group
-            .MapGet(
-                "/",
-                async (IMediator mediator, [AsParameters] SearchMemberProfilesRequest request) =>
-                {
-                    var result = await mediator.Send(request);
-                    return result;
-                }
-            )
-            .WithSummary("Searches for member profiles.");
+        //group
+        //    .MapGet(
+        //        "/",
+        //        async (IMediator mediator, [AsParameters] SearchMemberProfilesRequest request) =>
+        //        {
+        //            var result = await mediator.Send(request);
+        //            return result;
+        //        }
+        //    )
+        //    .WithSummary("Searches for member profiles.");
 
         group
             .MapGet(
-                "{id}",
-                async (IMediator mediator, UserId id) =>
+                "/",
+                async (IMediator mediator, ICurrentSession currentSession) =>
                 {
-                    var result = await mediator.Send(new GetMemberProfileByIdRequest(id));
+                    var result = await mediator.Send(new GetMemberProfileByIdRequest(currentSession.UserId));
                     return result.ToMinimalApiResult();
                 }
             )
@@ -85,17 +82,6 @@ public static class MemberProfileEndpoints
             )
             .WithSummary("Update user avatar.")
             .DisableAntiforgery();
-
-        group
-            .MapDelete(
-                "/",
-                async (IMediator mediator, ICurrentSession currentSession) =>
-                {
-                    var result = await mediator.Send(new DeleteMemberProfileRequest(currentSession.UserId));
-                    return result.ToMinimalApiResult();
-                }
-            )
-            .WithSummary("Deletes a member profile by its unique identifier.");
 
         // Experience endpoints
         group.MapGroup("experiences").WithTags("Experience").MapExperienceEndpoints();

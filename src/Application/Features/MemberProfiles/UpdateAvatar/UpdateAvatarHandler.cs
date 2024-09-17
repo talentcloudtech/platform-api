@@ -10,7 +10,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Platform.API.Configurations.OptionSetups;
 using Platform.Application.Common;
-using Platform.Application.Features.FileStorages.GenerateSasUri;
+using Platform.Application.Features.FileStorages.DeleteFile;
+using Platform.Domain.Entities;
 using Platform.Domain.Entities.Common;
 
 namespace Platform.Application.Features.MemberProfiles.UpdateAvatar;
@@ -18,7 +19,7 @@ namespace Platform.Application.Features.MemberProfiles.UpdateAvatar;
 /// <summary>
 /// Handles the request to update the avatar of a member.
 /// </summary>
-public class UpdateAvatarHandler : IRequestHandler<UpdateAvatarRequest, Result<string>>
+public class UpdateAvatarHandler : IRequestHandler<UpdateAvatarRequest, Result<UpdateAvatarResponse>>
 {
     private static readonly string[] AllowedExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".pdf" };
 
@@ -45,12 +46,14 @@ public class UpdateAvatarHandler : IRequestHandler<UpdateAvatarRequest, Result<s
     /// <param name="request">The request containing the member profile ID and the file to update.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The result of the operation.</returns>
-    public async Task<Result<string>> Handle(UpdateAvatarRequest request, CancellationToken cancellationToken)
+    public async Task<Result<UpdateAvatarResponse>> Handle(UpdateAvatarRequest request, CancellationToken cancellationToken)
     {
         var memberProfile = await context.MemberProfiles.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
         if (memberProfile == null)
         {
-            return Result.NotFound("Member profile not found.");
+            var currentUser = await context.Users.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+            memberProfile = new MemberProfile { Id = request.Id, UserName = currentUser?.UserName };
+            context.MemberProfiles.Add(memberProfile);
         }
 
         var fileExt = Path.GetExtension(request.File.FileName)?.ToLowerInvariant();
@@ -61,7 +64,8 @@ public class UpdateAvatarHandler : IRequestHandler<UpdateAvatarRequest, Result<s
         var fileName = CustomNewId.GenerateShortId() + fileExt;
 
         var containerClient = new BlobContainerClient(_azureBlobStorageOptions.ConnectionString, _azureBlobStorageOptions.ProfileContainer);
-        await containerClient.CreateIfNotExistsAsync(PublicAccessType.None);
+
+        await containerClient.CreateIfNotExistsAsync(PublicAccessType.Blob);
 
         var containerBlob = containerClient.GetBlobClient(fileName);
         await using (var stream = request.File.OpenReadStream())
@@ -69,11 +73,16 @@ public class UpdateAvatarHandler : IRequestHandler<UpdateAvatarRequest, Result<s
             await containerBlob.UploadAsync(stream, cancellationToken);
         }
 
+        var existingProfilePictureUrl = memberProfile.ProfilePictureUrl;
+
         memberProfile.ProfilePictureUrl = containerBlob.Uri.ToString();
         await context.SaveChangesAsync(cancellationToken);
 
-        var result = await mediator.Send(new GenerateSasUriRequest(containerBlob.Uri.ToString()), cancellationToken);
+        if (!string.IsNullOrEmpty(existingProfilePictureUrl))
+        {
+            var result = await mediator.Send(new DeleteFileRequest(existingProfilePictureUrl), cancellationToken);
+        }
 
-        return Result.Success(result);
+        return Result.Success(new UpdateAvatarResponse { FileUrl = memberProfile.ProfilePictureUrl });
     }
 }

@@ -24,11 +24,13 @@ public class UpdateMemberProfileHandler(IContext context) : IRequestHandler<Upda
     {
         MemberProfile? memberProfile = null;
         memberProfile = await context.MemberProfiles.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+        var currentUser = await context.Users.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
         if (memberProfile is null)
         {
             memberProfile = new MemberProfile
             {
                 Id = request.Id,
+                UserName = currentUser?.UserName,
                 FullName = request.FullName,
                 Subtitle = request.Subtitle,
                 ShortBio = request.ShortBio,
@@ -36,7 +38,6 @@ public class UpdateMemberProfileHandler(IContext context) : IRequestHandler<Upda
                 Timezone = request.Timezone,
                 ExternalLinks = request.ExternalLinks,
             };
-
             context.MemberProfiles.Add(memberProfile);
         }
         else
