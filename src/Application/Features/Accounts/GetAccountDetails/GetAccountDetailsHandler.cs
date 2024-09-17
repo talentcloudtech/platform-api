@@ -38,7 +38,7 @@ public class GetAccountDetailsHandler : IRequestHandler<GetAccountDetailsRequest
         {
             return Result.NotFound("User not found.");
         }
-        
+
         var nameParts = user.MemberProfile?.FullName?.Split(' ');
         var accountDetails = new GetAccountDetailsResponse
         {
