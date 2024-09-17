@@ -5,15 +5,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Platform.Application.Features.Educations.CreateEducation;
 using Platform.Application.Features.Educations.DeleteEducation;
-using Platform.Application.Features.Educations.GetEducationById;
 using Platform.Application.Features.Educations.UpdateEducation;
 using Platform.Application.Features.Experiences.CreateExperience;
 using Platform.Application.Features.Experiences.DeleteExperience;
-using Platform.Application.Features.Experiences.GetExperienceById;
 using Platform.Application.Features.Experiences.UpdateExperience;
 using Platform.Application.Features.Languages.CreateLanguage;
 using Platform.Application.Features.Languages.DeleteLanguage;
-using Platform.Application.Features.Languages.GetLanguageById;
 using Platform.Application.Features.Languages.UpdateLanguage;
 using Platform.Application.Features.MemberProfiles.DeleteMemberProfile;
 using Platform.Application.Features.MemberProfiles.GetMemberProfileById;
@@ -22,11 +19,9 @@ using Platform.Application.Features.MemberProfiles.UpdateAvatar;
 using Platform.Application.Features.MemberProfiles.UpdateMemberProfile;
 using Platform.Application.Features.MemberSkills.CreateMemberSkill;
 using Platform.Application.Features.MemberSkills.DeleteMemberSkill;
-using Platform.Application.Features.MemberSkills.GetMemberSkillById;
 using Platform.Application.Features.MemberSkills.UpdateMemberSkill;
 using Platform.Application.Features.ProjectInfos.CreateProjectInfo;
 using Platform.Application.Features.ProjectInfos.DeleteProjectInfo;
-using Platform.Application.Features.ProjectInfos.GetProjectInfoById;
 using Platform.Application.Features.ProjectInfos.UpdateProjectInfo;
 using Platform.Domain.Auth.Interfaces;
 using Platform.Domain.Entities.Common;
@@ -126,17 +121,6 @@ public static class MemberProfileEndpoints
     private static RouteGroupBuilder MapExperienceEndpoints(this RouteGroupBuilder group)
     {
         group
-            .MapGet(
-                "{experienceId}",
-                async (IMediator mediator, ICurrentSession currentSession, string experienceId) =>
-                {
-                    var result = await mediator.Send(new GetExperienceByIdRequest(currentSession.UserId, experienceId));
-                    return result.ToMinimalApiResult();
-                }
-            )
-            .WithSummary("Retrieves a specific experience for a member profile.");
-
-        group
             .MapPost(
                 "/",
                 async (IMediator mediator, ICurrentSession currentSession, CreateExperienceRequest request) =>
@@ -179,17 +163,6 @@ public static class MemberProfileEndpoints
     /// <returns>The route group builder with education endpoints.</returns>
     private static RouteGroupBuilder MapEducationEndpoints(this RouteGroupBuilder group)
     {
-        group
-            .MapGet(
-                "{educationId}",
-                async (IMediator mediator, ICurrentSession currentSession, string educationId) =>
-                {
-                    var result = await mediator.Send(new GetEducationByIdRequest(currentSession.UserId, educationId));
-                    return result.ToMinimalApiResult();
-                }
-            )
-            .WithSummary("Retrieves a specific education for a member profile.");
-
         group
             .MapPost(
                 "/",
@@ -235,17 +208,6 @@ public static class MemberProfileEndpoints
     private static RouteGroupBuilder MapLanguageEndpoints(this RouteGroupBuilder group)
     {
         group
-            .MapGet(
-                "{languageId}",
-                async (IMediator mediator, ICurrentSession currentSession, string languageId) =>
-                {
-                    var result = await mediator.Send(new GetLanguageByIdRequest(currentSession.UserId, languageId));
-                    return result.ToMinimalApiResult();
-                }
-            )
-            .WithSummary("Retrieves a specific language for a member profile.");
-
-        group
             .MapPost(
                 "/",
                 async (IMediator mediator, ICurrentSession currentSession, CreateLanguageRequest request) =>
@@ -289,17 +251,6 @@ public static class MemberProfileEndpoints
     private static RouteGroupBuilder MapProjectInfoEndpoints(this RouteGroupBuilder group)
     {
         group
-            .MapGet(
-                "{projectId}",
-                async (IMediator mediator, ICurrentSession currentSession, string projectId) =>
-                {
-                    var result = await mediator.Send(new GetProjectInfoByIdRequest(currentSession.UserId, projectId));
-                    return result.ToMinimalApiResult();
-                }
-            )
-            .WithSummary("Retrieves a specific project for a member profile.");
-
-        group
             .MapPost(
                 "/",
                 async (IMediator mediator, ICurrentSession currentSession, CreateProjectInfoRequest request) =>
@@ -342,17 +293,6 @@ public static class MemberProfileEndpoints
     /// <returns>The route group builder with member skill endpoints.</returns>
     private static RouteGroupBuilder MapMemberSkillEndpoints(this RouteGroupBuilder group)
     {
-        group
-            .MapGet(
-                "{memberSkillId}",
-                async (IMediator mediator, ICurrentSession currentSession, string memberSkillId) =>
-                {
-                    var result = await mediator.Send(new GetMemberSkillByIdRequest(currentSession.UserId, memberSkillId));
-                    return result.ToMinimalApiResult();
-                }
-            )
-            .WithSummary("Retrieves a specific skill for a member profile.");
-
         group
             .MapPost(
                 "/",
