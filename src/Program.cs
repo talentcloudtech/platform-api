@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -54,16 +55,7 @@ if (builder.Environment.EnvironmentName != "Testing")
     builder.AddOpenTelemetrySetup();
 }
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(
-        "AllowAll",
-        policy =>
-        {
-            policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-        }
-    );
-});
+builder.Services.AddCors(options => options.AddDefaultPolicy(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
 var app = builder.Build();
 
@@ -76,14 +68,15 @@ if (app.Environment.IsDevelopment())
 app.UseRouting();
 
 app.UseSwaggerSetup();
+app.UseForwardedHeaders(new ForwardedHeadersOptions { ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto });
+
 app.UseHsts();
 app.UseResponseCompression();
 app.UseHttpsRedirection();
 
+app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.UseCors("AllowAll");
 
 app.MapProjectEndpoints();
 app.MapMemberProfileEndpoints();
@@ -91,8 +84,6 @@ app.MapFileStorageEndpoints();
 app.MapWebhookEndpoints();
 app.MapAccountEndpoints();
 app.MapSkillsEndpoints();
-
-// app.MapGroup("api/identity").WithTags("Identity").MapIdentityApi<ApplicationUser>();
 
 app.MapGet("/", () => Results.Redirect("/swagger"));
 

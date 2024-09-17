@@ -1,8 +1,11 @@
+using System;
+using System.Linq;
 using Ardalis.Result.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Platform.Api.Configurations;
 using Platform.Application.Features.Accounts.ConfirmEmail;
 using Platform.Application.Features.Accounts.DeleteAccount;
 using Platform.Application.Features.Accounts.ForgotPassword;
@@ -50,7 +53,14 @@ public static class AccountEndpoints
                 async (IMediator mediator, [AsParameters] ConfirmEmailRequest request) =>
                 {
                     var result = await mediator.Send(request);
-                    return result.ToMinimalApiResult();
+                    if (result.IsSuccess)
+                    {
+                        return Results.Redirect(EnvironmentVariables.FrontendUrl);
+                    }
+                    else
+                    {
+                        return Results.BadRequest(result.Errors.Select(x => x).ToArray());
+                    }
                 }
             )
             .WithSummary("Confirm email.")
