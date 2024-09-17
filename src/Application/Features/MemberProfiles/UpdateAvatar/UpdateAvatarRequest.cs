@@ -8,7 +8,7 @@ namespace Platform.Application.Features.MemberProfiles.UpdateAvatar;
 /// <summary>
 /// Represents a request to update the avatar.
 /// </summary>
-public record UpdateAvatarRequest : IRequest<Result<string>>
+public record UpdateAvatarRequest : IRequest<Result<UpdateAvatarResponse>>
 {
     /// <summary>
     /// Get or set user id

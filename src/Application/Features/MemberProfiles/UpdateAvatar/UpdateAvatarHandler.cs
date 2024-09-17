@@ -18,7 +18,7 @@ namespace Platform.Application.Features.MemberProfiles.UpdateAvatar;
 /// <summary>
 /// Handles the request to update the avatar of a member.
 /// </summary>
-public class UpdateAvatarHandler : IRequestHandler<UpdateAvatarRequest, Result<string>>
+public class UpdateAvatarHandler : IRequestHandler<UpdateAvatarRequest, Result<UpdateAvatarResponse>>
 {
     private static readonly string[] AllowedExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".pdf" };
 
@@ -45,7 +45,7 @@ public class UpdateAvatarHandler : IRequestHandler<UpdateAvatarRequest, Result<s
     /// <param name="request">The request containing the member profile ID and the file to update.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The result of the operation.</returns>
-    public async Task<Result<string>> Handle(UpdateAvatarRequest request, CancellationToken cancellationToken)
+    public async Task<Result<UpdateAvatarResponse>> Handle(UpdateAvatarRequest request, CancellationToken cancellationToken)
     {
         var memberProfile = await context.MemberProfiles.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
         if (memberProfile == null)
@@ -80,6 +80,6 @@ public class UpdateAvatarHandler : IRequestHandler<UpdateAvatarRequest, Result<s
             var result = await mediator.Send(new DeleteFileRequest(existingProfilePictureUrl), cancellationToken);
         }
 
-        return Result.Success(memberProfile.ProfilePictureUrl);
+        return Result.Success(new UpdateAvatarResponse { FileUrl = memberProfile.ProfilePictureUrl });
     }
 }
