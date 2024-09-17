@@ -51,12 +51,12 @@ public class MemberProfile : Entity<UserId>
     /// <summary>
     /// Gets or sets the languages known by the member.
     /// </summary>
-    public List<string>? Languages { get; set; }
+    public List<Language>? Languages { get; set; }
 
     /// <summary>
     /// Gets or sets the skills of the member.
     /// </summary>
-    public List<Skill>? Skills { get; set; }
+    public List<MemberSkill>? Skills { get; set; }
 
     /// <summary>
     /// Gets or sets the work experiences of the member.

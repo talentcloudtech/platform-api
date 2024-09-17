@@ -1,0 +1,47 @@
+using Ardalis.Result.AspNetCore;
+using MediatR;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
+using Platform.Application.Features.Skills.CreateSkill;
+using Platform.Application.Features.Skills.SearchSkills;
+using Platform.Domain.Auth.Interfaces;
+
+namespace Platform.API.Endpoints;
+
+/// <summary>
+/// Represents the endpoints for skills.
+/// </summary>
+public static class SkillEndpoints
+{
+    /// <summary>
+    /// Maps the endpoints for skills.
+    /// </summary>
+    /// <param name="builder">The endpoint route builder.</param>
+    public static void MapSkillsEndpoints(this IEndpointRouteBuilder builder)
+    {
+        var group = builder.MapGroup("api/skills").WithTags("Skills").RequireAuthorization();
+
+        group
+            .MapGet(
+                "/",
+                async (IMediator mediator, [AsParameters] SearchSkillsRequest request) =>
+                {
+                    var result = await mediator.Send(request);
+                    return result;
+                }
+            )
+            .WithSummary("Searches for skills.");
+
+        group
+            .MapPost(
+                "/",
+                async (IMediator mediator, ICurrentSession session, CreateSkillRequest request) =>
+                {
+                    var result = await mediator.Send(request);
+                    return result.ToMinimalApiResult();
+                }
+            )
+            .WithSummary("Creates a skill.");
+    }
+}

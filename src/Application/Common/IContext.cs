@@ -38,6 +38,11 @@ public interface IContext : IDataProtectionKeyContext, IAsyncDisposable, IDispos
     /// </summary>
     public DbSet<MemberProfile> MemberProfiles { get; }
 
+    /// <summary>
+    /// Gets or sets the skill DbSet.
+    /// </summary>
+    public DbSet<Skill> Skills { get; }
+
     // /// <summary>
     // /// Gets or sets the DbSet of ProjectUser entities.
     // /// </summary>

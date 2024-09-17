@@ -6,6 +6,21 @@
 public static class StringSizes
 {
     /// <summary>
+    /// The maximum size for a small string.
+    /// </summary>
+    public const int Small = 25;
+
+    /// <summary>
+    /// The maximum size for a short string.
+    /// </summary>
+    public const int Short = 50;
+
+    /// <summary>
+    /// The maximum size for a medium string.
+    /// </summary>
+    public const int Medium = 100;
+
+    /// <summary>
     /// The maximum string size.
     /// </summary>
     public const int Max = 4000;

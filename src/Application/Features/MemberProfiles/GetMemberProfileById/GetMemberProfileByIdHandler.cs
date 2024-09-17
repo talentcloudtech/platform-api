@@ -11,19 +11,8 @@ namespace Platform.Application.Features.MemberProfiles.GetMemberProfileById;
 /// <summary>
 /// Handles the request to retrieve a member profile by its unique identifier.
 /// </summary>
-public class GetMemberProfileByIdHandler : IRequestHandler<GetMemberProfileByIdRequest, Result<MemberProfileResponse>>
+public class GetMemberProfileByIdHandler(IContext context) : IRequestHandler<GetMemberProfileByIdRequest, Result<MemberProfileResponse>>
 {
-    private readonly IContext _context;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="GetMemberProfileByIdHandler"/> class.
-    /// </summary>
-    /// <param name="context">The database context used to access member profile.</param>
-    public GetMemberProfileByIdHandler(IContext context)
-    {
-        _context = context;
-    }
-
     /// <summary>
     /// Handles the retrieval of a member profile by its ID.
     /// </summary>
@@ -35,7 +24,7 @@ public class GetMemberProfileByIdHandler : IRequestHandler<GetMemberProfileByIdR
     /// </returns>
     public async Task<Result<MemberProfileResponse>> Handle(GetMemberProfileByIdRequest request, CancellationToken cancellationToken)
     {
-        var memberProfile = await _context.MemberProfiles.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken: cancellationToken);
+        var memberProfile = await context.MemberProfiles.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken: cancellationToken);
 
         if (memberProfile is null)
             return Result.NotFound();

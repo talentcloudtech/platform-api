@@ -83,6 +83,7 @@ app.MapMemberProfileEndpoints();
 app.MapFileStorageEndpoints();
 app.MapWebhookEndpoints();
 app.MapAccountEndpoints();
+app.MapSkillsEndpoints();
 
 app.MapGet("/", () => Results.Redirect("/swagger"));
 
