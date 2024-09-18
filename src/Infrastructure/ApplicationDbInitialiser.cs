@@ -62,7 +62,22 @@ public class ApplicationDbInitializer : IHostedService
     /// <returns>A task representing the asynchronous operation.</returns>
     private async Task SeedDataAsync(ApplicationDbContext context, CancellationToken cancellationToken)
     {
-        await RoleData.SeedAsync(context, cancellationToken);
-        await SkillData.SeedAsync(context, cancellationToken);
+        using (var transaction = context.Database.BeginTransaction())
+        {
+            try
+            {
+                await RoleData.SeedAsync(context, _logger, cancellationToken);
+                await SkillData.SeedAsync(context, _logger, cancellationToken);
+
+                await transaction.CommitAsync(cancellationToken);
+                await transaction.DisposeAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred during data seeding. Rolling back transaction.");
+                await transaction.RollbackAsync(cancellationToken);
+                await transaction.DisposeAsync();
+            }
+        }
     }
 }

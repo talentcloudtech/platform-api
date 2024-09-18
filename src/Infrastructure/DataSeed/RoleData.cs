@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Platform.Domain.Entities;
 using Platform.Domain.Entities.Enums;
 
@@ -16,9 +17,10 @@ public static class RoleData
     /// Seeds the role data.
     /// </summary>
     /// <param name="context">The application database context.</param>
+    /// <param name="logger">The logger.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The task completed.</returns>
-    public static async Task SeedAsync(ApplicationDbContext context, CancellationToken cancellationToken)
+    public static async Task SeedAsync(ApplicationDbContext context, ILogger logger, CancellationToken cancellationToken)
     {
         if (!await context.Roles.AnyAsync(cancellationToken))
         {
@@ -30,6 +32,7 @@ public static class RoleData
             };
             await context.Roles.AddRangeAsync(roles, cancellationToken);
             await context.SaveChangesAsync(cancellationToken);
+            logger.LogInformation("Role data seeding completed successfully.");
         }
     }
 }

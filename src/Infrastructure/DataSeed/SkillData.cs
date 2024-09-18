@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Platform.Domain.Entities;
 
 namespace Platform.Infrastructure.DataSeed;
@@ -15,15 +17,21 @@ public static class SkillData
     /// Seeds the skill data.
     /// </summary>
     /// <param name="context">The application database context.</param>
+    /// <param name="logger">The logger.</param>
     /// <param name="cancellationToken">The cancellation token</param>
     /// <returns>the task completed</returns>
-    public static async Task SeedAsync(ApplicationDbContext context, CancellationToken cancellationToken)
+    public static async Task SeedAsync(ApplicationDbContext context, ILogger logger, CancellationToken cancellationToken)
     {
-        if (!await context.Skills.AnyAsync(cancellationToken))
+        var skills = GetSkills();
+        var existingSkillIds = await context.Skills.Select(s => s.Id).ToListAsync(cancellationToken);
+
+        var newSkills = skills.Where(s => !existingSkillIds.Contains(s.Id)).ToList();
+
+        if (newSkills.Any())
         {
-            var skills = GetSkills();
-            await context.Skills.AddRangeAsync(skills, cancellationToken);
+            await context.Skills.AddRangeAsync(newSkills, cancellationToken);
             await context.SaveChangesAsync(cancellationToken);
+            logger.LogInformation("Role data seeding completed successfully.");
         }
     }
 
