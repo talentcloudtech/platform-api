@@ -20,21 +20,16 @@ public partial class SkillNameUnique : Migration
             oldClrType: typeof(string),
             oldType: "character varying(100)",
             oldMaxLength: 100,
-            oldNullable: true);
+            oldNullable: true
+        );
 
-        migrationBuilder.CreateIndex(
-            name: "IX_Skills_Name",
-            table: "Skills",
-            column: "Name",
-            unique: true);
+        migrationBuilder.CreateIndex(name: "IX_Skills_Name", table: "Skills", column: "Name", unique: true);
     }
 
     /// <inheritdoc />
     protected override void Down(MigrationBuilder migrationBuilder)
     {
-        migrationBuilder.DropIndex(
-            name: "IX_Skills_Name",
-            table: "Skills");
+        migrationBuilder.DropIndex(name: "IX_Skills_Name", table: "Skills");
 
         migrationBuilder.AlterColumn<string>(
             name: "Key",
@@ -44,6 +39,7 @@ public partial class SkillNameUnique : Migration
             nullable: true,
             oldClrType: typeof(string),
             oldType: "character varying(100)",
-            oldMaxLength: 100);
+            oldMaxLength: 100
+        );
     }
 }

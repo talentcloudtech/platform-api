@@ -1,13 +1,14 @@
-using Ardalis.Result;
 using System.Collections.Generic;
 using System.Linq;
+using Ardalis.Result;
 
 namespace Platform.Application.Common.Responses;
 
 /// <summary>
 /// Represents an API response with a result and optional pagination information.
 /// </summary>
-public class ApiResponse<T> where T : class
+public class ApiResponse<T>
+    where T : class
 {
     /// <summary>
     /// Gets or sets a value indicating whether the API response is successful.
@@ -37,7 +38,7 @@ public class ApiResponse<T> where T : class
             {
                 Data = result.Value,
                 Success = true,
-                Errors = null
+                Errors = null,
             };
         }
 
@@ -47,18 +48,16 @@ public class ApiResponse<T> where T : class
             {
                 Data = default,
                 Success = false,
-                Errors = result.ValidationErrors.Select(e => new Dictionary<string, string[]> { { StringUtility.ToCamelCase(e.Identifier), new[] { e.ErrorMessage } } }).ToList()
+                Errors = result
+                    .ValidationErrors.Select(e => new Dictionary<string, string[]> { { StringUtility.ToCamelCase(e.Identifier), new[] { e.ErrorMessage } } })
+                    .ToList(),
             };
         }
         return new ApiResponse<T>
         {
             Data = default,
             Success = false,
-            Errors = result.Errors.Select(e => new Dictionary<string, string[]> { { "message", new[] { e } } }).ToList()
+            Errors = result.Errors.Select(e => new Dictionary<string, string[]> { { "message", new[] { e } } }).ToList(),
         };
-
-
     }
-
-
 }

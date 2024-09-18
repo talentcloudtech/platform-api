@@ -18,7 +18,8 @@ namespace Platform.Migrations
                 nullable: true,
                 oldClrType: typeof(string),
                 oldType: "character varying(100)",
-                oldMaxLength: 100);
+                oldMaxLength: 100
+            );
         }
 
         /// <inheritdoc />
@@ -34,7 +35,8 @@ namespace Platform.Migrations
                 oldClrType: typeof(string),
                 oldType: "character varying(100)",
                 oldMaxLength: 100,
-                oldNullable: true);
+                oldNullable: true
+            );
         }
     }
 }

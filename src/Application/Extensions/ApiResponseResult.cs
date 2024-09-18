@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Platform.Application.Common;
 using Platform.Application.Common.Responses;
+
 namespace Platform.Application.Extensions;
 
 /// <summary>
@@ -20,14 +20,16 @@ public static partial class ApiResponseResultExtensions
     /// <typeparam name="T">The value being returned</typeparam>
     /// <param name="result">The Ardalis.Result to convert to an Microsoft.AspNetCore.Http.IResult</param>
     /// <returns></returns>
-    public static Microsoft.AspNetCore.Http.IResult ToPlatformApiResult<T>(this Ardalis.Result.Result<T> result) => ToPlatformApiResult((Ardalis.Result.IResult)result);
+    public static Microsoft.AspNetCore.Http.IResult ToPlatformApiResult<T>(this Ardalis.Result.Result<T> result) =>
+        ToPlatformApiResult((Ardalis.Result.IResult)result);
 
     /// <summary>
     /// Convert a <see cref="Ardalis.Result.Result"/> to an instance of <see cref="Microsoft.AspNetCore.Http.IResult"/>
     /// </summary>
     /// <param name="result">The Ardalis.Result to convert to an Microsoft.AspNetCore.Http.IResult</param>
     /// <returns></returns>
-    public static Microsoft.AspNetCore.Http.IResult ToPlatformApiResult(this Ardalis.Result.Result result) => ToPlatformApiResult((Ardalis.Result.IResult)result);
+    public static Microsoft.AspNetCore.Http.IResult ToPlatformApiResult(this Ardalis.Result.Result result) =>
+        ToPlatformApiResult((Ardalis.Result.IResult)result);
 
     internal static Microsoft.AspNetCore.Http.IResult ToPlatformApiResult(this Ardalis.Result.IResult result) =>
         result.Status switch
@@ -68,13 +70,15 @@ public static partial class ApiResponseResultExtensions
         var details = new List<Dictionary<string, string[]>> { new() { { "message", new[] { result.Errors.FirstOrDefault() ?? "Bad request." } } } };
         if (result.ValidationErrors.Any())
         {
-            details = result.ValidationErrors.Select(e => new Dictionary<string, string[]> { { StringUtility.ToCamelCase(e.Identifier), new[] { e.ErrorMessage } } }).ToList();
+            details = result
+                .ValidationErrors.Select(e => new Dictionary<string, string[]> { { StringUtility.ToCamelCase(e.Identifier), new[] { e.ErrorMessage } } })
+                .ToList();
         }
-        return Results.Json(new ApiResponse<string>
-        {
-            Success = false,
-            Errors = details
-        }, statusCode: StatusCodes.Status400BadRequest, contentType: "application/json");
+        return Results.Json(
+            new ApiResponse<string> { Success = false, Errors = details },
+            statusCode: StatusCodes.Status400BadRequest,
+            contentType: "application/json"
+        );
     }
 
     private static Microsoft.AspNetCore.Http.IResult UnprocessableEntity(Ardalis.Result.IResult result)
@@ -91,7 +95,6 @@ public static partial class ApiResponseResultExtensions
     {
         return ToHttpResults(result, StatusCodes.Status409Conflict, "Resource already exists.");
     }
-
 
     private static Microsoft.AspNetCore.Http.IResult CriticalEntity(Ardalis.Result.IResult result)
     {
@@ -122,11 +125,6 @@ public static partial class ApiResponseResultExtensions
             details.Add(new Dictionary<string, string[]> { { "message", result.Errors.ToArray() } });
         }
 
-        return Results.Json(new ApiResponse<string>
-        {
-            Success = false,
-            Errors = details
-        }, statusCode: statusCode, contentType: "application/json");
+        return Results.Json(new ApiResponse<string> { Success = false, Errors = details }, statusCode: statusCode, contentType: "application/json");
     }
 }
-

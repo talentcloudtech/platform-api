@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using EntityFramework.Exceptions.Common;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -6,10 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Platform.Application.Common.Responses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Platform.Api.Configurations;
 
@@ -79,26 +79,18 @@ public class GlobalExceptionHandlerMiddleware
                 context.Response.StatusCode = 400;
             }
 
-            var errors = new List<Dictionary<string, string[]>>
-                {
-                    new() {
-                        { "message", new[] { message } }
-                    }
-                };
+            var errors = new List<Dictionary<string, string[]>> { new() { { "message", new[] { message } } } };
 
             if (_env.IsDevelopment())
             {
-                errors.Add(new Dictionary<string, string[]>
-                    {
-                        { "stackTrace", new[] { ex.StackTrace ?? string.Empty } }
-                    });
+                errors.Add(new Dictionary<string, string[]> { { "stackTrace", new[] { ex.StackTrace ?? string.Empty } } });
             }
 
             var response = new ApiResponse<object>
             {
                 Success = false,
                 Data = null,
-                Errors = errors
+                Errors = errors,
             };
 
             await context.Response.WriteAsJsonAsync(response);
