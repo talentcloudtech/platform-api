@@ -35,11 +35,7 @@ public class RegisterAccountHandler(IContext context, UserManager<ApplicationUse
 
         if (!result.Succeeded)
         {
-            return Result.Invalid(result.Errors.Select(e => new ValidationError
-            {
-                Identifier = "root",
-                ErrorMessage = e.Description
-            }));
+            return Result.Invalid(result.Errors.Select(e => new ValidationError { Identifier = "root", ErrorMessage = e.Description }));
         }
 
         // assign role to user

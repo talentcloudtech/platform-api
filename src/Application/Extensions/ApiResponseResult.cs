@@ -70,7 +70,8 @@ public static partial class ApiResponseResultExtensions
         Dictionary<string, string[]> groupedErrors;
         if (result.ValidationErrors.Any())
         {
-            groupedErrors = result.ValidationErrors.GroupBy(e => e.Identifier)
+            groupedErrors = result
+                .ValidationErrors.GroupBy(e => e.Identifier)
                 .ToDictionary(g => StringUtility.ToCamelCase(g.Key), g => g.Select(e => e.ErrorMessage).ToArray());
         }
         else
@@ -125,7 +126,8 @@ public static partial class ApiResponseResultExtensions
         Dictionary<string, string[]> groupedErrors;
         if (result.ValidationErrors.Any())
         {
-            groupedErrors = result.ValidationErrors.GroupBy(e => e.Identifier)
+            groupedErrors = result
+                .ValidationErrors.GroupBy(e => e.Identifier)
                 .ToDictionary(g => StringUtility.ToCamelCase(g.Key), g => g.Select(e => e.ErrorMessage).ToArray());
         }
         if (result.Errors.Any())
