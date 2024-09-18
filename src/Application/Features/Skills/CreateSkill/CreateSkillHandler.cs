@@ -27,10 +27,10 @@ public class CreateSkillHandler(IContext context) : IRequestHandler<CreateSkillR
             predicate: p => p.Name.ToLower().Trim() == request.Name.ToLower().Trim(),
             cancellationToken
         );
-        if (existSkillName != null)
-        {
-            return Result.Conflict("Duplicate skill name found.");
-        }
+        // if (existSkillName != null)
+        // {
+        //     return Result.Conflict("Duplicate skill name found.");
+        // }
         var skill = new Skill { Name = request.Name };
 
         await context.Skills.AddAsync(skill, cancellationToken);

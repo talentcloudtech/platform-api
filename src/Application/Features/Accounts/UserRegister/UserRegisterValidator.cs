@@ -13,8 +13,6 @@ public class UserRegisterValidator : AbstractValidator<UserRegisterRequest>
     /// </summary>
     public UserRegisterValidator()
     {
-        RuleLevelCascadeMode = CascadeMode.Stop;
-
         RuleFor(x => x.FullName).NotEmpty().MaximumLength(StringSizes.Title);
         RuleFor(x => x.UserName).NotEmpty().MaximumLength(25);
         RuleFor(x => x.Email).NotEmpty().EmailAddress();

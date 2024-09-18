@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Platform.Application.Extensions;
 using Platform.Application.Features.Projects.CreateProject;
 using Platform.Application.Features.Projects.DeleteProject;
 using Platform.Application.Features.Projects.GetProjectById;
@@ -42,7 +43,7 @@ public static class ProjectEndpoints
                 async (IMediator mediator, ProjectId id) =>
                 {
                     var result = await mediator.Send(new GetProjectByIdRequest(id));
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Retrieves a project by its unique identifier.");
@@ -53,7 +54,7 @@ public static class ProjectEndpoints
                 async (IMediator mediator, CreateProjectRequest request) =>
                 {
                     var result = await mediator.Send(request);
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Creates a new project.");
@@ -64,7 +65,7 @@ public static class ProjectEndpoints
                 async (IMediator mediator, ProjectId id, UpdateProjectRequest request) =>
                 {
                     var result = await mediator.Send(request with { Id = id });
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Updates a project by its unique identifier.");
@@ -75,7 +76,7 @@ public static class ProjectEndpoints
                 async (IMediator mediator, ProjectId id) =>
                 {
                     var result = await mediator.Send(new DeleteProjectRequest(id));
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Deletes a project by its unique identifier.");

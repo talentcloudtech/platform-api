@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Platform.Application.Extensions;
 using Platform.Application.Features.FileStorages.GenerateSasUri;
 using Platform.Application.Features.FileStorages.UploadFile;
 
@@ -28,7 +29,7 @@ public static class FileStorageEndpoints
                 {
                     var request = new UploadFileRequest { File = file };
                     var result = await mediator.Send(request);
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Upload file and generate download url.")
@@ -40,7 +41,7 @@ public static class FileStorageEndpoints
                 async (IMediator mediator, string filePath) =>
                 {
                     var result = await mediator.Send(new GenerateSasUriRequest(filePath));
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Generate download url.");

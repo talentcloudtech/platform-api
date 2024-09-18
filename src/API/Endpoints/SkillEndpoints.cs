@@ -1,8 +1,11 @@
+using Ardalis.Result;
 using Ardalis.Result.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Platform.Application.Common.Responses;
+using Platform.Application.Extensions;
 using Platform.Application.Features.Skills.CreateSkill;
 using Platform.Application.Features.Skills.SearchSkills;
 using Platform.Domain.Auth.Interfaces;
@@ -39,7 +42,8 @@ public static class SkillEndpoints
                 async (IMediator mediator, ICurrentSession session, CreateSkillRequest request) =>
                 {
                     var result = await mediator.Send(request);
-                    return result.ToMinimalApiResult();
+
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Creates a skill.");

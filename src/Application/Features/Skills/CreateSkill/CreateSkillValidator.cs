@@ -13,6 +13,6 @@ public class CreateSkillValidator : AbstractValidator<CreateSkillRequest>
     /// </summary>
     public CreateSkillValidator()
     {
-        RuleFor(x => x.Name).NotEmpty().WithMessage("Skill name is required.").MaximumLength(StringSizes.Short);
+        RuleFor(x => x.Name).NotEmpty().MaximumLength(StringSizes.Short);
     }
 }

@@ -60,10 +60,10 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(builder => builder.
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseDeveloperExceptionPage();
-}
+// if (app.Environment.IsDevelopment())
+// {
+//     app.UseDeveloperExceptionPage();
+// }
 
 app.UseRouting();
 
@@ -86,5 +86,7 @@ app.MapAccountEndpoints();
 app.MapSkillsEndpoints();
 
 app.MapGet("/", () => Results.Redirect("/swagger"));
+
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
 await app.RunAsync();
