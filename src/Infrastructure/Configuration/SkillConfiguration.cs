@@ -20,9 +20,11 @@ public class SkillConfiguration : IEntityTypeConfiguration<Skill>
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Id).HasMaxLength(25).HasConversion<SkillId.EfCoreValueConverter>();
-        builder.Property(x => x.Name).HasMaxLength(StringSizes.Medium);
-        builder.Property(x => x.Key).HasMaxLength(StringSizes.Medium);
+        builder.Property(x => x.Name).HasMaxLength(StringSizes.Medium).IsRequired();
+        builder.Property(x => x.Key).HasMaxLength(StringSizes.Medium).IsRequired(false);
         builder.Property(x => x.Path).HasMaxLength(StringSizes.Bio);
         builder.Property(x => x.Keywords).HasColumnType("text[]").IsRequired(false);
+
+        builder.HasIndex(x => x.Name).IsUnique();
     }
 }

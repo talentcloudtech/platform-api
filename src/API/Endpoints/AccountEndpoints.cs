@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Platform.Api.Configurations;
+using Platform.Application.Extensions;
 using Platform.Application.Features.Accounts.ConfirmEmail;
 using Platform.Application.Features.Accounts.DeleteAccount;
 using Platform.Application.Features.Accounts.ForgotPassword;
@@ -41,7 +42,7 @@ public static class AccountEndpoints
                 async (IMediator mediator, LoginRequest request) =>
                 {
                     var result = await mediator.Send(request);
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Login user.")
@@ -72,7 +73,7 @@ public static class AccountEndpoints
                 async (IMediator mediator, ResendEmailConfirmationRequest request) =>
                 {
                     var result = await mediator.Send(request);
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Resend email confirmation.")
@@ -85,7 +86,7 @@ public static class AccountEndpoints
                 async (IMediator mediator, RegisterAccountRequest request) =>
                 {
                     var result = await mediator.Send(request);
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Register account.")
@@ -97,7 +98,7 @@ public static class AccountEndpoints
                 async (IMediator mediator, ForgotPasswordRequest request) =>
                 {
                     var result = await mediator.Send(request);
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Forgot password.")
@@ -109,7 +110,7 @@ public static class AccountEndpoints
                 async (IMediator mediator, ResetPasswordRequest request) =>
                 {
                     var result = await mediator.Send(request);
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Reset password.")
@@ -121,7 +122,7 @@ public static class AccountEndpoints
                 async (IMediator mediator, RefreshTokenRequest request) =>
                 {
                     var result = await mediator.Send(request);
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Refresh token.")
@@ -133,7 +134,7 @@ public static class AccountEndpoints
                 async (IMediator mediator, ICurrentSession currentUser, LogoutRequest request) =>
                 {
                     var result = await mediator.Send(request with { UserId = currentUser.UserId });
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Logout user.")
@@ -145,7 +146,7 @@ public static class AccountEndpoints
                 async (IMediator mediator, UpdateAvatarRequest request) =>
                 {
                     var result = await mediator.Send(request);
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Update avatar.")
@@ -157,7 +158,7 @@ public static class AccountEndpoints
                 async (IMediator mediator, ICurrentSession currentUser) =>
                 {
                     var result = await mediator.Send(new DeleteAccountRequest() with { UserId = currentUser.UserId });
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Delete user account from the database.")
@@ -169,7 +170,7 @@ public static class AccountEndpoints
                 async (IMediator mediator, ICurrentSession currentUser) =>
                 {
                     var result = await mediator.Send(new GetAccountDetailsRequest { UserId = currentUser.UserId });
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Get current user account details.")
@@ -181,7 +182,7 @@ public static class AccountEndpoints
                 async (IMediator mediator, ICurrentSession currentUser, UpdateUsernameRequest request) =>
                 {
                     var result = await mediator.Send(request with { UserId = currentUser.UserId });
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Update username.")

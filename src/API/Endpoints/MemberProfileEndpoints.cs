@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Platform.Application.Extensions;
 using Platform.Application.Features.Educations.CreateEducation;
 using Platform.Application.Features.Educations.DeleteEducation;
 using Platform.Application.Features.Educations.UpdateEducation;
@@ -55,7 +56,7 @@ public static class MemberProfileEndpoints
                 async (IMediator mediator, ICurrentSession currentSession) =>
                 {
                     var result = await mediator.Send(new GetMemberProfileByIdRequest(currentSession.UserId));
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Retrieves a member profile by its unique identifier.");
@@ -66,7 +67,7 @@ public static class MemberProfileEndpoints
                 async (IMediator mediator, ICurrentSession currentSession, UpdateMemberProfileRequest request) =>
                 {
                     var result = await mediator.Send(request with { Id = currentSession.UserId });
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Updates a member profile by its unique identifier.");
@@ -77,7 +78,7 @@ public static class MemberProfileEndpoints
                 async (IMediator mediator, ICurrentSession currentSession, IFormFile file) =>
                 {
                     var result = await mediator.Send(new UpdateAvatarRequest { Id = currentSession.UserId, File = file });
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Update user avatar.")
@@ -112,7 +113,7 @@ public static class MemberProfileEndpoints
                 async (IMediator mediator, ICurrentSession currentSession, CreateExperienceRequest request) =>
                 {
                     var result = await mediator.Send(request with { MemberProfileId = currentSession.UserId });
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Creates a new experience for a member profile.");
@@ -123,7 +124,7 @@ public static class MemberProfileEndpoints
                 async (IMediator mediator, ICurrentSession currentSession, string experienceId, UpdateExperienceRequest request) =>
                 {
                     var result = await mediator.Send(request with { MemberProfileId = currentSession.UserId, ExperienceId = experienceId });
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Updates an experience for a member profile.");
@@ -134,7 +135,7 @@ public static class MemberProfileEndpoints
                 async (IMediator mediator, ICurrentSession currentSession, string experienceId) =>
                 {
                     var result = await mediator.Send(new DeleteExperienceRequest(currentSession.UserId, experienceId));
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Deletes an experience from a member profile.");
@@ -155,7 +156,7 @@ public static class MemberProfileEndpoints
                 async (IMediator mediator, ICurrentSession currentSession, CreateEducationRequest request) =>
                 {
                     var result = await mediator.Send(request with { MemberProfileId = currentSession.UserId });
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Creates a new education for a member profile.");
@@ -166,7 +167,7 @@ public static class MemberProfileEndpoints
                 async (IMediator mediator, ICurrentSession currentSession, string educationId, UpdateEducationRequest request) =>
                 {
                     var result = await mediator.Send(request with { MemberProfileId = currentSession.UserId, EducationId = educationId });
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Updates an education for a member profile.");
@@ -177,7 +178,7 @@ public static class MemberProfileEndpoints
                 async (IMediator mediator, ICurrentSession currentSession, string educationId) =>
                 {
                     var result = await mediator.Send(new DeleteEducationRequest(currentSession.UserId, educationId));
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Deletes an education from a member profile.");
@@ -199,7 +200,7 @@ public static class MemberProfileEndpoints
                 async (IMediator mediator, ICurrentSession currentSession, CreateLanguageRequest request) =>
                 {
                     var result = await mediator.Send(request with { MemberProfileId = currentSession.UserId });
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Creates a new language for a member profile.");
@@ -210,7 +211,7 @@ public static class MemberProfileEndpoints
                 async (IMediator mediator, ICurrentSession currentSession, string languageId, UpdateLanguageRequest request) =>
                 {
                     var result = await mediator.Send(request with { MemberProfileId = currentSession.UserId, LanguageId = languageId });
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Updates a language for a member profile.");
@@ -221,7 +222,7 @@ public static class MemberProfileEndpoints
                 async (IMediator mediator, ICurrentSession currentSession, string languageId) =>
                 {
                     var result = await mediator.Send(new DeleteLanguageRequest(currentSession.UserId, languageId));
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Deletes a language from a member profile.");
@@ -242,7 +243,7 @@ public static class MemberProfileEndpoints
                 async (IMediator mediator, ICurrentSession currentSession, CreateProjectInfoRequest request) =>
                 {
                     var result = await mediator.Send(request with { MemberProfileId = currentSession.UserId });
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Creates a new project for a member profile.");
@@ -253,7 +254,7 @@ public static class MemberProfileEndpoints
                 async (IMediator mediator, ICurrentSession currentSession, string projectId, UpdateProjectInfoRequest request) =>
                 {
                     var result = await mediator.Send(request with { MemberProfileId = currentSession.UserId, ProjectInfoId = projectId });
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Updates a project for a member profile.");
@@ -264,7 +265,7 @@ public static class MemberProfileEndpoints
                 async (IMediator mediator, ICurrentSession currentSession, string projectId) =>
                 {
                     var result = await mediator.Send(new DeleteProjectInfoRequest(currentSession.UserId, projectId));
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Deletes a project from a member profile.");
@@ -285,7 +286,7 @@ public static class MemberProfileEndpoints
                 async (IMediator mediator, ICurrentSession currentSession, CreateMemberSkillRequest request) =>
                 {
                     var result = await mediator.Send(request with { MemberProfileId = currentSession.UserId });
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Creates a new skill for a member profile.");
@@ -303,7 +304,7 @@ public static class MemberProfileEndpoints
                             SkillId = request.SkillId,
                         }
                     );
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Updates a skill for a member profile.");
@@ -314,7 +315,7 @@ public static class MemberProfileEndpoints
                 async (IMediator mediator, ICurrentSession currentSession, string memberSkillId) =>
                 {
                     var result = await mediator.Send(new DeleteMemberSkillRequest(currentSession.UserId, memberSkillId));
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Deletes a skill from a member profile.");

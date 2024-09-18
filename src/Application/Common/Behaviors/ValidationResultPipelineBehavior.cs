@@ -45,6 +45,7 @@ public class ValidationResultPipelineBehavior<TRequest, TResponse> : IPipelineBe
 
             if (!result.IsValid)
             {
+                Console.WriteLine(result.Errors.Count);
                 // Due to not wanting to use reflection, we assume that every request
                 // that wants to validate something also returns a result.
                 // Using implicit casts, we are able to use this same behavior for all of them.
