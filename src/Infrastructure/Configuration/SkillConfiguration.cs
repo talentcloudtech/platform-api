@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Platform.Application.Common;
 using Platform.Domain.Entities;
 using Platform.Domain.Entities.Common;
 
@@ -19,5 +20,9 @@ public class SkillConfiguration : IEntityTypeConfiguration<Skill>
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Id).HasMaxLength(25).HasConversion<SkillId.EfCoreValueConverter>();
+        builder.Property(x => x.Name).HasMaxLength(StringSizes.Medium);
+        builder.Property(x => x.Key).HasMaxLength(StringSizes.Medium);
+        builder.Property(x => x.Path).HasMaxLength(StringSizes.Bio);
+        builder.Property(x => x.Keywords).HasColumnType("text[]").IsRequired(false);
     }
 }
