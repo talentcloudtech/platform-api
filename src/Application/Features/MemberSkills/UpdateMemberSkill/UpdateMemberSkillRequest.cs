@@ -25,7 +25,7 @@ public record UpdateMemberSkillRequest : IRequest<Result<MemberSkillResponse>>
     /// <summary>
     /// Gets or sets the skill identifier.
     /// </summary>
-    public SkillId SkillId { get; set; } = null!;
+    public string SkillId { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets the number of months of experience in the skill.
