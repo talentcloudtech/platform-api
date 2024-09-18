@@ -34,8 +34,7 @@ public static class PersistenceSetup
         services.AddHostedService<ApplicationDbInitializer>();
         services.AddDbContextPool<ApplicationDbContext>(o =>
         {
-            o.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
-            o.UseExceptionProcessor();
+            o.UseNpgsql(configuration.GetConnectionString("DefaultConnection")).UseExceptionProcessor();
         });
 
         return services;

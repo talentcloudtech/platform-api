@@ -31,7 +31,7 @@ public static class SkillEndpoints
                 async (IMediator mediator, [AsParameters] SearchSkillsRequest request) =>
                 {
                     var result = await mediator.Send(request);
-                    return result;
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Searches for skills.");
