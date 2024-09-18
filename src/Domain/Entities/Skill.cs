@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Platform.Domain.Entities.Common;
 
 namespace Platform.Domain.Entities;
@@ -16,4 +17,19 @@ public class Skill : Entity<SkillId>
     /// Gets or sets the name.
     /// </summary>
     public required string Name { get; set; }
+
+    /// <summary>
+    /// Gets or sets the key.
+    /// </summary>
+    public string? Key { get; set; }
+
+    /// <summary>
+    /// Gets or sets the path.
+    /// </summary>
+    public string? Path { get; set; }
+
+    /// <summary>
+    /// Gets or sets the keywords.
+    /// </summary>
+    public string[]? Keywords { get; set; }
 }

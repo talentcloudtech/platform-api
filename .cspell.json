@@ -39,6 +39,7 @@
         "report",
         "**/bin/**",
         "**/obj/**",
-        "**/**.csproj"
+        "**/**.csproj",
+        "**/src/Infrastructure/DataSeed/**"
     ]
 }

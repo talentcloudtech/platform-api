@@ -11,6 +11,7 @@ using Microsoft.Extensions.Options;
 using Platform.API.Configurations.OptionSetups;
 using Platform.Application.Common;
 using Platform.Application.Features.FileStorages.DeleteFile;
+using Platform.Domain.Entities;
 using Platform.Domain.Entities.Common;
 
 namespace Platform.Application.Features.MemberProfiles.UpdateAvatar;
@@ -50,7 +51,9 @@ public class UpdateAvatarHandler : IRequestHandler<UpdateAvatarRequest, Result<U
         var memberProfile = await context.MemberProfiles.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
         if (memberProfile == null)
         {
-            return Result.NotFound("Member profile not found.");
+            var currentUser = await context.Users.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+            memberProfile = new MemberProfile { Id = request.Id, UserName = currentUser?.UserName };
+            context.MemberProfiles.Add(memberProfile);
         }
 
         var fileExt = Path.GetExtension(request.File.FileName)?.ToLowerInvariant();
