@@ -296,7 +296,14 @@ public static class MemberProfileEndpoints
                 "{memberSkillId}",
                 async (IMediator mediator, ICurrentSession currentSession, string memberSkillId, UpdateMemberSkillRequest request) =>
                 {
-                    var result = await mediator.Send(request with { MemberProfileId = currentSession.UserId, SkillId = memberSkillId });
+                    var result = await mediator.Send(
+                        request with
+                        {
+                            MemberProfileId = currentSession.UserId,
+                            MemberSkillId = memberSkillId,
+                            SkillId = request.SkillId,
+                        }
+                    );
                     return result.ToPlatformApiResult();
                 }
             )

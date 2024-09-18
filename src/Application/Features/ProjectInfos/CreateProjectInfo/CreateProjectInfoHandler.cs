@@ -46,6 +46,7 @@ public class CreateProjectInfoHandler(IContext context) : IRequestHandler<Create
             memberProfile.ProjectInfos = new List<ProjectInfo>();
 
         memberProfile.ProjectInfos?.Add(project);
+        await context.SaveChangesAsync(cancellationToken);
 
         return Result.Success(project.Adapt<ProjectInfoResponse>());
     }

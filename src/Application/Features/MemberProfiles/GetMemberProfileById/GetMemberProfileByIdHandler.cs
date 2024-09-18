@@ -27,7 +27,7 @@ public class GetMemberProfileByIdHandler(IContext context) : IRequestHandler<Get
         var memberProfile = await context.MemberProfiles.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken: cancellationToken);
 
         if (memberProfile is null)
-            return Result.NotFound();
+            return new MemberProfileResponse();
 
         return memberProfile.Adapt<MemberProfileResponse>();
     }
