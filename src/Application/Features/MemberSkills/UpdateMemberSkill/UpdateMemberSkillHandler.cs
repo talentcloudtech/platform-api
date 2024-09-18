@@ -51,6 +51,6 @@ public class UpdateMemberSkillHandler(IContext context) : IRequestHandler<Update
 
         await context.SaveChangesAsync(cancellationToken);
 
-        return Result.Success(skill.Adapt<MemberSkillResponse>());
+        return Result.Success(memberSkill.Adapt<MemberSkillResponse>());
     }
 }
