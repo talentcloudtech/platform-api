@@ -78,7 +78,7 @@ public static class MemberProfileEndpoints
                 async (IMediator mediator, ICurrentSession currentSession, IFormFile file) =>
                 {
                     var result = await mediator.Send(new UpdateAvatarRequest { Id = currentSession.UserId, File = file });
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Update user avatar.")
@@ -113,7 +113,7 @@ public static class MemberProfileEndpoints
                 async (IMediator mediator, ICurrentSession currentSession, CreateExperienceRequest request) =>
                 {
                     var result = await mediator.Send(request with { MemberProfileId = currentSession.UserId });
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Creates a new experience for a member profile.");
@@ -124,7 +124,7 @@ public static class MemberProfileEndpoints
                 async (IMediator mediator, ICurrentSession currentSession, string experienceId, UpdateExperienceRequest request) =>
                 {
                     var result = await mediator.Send(request with { MemberProfileId = currentSession.UserId, ExperienceId = experienceId });
-                    return result.ToMinimalApiResult();
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Updates an experience for a member profile.");
