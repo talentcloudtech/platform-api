@@ -39,6 +39,11 @@ public class UpdateMemberSkillHandler(IContext context) : IRequestHandler<Update
         {
             return Result.NotFound("Skill not found.");
         }
+        var existMemberSkill = memberProfile.Skills?.FirstOrDefault(x => x.Identifier != request.MemberSkillId && x.SkillId == request.SkillId);
+        if (existMemberSkill != null)
+        {
+            return Result.Conflict("Duplicate skill found");
+        }
 
         memberSkill.SkillId = request.SkillId.ToString();
         memberSkill.Name = skill.Name;
