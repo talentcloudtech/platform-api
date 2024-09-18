@@ -67,15 +67,19 @@ public static partial class ApiResponseResultExtensions
 
     private static Microsoft.AspNetCore.Http.IResult BadRequest(Ardalis.Result.IResult result)
     {
-        var details = new List<Dictionary<string, string[]>> { new() { { "message", new[] { result.Errors.FirstOrDefault() ?? "Bad request." } } } };
+        Dictionary<string, string[]> groupedErrors;
         if (result.ValidationErrors.Any())
         {
-            details = result
-                .ValidationErrors.Select(e => new Dictionary<string, string[]> { { StringUtility.ToCamelCase(e.Identifier), new[] { e.ErrorMessage } } })
-                .ToList();
+            groupedErrors = result.ValidationErrors.GroupBy(e => e.Identifier)
+                .ToDictionary(g => StringUtility.ToCamelCase(g.Key), g => g.Select(e => e.ErrorMessage).ToArray());
         }
+        else
+        {
+            groupedErrors = new Dictionary<string, string[]> { { "message", new[] { result.Errors.FirstOrDefault() ?? "Bad request." } } };
+        }
+
         return Results.Json(
-            new ApiResponse<string> { Success = false, Errors = details },
+            new ApiResponse<string> { Success = false, Errors = groupedErrors },
             statusCode: StatusCodes.Status400BadRequest,
             contentType: "application/json"
         );
@@ -118,13 +122,21 @@ public static partial class ApiResponseResultExtensions
 
     private static Microsoft.AspNetCore.Http.IResult ToHttpResults(Ardalis.Result.IResult result, int statusCode, string message)
     {
-        var details = new List<Dictionary<string, string[]>> { new() { { "message", new[] { message } } } };
+        Dictionary<string, string[]> groupedErrors;
+        if (result.ValidationErrors.Any())
+        {
+            groupedErrors = result.ValidationErrors.GroupBy(e => e.Identifier)
+                .ToDictionary(g => StringUtility.ToCamelCase(g.Key), g => g.Select(e => e.ErrorMessage).ToArray());
+        }
         if (result.Errors.Any())
         {
-            details.Clear();
-            details.Add(new Dictionary<string, string[]> { { "message", result.Errors.ToArray() } });
+            groupedErrors = result.Errors.ToDictionary(e => "message", e => new[] { e });
+        }
+        else
+        {
+            groupedErrors = new Dictionary<string, string[]> { { "message", new[] { message } } };
         }
 
-        return Results.Json(new ApiResponse<string> { Success = false, Errors = details }, statusCode: statusCode, contentType: "application/json");
+        return Results.Json(new ApiResponse<string> { Success = false, Errors = groupedErrors }, statusCode: statusCode, contentType: "application/json");
     }
 }

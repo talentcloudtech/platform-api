@@ -70,7 +70,7 @@ public class GlobalExceptionHandlerMiddleware
             }
             if (ex is MaxLengthExceededException maxLengthExceededException)
             {
-                message = maxLengthExceededException.Message;
+                message = "Max length exceeded for some field";
                 context.Response.StatusCode = 400;
             }
             if (ex is ReferenceConstraintException referenceConstraintException)
@@ -79,11 +79,11 @@ public class GlobalExceptionHandlerMiddleware
                 context.Response.StatusCode = 400;
             }
 
-            var errors = new List<Dictionary<string, string[]>> { new() { { "message", new[] { message } } } };
+            var errors = new Dictionary<string, string[]> { { "message", [message] } };
 
             if (_env.IsDevelopment())
             {
-                errors.Add(new Dictionary<string, string[]> { { "stackTrace", new[] { ex.StackTrace ?? string.Empty } } });
+                errors.Add("stackTrace", [ex.StackTrace ?? string.Empty]);
             }
 
             var response = new ApiResponse<object>

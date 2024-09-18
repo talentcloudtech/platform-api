@@ -23,41 +23,5 @@ public class ApiResponse<T>
     /// <summary>
     /// Gets or sets the errors of the API response.
     /// </summary>
-    public List<Dictionary<string, string[]>>? Errors { get; set; } = new();
-
-    /// <summary>
-    /// Creates an ApiResponse from a Result.
-    /// </summary>
-    /// <param name="result">The result to create the ApiResponse from.</param>
-    /// <returns>An ApiResponse.</returns>
-    public static ApiResponse<T> FromResult(Result<T> result)
-    {
-        if (result.IsSuccess)
-        {
-            return new ApiResponse<T>
-            {
-                Data = result.Value,
-                Success = true,
-                Errors = null,
-            };
-        }
-
-        if (result.ValidationErrors.Any())
-        {
-            return new ApiResponse<T>
-            {
-                Data = default,
-                Success = false,
-                Errors = result
-                    .ValidationErrors.Select(e => new Dictionary<string, string[]> { { StringUtility.ToCamelCase(e.Identifier), new[] { e.ErrorMessage } } })
-                    .ToList(),
-            };
-        }
-        return new ApiResponse<T>
-        {
-            Data = default,
-            Success = false,
-            Errors = result.Errors.Select(e => new Dictionary<string, string[]> { { "message", new[] { e } } }).ToList(),
-        };
-    }
+    public Dictionary<string, string[]>? Errors { get; set; }
 }

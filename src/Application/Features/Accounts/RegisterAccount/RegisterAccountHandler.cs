@@ -35,7 +35,11 @@ public class RegisterAccountHandler(IContext context, UserManager<ApplicationUse
 
         if (!result.Succeeded)
         {
-            return Result.Error(result.Errors.FirstOrDefault()?.Description ?? "Failed to register user");
+            return Result.Invalid(result.Errors.Select(e => new ValidationError
+            {
+                Identifier = "root",
+                ErrorMessage = e.Description
+            }));
         }
 
         // assign role to user
