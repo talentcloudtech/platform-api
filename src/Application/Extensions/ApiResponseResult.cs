@@ -51,7 +51,7 @@ public static partial class ApiResponseResultExtensions
     private static Microsoft.AspNetCore.Http.IResult Ok(Ardalis.Result.IResult result)
     {
         return result is Ardalis.Result.Result
-            ? ToHttpResults(result, StatusCodes.Status200OK, "Ok.")
+            ? Results.Ok(new ApiResponse<object> { Success = true, Data = result.GetValue() })
             : Results.Ok(new ApiResponse<object> { Success = true, Data = result.GetValue() });
     }
 
