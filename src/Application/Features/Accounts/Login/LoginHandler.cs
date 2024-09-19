@@ -44,7 +44,14 @@ public class LoginHandler(
 
         if (user is null)
         {
-            return Result.Invalid(new ValidationError("Invalid credentials."));
+            return Result.Invalid(
+                new ValidationError
+                {
+                    Identifier = "root",
+                    ErrorMessage = "Invalid credentials.",
+                    ErrorCode = "invalid_credentials",
+                }
+            );
         }
 
         if (!user.EmailConfirmed)

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Platform.Api.Configurations;
 using Platform.Application.Extensions;
+using Platform.Application.Features.Accounts.ChangeEmail;
 using Platform.Application.Features.Accounts.ConfirmEmail;
 using Platform.Application.Features.Accounts.DeleteAccount;
 using Platform.Application.Features.Accounts.ForgotPassword;
@@ -155,9 +156,9 @@ public static class AccountEndpoints
         group
             .MapDelete(
                 "/",
-                async (IMediator mediator, ICurrentSession currentUser) =>
+                async (IMediator mediator, ICurrentSession currentUser, DeleteAccountRequest request) =>
                 {
-                    var result = await mediator.Send(new DeleteAccountRequest() with { UserId = currentUser.UserId });
+                    var result = await mediator.Send(request with { UserId = currentUser.UserId });
                     return result.ToPlatformApiResult();
                 }
             )
@@ -186,6 +187,18 @@ public static class AccountEndpoints
                 }
             )
             .WithSummary("Update username.")
+            .RequireAuthorization();
+
+        group
+            .MapPut(
+                "/change-email",
+                async (IMediator mediator, ICurrentSession currentUser, ChangeEmailRequest request) =>
+                {
+                    var result = await mediator.Send(request with { UserId = currentUser.UserId });
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Change email.")
             .RequireAuthorization();
     }
 }
