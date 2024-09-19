@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Ardalis.Result;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Platform.Application.Common;
 using Platform.Domain.Entities;
 
 namespace Platform.Application.Features.Accounts.UpdateUserName;
@@ -11,7 +12,7 @@ namespace Platform.Application.Features.Accounts.UpdateUserName;
 /// Handler for updating the username of a user.
 /// </summary>
 /// <param name="userManager">The user manager.</param>
-public class UpdateUserNameHandler(UserManager<ApplicationUser> userManager) : IRequestHandler<UpdateUsernameRequest, Result<string>>
+public class UpdateUserNameHandler(UserManager<ApplicationUser> userManager, IContext context) : IRequestHandler<UpdateUsernameRequest, Result<string>>
 {
     /// <summary>
     /// Updates the username of the user.
@@ -26,8 +27,13 @@ public class UpdateUserNameHandler(UserManager<ApplicationUser> userManager) : I
         {
             return Result.NotFound($"User with id {request.UserId} not found.");
         }
-
+        var isDuplicate = await userManager.FindByNameAsync(request.UserName);
+        if (isDuplicate is not null)
+        {
+            return Result.Invalid(new ValidationError { Identifier = nameof(request.UserName), ErrorMessage = "Username already exists." });
+        }
         user.UserName = request.UserName;
+
         await userManager.SetUserNameAsync(user, request.UserName);
         return Result.Success();
     }
