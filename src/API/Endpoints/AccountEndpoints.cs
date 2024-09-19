@@ -155,9 +155,9 @@ public static class AccountEndpoints
         group
             .MapDelete(
                 "/",
-                async (IMediator mediator, ICurrentSession currentUser) =>
+                async (IMediator mediator, ICurrentSession currentUser, DeleteAccountRequest request) =>
                 {
-                    var result = await mediator.Send(new DeleteAccountRequest() with { UserId = currentUser.UserId });
+                    var result = await mediator.Send(request with { UserId = currentUser.UserId });
                     return result.ToPlatformApiResult();
                 }
             )
