@@ -31,13 +31,27 @@ public class ChangeEmailHandler(UserManager<ApplicationUser> userManager) : IReq
         var passwordCheck = await userManager.CheckPasswordAsync(user, request.Password);
         if (!passwordCheck)
         {
-            return Result.Error("Invalid password.");
+            return Result.Invalid(
+                new ValidationError
+                {
+                    Identifier = "password",
+                    ErrorMessage = "Invalid password.",
+                    ErrorCode = "invalid_password",
+                }
+            );
         }
 
         var duplicateEmail = await userManager.FindByEmailAsync(request.NewEmail);
         if (duplicateEmail != null)
         {
-            return Result.Error("Email already exists.");
+            return Result.Invalid(
+                new ValidationError
+                {
+                    Identifier = "newEmail",
+                    ErrorMessage = "Email already exists.",
+                    ErrorCode = "email_already_exists",
+                }
+            );
         }
 
         var token = await userManager.GenerateChangeEmailTokenAsync(user, request.NewEmail);
