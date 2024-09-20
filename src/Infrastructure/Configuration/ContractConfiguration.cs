@@ -24,5 +24,8 @@ public class ContractConfiguration : IEntityTypeConfiguration<Contract>
         builder.Property(x => x.WorkspaceId).HasMaxLength(25).HasConversion<WorkspaceId.EfCoreValueConverter>();
         builder.Property(x => x.BillingType).HasConversion<string>();
         builder.Property(x => x.Status).HasConversion<string>();
+
+        builder.Property(x => x.CreatedBy).HasConversion<UserId.EfCoreValueConverter>();
+        builder.Property(x => x.UpdatedBy).HasConversion<UserId.EfCoreValueConverter>();
     }
 }

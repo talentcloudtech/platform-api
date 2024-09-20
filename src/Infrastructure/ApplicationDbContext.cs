@@ -31,11 +31,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<ApplicationUser> ApplicationUsers { get; set; } = null!;
 
     /// <summary>
-    /// Gets or sets the projects DbSet.
-    /// </summary>
-    public DbSet<Project> Projects { get; set; } = null!;
-
-    /// <summary>
     /// Gets or sets the skills DbSet.
     /// </summary>
     public DbSet<Skill> Skills { get; set; } = null!;
@@ -49,11 +44,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     /// Gets or sets the data protection keys DbSet.
     /// </summary>
     public DbSet<DataProtectionKey> DataProtectionKeys { get; set; } = null!;
-
-    // /// <summary>
-    // /// Gets or sets the DbSet of ProjectUser entities.
-    // // /// </summary>
-    // public DbSet<ProjectUser> ProjectUsers { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets the DbSet of Workspace entities.
@@ -69,6 +59,46 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     /// Gets or sets the DbSet of Contract entities.
     /// </summary>
     public DbSet<Contract> Contracts { get; set; } = null!;
+
+    /// <summary>
+    /// Gets or sets the DbSet of Project entities.
+    /// </summary>
+    public DbSet<Project> Projects { get; set; } = null!;
+
+    /// <summary>
+    /// Gets or sets the DbSet of ProjectMember entities.
+    /// </summary>
+    public DbSet<ProjectMember> ProjectMembers { get; set; } = null!;
+
+    /// <summary>
+    /// Gets or sets the DbSet of Task entities.
+    /// </summary>
+    public DbSet<ProjectTask> ProjectTasks { get; set; } = null!;
+
+    /// <summary>
+    /// Gets or sets the DbSet of TaskAssignment entities.
+    /// </summary>
+    public DbSet<ProjectTaskAssignment> ProjectTaskAssignments { get; set; } = null!;
+
+    /// <summary>
+    /// Gets or sets the DbSet of Message entities.
+    /// </summary>
+    public DbSet<Message> Messages { get; set; } = null!;
+
+    /// <summary>
+    /// Gets or sets the DbSet of MessageRecipient entities.
+    /// </summary>
+    public DbSet<MessageRecipient> MessageRecipients { get; set; } = null!;
+
+    /// <summary>
+    /// Gets or sets the DbSet of MessageReply entities.
+    /// </summary>
+    public DbSet<MessageReply> MessageReplies { get; set; } = null!;
+
+    /// <summary>
+    /// Gets or sets the DbSet of MessageAttachment entities.
+    /// </summary>
+    public DbSet<MessageAttachment> MessageAttachments { get; set; } = null!;
 
     /// <summary>
     /// Configures the model for the database context.

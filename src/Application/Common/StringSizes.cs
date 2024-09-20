@@ -49,4 +49,14 @@ public static class StringSizes
     /// The maximum size for a short address.
     /// </summary>
     public const int ShortAddress = 255;
+
+    /// <summary>
+    /// The maximum size for a file name.
+    /// </summary>
+    public const int FileName = 255;
+
+    /// <summary>
+    /// The maximum size for a file type.
+    /// </summary>
+    public const int FileType = 255;
 }

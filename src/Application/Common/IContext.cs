@@ -29,11 +29,6 @@ public interface IContext : IDataProtectionKeyContext, IAsyncDisposable, IDispos
     public DbSet<ApplicationUser> Users { get; }
 
     /// <summary>
-    /// Gets or sets the projects DbSet.
-    /// </summary>
-    public DbSet<Project> Projects { get; }
-
-    /// <summary>
     /// Gets or sets the member profile DbSet.
     /// </summary>
     public DbSet<MemberProfile> MemberProfiles { get; }
@@ -43,10 +38,60 @@ public interface IContext : IDataProtectionKeyContext, IAsyncDisposable, IDispos
     /// </summary>
     public DbSet<Skill> Skills { get; }
 
-    // /// <summary>
-    // /// Gets or sets the DbSet of ProjectUser entities.
-    // /// </summary>
-    // public DbSet<ProjectUser> ProjectUsers { get; }
+    /// <summary>
+    /// Gets or sets the DbSet of Workspace entities.
+    /// </summary>
+    public DbSet<Workspace> Workspaces { get; }
+
+    /// <summary>
+    /// Gets or sets the DbSet of WorkspaceMember entities.
+    /// </summary>
+    public DbSet<WorkspaceMember> WorkspaceMembers { get; }
+
+    /// <summary>
+    /// Gets or sets the DbSet of Contract entities.
+    /// </summary>
+    public DbSet<Contract> Contracts { get; }
+
+    /// <summary>
+    /// Gets or sets the DbSet of Project entities.
+    /// </summary>
+    public DbSet<Project> Projects { get; }
+
+    /// <summary>
+    /// Gets or sets the DbSet of ProjectMember entities.
+    /// </summary>
+    public DbSet<ProjectMember> ProjectMembers { get; }
+
+    /// <summary>
+    /// Gets or sets the DbSet of Task entities.
+    /// </summary>
+    public DbSet<ProjectTask> ProjectTasks { get; }
+
+    /// <summary>
+    /// Gets or sets the DbSet of TaskAssignment entities.
+    /// </summary>
+    public DbSet<ProjectTaskAssignment> ProjectTaskAssignments { get; }
+
+    /// <summary>
+    /// Gets or sets the DbSet of Message entities.
+    /// </summary>
+    public DbSet<Message> Messages { get; }
+
+    /// <summary>
+    /// Gets or sets the DbSet of MessageRecipient entities.
+    /// </summary>
+    public DbSet<MessageRecipient> MessageRecipients { get; }
+
+    /// <summary>
+    /// Gets or sets the DbSet of MessageReply entities.
+    /// </summary>
+    public DbSet<MessageReply> MessageReplies { get; }
+
+    /// <summary>
+    /// Gets or sets the DbSet of MessageAttachment entities.
+    /// </summary>
+    public DbSet<MessageAttachment> MessageAttachments { get; }
 
     /// <summary>
     /// Asynchronously saves all changes made in this context to the underlying database.

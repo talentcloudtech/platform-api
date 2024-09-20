@@ -1,35 +1,82 @@
+using System;
+using System.Collections.Generic;
 using Platform.Domain.Entities.Common;
 using Platform.Domain.Entities.Enums;
 
 namespace Platform.Domain.Entities;
 
 /// <summary>
-/// /Represents a project entity.
+/// Represents a project entity in the system.
 /// </summary>
 public class Project : Entity<ProjectId>
 {
     /// <summary>
-    /// Gets or sets the unique identifier of the project.
+    /// Gets or sets the unique identifier for the project.
     /// </summary>
     public override ProjectId Id { get; set; } = CustomNewId.GenerateStandardId();
 
     /// <summary>
-    /// Gets or sets the name of the project.
+    /// Gets or sets the workspace identifier associated with this project.
     /// </summary>
-    public string Name { get; set; } = null!;
+    public WorkspaceId WorkspaceId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the title of the project.
+    /// </summary>
+    public string Title { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets the description of the project.
     /// </summary>
-    public string? Description { get; init; }
+    public string? Description { get; set; }
+
+    /// <summary>
+    /// Gets or sets the start date of the project.
+    /// </summary>
+    public DateTime StartDate { get; set; }
+
+    /// <summary>
+    /// Gets or sets the end date of the project.
+    /// </summary>
+    public DateTime? EndDate { get; set; }
+
+    /// <summary>
+    /// Gets or sets the budget for the project.
+    /// </summary>
+    public decimal? Budget { get; set; }
 
     /// <summary>
     /// Gets or sets the status of the project.
     /// </summary>
-    public ProjectStatus Status { get; init; }
+    public ProjectStatus Status { get; set; }
 
-    // /// <summary>
-    // /// Gets the list of project users.
-    // /// </summary>
-    // public List<ProjectUser> ProjectUsers { get; } = [];
+    /// <summary>
+    /// Gets or sets the date when the project was created.
+    /// </summary>
+    public DateTime CreatedDate { get; set; }
+
+    /// <summary>
+    /// Gets or sets the identifier of the user who created the project.
+    /// </summary>
+    public UserId CreatedBy { get; set; }
+
+    /// <summary>
+    /// Gets or sets the date when the project was last updated.
+    /// </summary>
+    public DateTime? UpdatedDate { get; set; }
+
+    /// <summary>
+    /// Gets or sets the identifier of the user who last updated the project.
+    /// </summary>
+    public UserId? UpdatedBy { get; set; }
+
+    /// <summary>
+    /// Gets or sets the collection of project members.
+    /// </summary>
+    public ICollection<ProjectMember> Members { get; set; } = new List<ProjectMember>();
+
+    /// <summary>
+    /// Gets or sets the collection of tasks associated with this project.
+    /// </summary>
+    public ICollection<ProjectTask> ProjectTasks { get; set; } = new List<ProjectTask>();
 }

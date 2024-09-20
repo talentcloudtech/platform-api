@@ -36,7 +36,7 @@ public class UpdateProjectHandler : IRequestHandler<UpdateProjectRequest, Result
         if (originalProject == null)
             return Result.NotFound();
 
-        originalProject.Name = request.Name;
+        originalProject.Title = request.Name;
         // originalProject.Description = request.Description;
         // originalProject.Status = request.Status;
 
