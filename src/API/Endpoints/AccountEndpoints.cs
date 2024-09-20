@@ -1,6 +1,4 @@
-using System;
 using System.Linq;
-using Ardalis.Result.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -18,7 +16,6 @@ using Platform.Application.Features.Accounts.RefreshToken;
 using Platform.Application.Features.Accounts.RegisterAccount;
 using Platform.Application.Features.Accounts.ResendEmailConfirmation;
 using Platform.Application.Features.Accounts.ResetPassword;
-using Platform.Application.Features.Accounts.UpdateAvatar;
 using Platform.Application.Features.Accounts.UpdateUserName;
 using Platform.Domain.Auth.Interfaces;
 
@@ -143,19 +140,7 @@ public static class AccountEndpoints
 
         group
             .MapPut(
-                "/avatar",
-                async (IMediator mediator, UpdateAvatarRequest request) =>
-                {
-                    var result = await mediator.Send(request);
-                    return result.ToPlatformApiResult();
-                }
-            )
-            .WithSummary("Update avatar.")
-            .RequireAuthorization();
-
-        group
-            .MapDelete(
-                "/",
+                "/delete",
                 async (IMediator mediator, ICurrentSession currentUser, DeleteAccountRequest request) =>
                 {
                     var result = await mediator.Send(request with { UserId = currentUser.UserId });
