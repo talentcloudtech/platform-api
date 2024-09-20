@@ -39,4 +39,14 @@ public static class StringSizes
     /// The maximum size for a bio.
     /// </summary>
     public const int Url = 500;
+
+    /// <summary>
+    /// The maximum size for an email.
+    /// </summary>
+    public const int Email = 255;
+
+    /// <summary>
+    /// The maximum size for a short address.
+    /// </summary>
+    public const int ShortAddress = 255;
 }

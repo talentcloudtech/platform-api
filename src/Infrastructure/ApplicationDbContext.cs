@@ -52,8 +52,23 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
 
     // /// <summary>
     // /// Gets or sets the DbSet of ProjectUser entities.
-    // /// </summary>
+    // // /// </summary>
     // public DbSet<ProjectUser> ProjectUsers { get; set; } = null!;
+
+    /// <summary>
+    /// Gets or sets the DbSet of Workspace entities.
+    /// </summary>
+    public DbSet<Workspace> Workspaces { get; set; } = null!;
+
+    /// <summary>
+    /// Gets or sets the DbSet of WorkspaceMember entities.
+    /// </summary>
+    public DbSet<WorkspaceMember> WorkspaceMembers { get; set; } = null!;
+
+    /// <summary>
+    /// Gets or sets the DbSet of Contract entities.
+    /// </summary>
+    public DbSet<Contract> Contracts { get; set; } = null!;
 
     /// <summary>
     /// Configures the model for the database context.

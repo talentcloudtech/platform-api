@@ -28,16 +28,16 @@ public partial struct UserId : IStringId
 }
 
 /// <summary>
-/// Represents a strongly typed identifier for a user.
+/// Represents a strongly typed identifier for a role.
 /// </summary>
 [StronglyTypedId]
 public partial struct RoleId : IStringId
 {
     /// <summary>
-    /// Implicitly converts a id to a UserId.
+    /// Implicitly converts a id to a RoleId.
     /// </summary>
     /// <param name="id">The id value.</param>
-    /// <returns>A new instance of UserId.</returns>
+    /// <returns>A new instance of RoleId.</returns>
     public static implicit operator RoleId(string id)
     {
         return new RoleId(id);
@@ -58,6 +58,57 @@ public partial struct ProjectId : IStringId
     public static implicit operator ProjectId(string id)
     {
         return new ProjectId(id);
+    }
+}
+
+/// <summary>
+/// Represents a strongly typed identifier for a workspace.
+/// </summary>
+[StronglyTypedId]
+public partial struct WorkspaceId : IStringId
+{
+    /// <summary>
+    /// Implicitly converts a id to a WorkspaceId.
+    /// </summary>
+    /// <param name="id">The id value.</param>
+    /// <returns>A new instance of WorkspaceId.</returns>
+    public static implicit operator WorkspaceId(string id)
+    {
+        return new WorkspaceId(id);
+    }
+}
+
+/// <summary>
+/// Represents a strongly typed identifier for a workspace member.
+/// </summary>
+[StronglyTypedId]
+public partial struct WorkspaceMemberId : IStringId
+{
+    /// <summary>
+    /// Implicitly converts a id to a WorkspaceMemberId.
+    /// </summary>
+    /// <param name="id">The id value.</param>
+    /// <returns>A new instance of WorkspaceMemberId.</returns>
+    public static implicit operator WorkspaceMemberId(string id)
+    {
+        return new WorkspaceMemberId(id);
+    }
+}
+
+/// <summary>
+/// Represents a strongly typed identifier for a contract.
+/// </summary>
+[StronglyTypedId]
+public partial struct ContractId : IStringId
+{
+    /// <summary>
+    /// Implicitly converts a id to a ContractId.
+    /// </summary>
+    /// <param name="id">The id value.</param>
+    /// <returns>A new instance of ContractId.</returns>
+    public static implicit operator ContractId(string id)
+    {
+        return new ContractId(id);
     }
 }
 
@@ -88,7 +139,7 @@ public partial struct SkillId : IStringId
     /// Implicitly converts a id to a SkillId.
     /// </summary>
     /// <param name="id">The id value.</param>
-    /// <returns>A new instance of  SkillId.</returns>
+    /// <returns>A new instance of SkillId.</returns>
     public static implicit operator SkillId(string id)
     {
         return new SkillId(id);
@@ -96,18 +147,13 @@ public partial struct SkillId : IStringId
 }
 
 /// <summary>
-/// Represents a strongly typed identifier for a experience.
+/// Represents a strongly typed identifier for an experience.
 /// </summary>
 [StronglyTypedId]
 public partial struct ExperienceId : IStringId
 {
-    internal static ExperienceId New()
-    {
-        throw new NotImplementedException();
-    }
-
     /// <summary>
-    /// Implicitly converts a id to a ExperienceId.
+    /// Implicitly converts a id to an ExperienceId.
     /// </summary>
     /// <param name="id">The id value.</param>
     /// <returns>A new instance of ExperienceId.</returns>
@@ -118,13 +164,13 @@ public partial struct ExperienceId : IStringId
 }
 
 /// <summary>
-/// Represents a strongly typed identifier for a education.
+/// Represents a strongly typed identifier for an education.
 /// </summary>
 [StronglyTypedId]
 public partial struct EducationId : IStringId
 {
     /// <summary>
-    /// Implicitly converts a id to a EducationId.
+    /// Implicitly converts a id to an EducationId.
     /// </summary>
     /// <param name="id">The id value.</param>
     /// <returns>A new instance of EducationId.</returns>
