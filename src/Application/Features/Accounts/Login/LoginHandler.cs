@@ -59,9 +59,8 @@ public class LoginHandler(
             return Result.Invalid(
                 new ValidationError
                 {
-                    Identifier = "root",
+                    Identifier = "email_not_confirmed",
                     ErrorMessage = "Email not confirmed.",
-                    ErrorCode = "email_not_confirmed",
                 }
             );
         }
