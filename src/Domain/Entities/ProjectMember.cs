@@ -1,6 +1,6 @@
 using System;
 using Platform.Domain.Entities.Common;
-using Platform.Domain.Enums;
+using Platform.Domain.Entities.Enums;
 
 namespace Platform.Domain.Entities;
 
@@ -58,4 +58,9 @@ public class ProjectMember : Entity<ProjectMemberId>
     /// Gets or sets the project associated with this project member.
     /// </summary>
     public Project Project { get; set; } = null!;
+
+    /// <summary>
+    /// Gets or sets the user associated with this project member.
+    /// </summary>
+    public ApplicationUser User { get; set; } = null!;
 }

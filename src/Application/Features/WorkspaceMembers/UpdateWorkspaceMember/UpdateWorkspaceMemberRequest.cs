@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 using Ardalis.Result;
 using MediatR;
 using Platform.Domain.Entities.Common;
-using Platform.Domain.Enums;
+using Platform.Domain.Entities.Enums;
 
 namespace Platform.Application.Features.WorkspaceMembers.UpdateWorkspaceMember;
 

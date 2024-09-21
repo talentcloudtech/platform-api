@@ -1,3 +1,5 @@
+namespace Platform.Domain.Entities.Enums;
+
 /// <summary>
 /// Represents the owner role in a project.
 /// </summary>

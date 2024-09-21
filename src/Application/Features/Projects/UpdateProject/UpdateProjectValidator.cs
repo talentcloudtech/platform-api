@@ -14,11 +14,9 @@ public class UpdateProjectValidator : AbstractValidator<UpdateProjectRequest>
     public UpdateProjectValidator()
     {
         RuleFor(x => x.Id).NotEmpty();
-
-        RuleFor(x => x.Name).NotEmpty().MaximumLength(StringSizes.Title);
-
-        RuleFor(x => x.Status).IsInEnum();
-
+        RuleFor(x => x.WorkspaceId).NotEmpty();
+        RuleFor(x => x.Title).NotEmpty().MaximumLength(StringSizes.Title);
         RuleFor(x => x.Description).MaximumLength(StringSizes.Max);
+        RuleFor(x => x.Status).IsInEnum();
     }
 }

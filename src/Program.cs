@@ -78,14 +78,15 @@ app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapProjectEndpoints();
-app.MapMemberProfileEndpoints();
 app.MapFileStorageEndpoints();
 app.MapWebhookEndpoints();
 app.MapAccountEndpoints();
+app.MapMemberProfileEndpoints();
 app.MapSkillsEndpoints();
 app.MapWorkspaceEndpoints();
 app.MapWorkspaceMemberEndpoints();
+app.MapProjectEndpoints();
+app.MapProjectMemberEndpoints();
 
 app.MapGet("/", () => Results.Redirect("/swagger"));
 

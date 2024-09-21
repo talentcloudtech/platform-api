@@ -13,7 +13,8 @@ public class CreateProjectValidator : AbstractValidator<CreateProjectRequest>
     /// </summary>
     public CreateProjectValidator()
     {
-        RuleFor(x => x.Name).NotEmpty().MaximumLength(StringSizes.Title);
-        RuleFor(x => x.Description).NotEmpty().MaximumLength(StringSizes.Max);
+        RuleFor(x => x.WorkspaceId).NotEmpty();
+        RuleFor(x => x.Title).NotEmpty().MaximumLength(StringSizes.Title);
+        RuleFor(x => x.Description).MaximumLength(StringSizes.Max);
     }
 }

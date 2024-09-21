@@ -1,7 +1,7 @@
 using System;
 using Platform.Application.Common.Responses;
 using Platform.Domain.Entities.Common;
-using Platform.Domain.Enums;
+using Platform.Domain.Entities.Enums;
 
 namespace Platform.Application.Features.WorkspaceMembers;
 

@@ -1,29 +1,23 @@
+using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.Result;
 using Mapster;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
+using Platform.Domain.Auth.Interfaces;
 using Platform.Domain.Entities;
+using Platform.Domain.Entities.Enums;
 
 namespace Platform.Application.Features.Projects.CreateProject;
 
 /// <summary>
 /// Handles the creation of a project.
 /// </summary>
-public class CreateProjectHandler : IRequestHandler<CreateProjectRequest, Result<ProjectResponse>>
+public class CreateProjectHandler(IContext context, ICurrentSession session) : IRequestHandler<CreateProjectRequest, Result<ProjectResponse>>
 {
-    private readonly IContext _context;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CreateProjectHandler"/> class.
-    /// </summary>
-    /// <param name="context">The context.</param>
-    public CreateProjectHandler(IContext context)
-    {
-        _context = context;
-    }
-
     /// <summary>
     /// Handles the creation of a project.
     /// </summary>
@@ -32,11 +26,33 @@ public class CreateProjectHandler : IRequestHandler<CreateProjectRequest, Result
     /// <returns>The result of the project creation.</returns>
     public async Task<Result<ProjectResponse>> Handle(CreateProjectRequest request, CancellationToken cancellationToken)
     {
-        var created = request.Adapt<Project>();
+        var workspace = await context.Workspaces.Include(x => x.Members).FirstOrDefaultAsync(x => x.Id == request.WorkspaceId, cancellationToken);
+        if (workspace == null)
+            return Result.NotFound("Workspace not found.");
 
-        _context.Projects.Add(created);
-        await _context.SaveChangesAsync(cancellationToken);
+        if (!workspace.Members.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner))
+            return Result.Forbidden("You are not a owner of this workspace. You can't create a project.");
 
-        return created.Adapt<ProjectResponse>();
+        var currentTimestamp = DateTime.UtcNow;
+
+        var newProject = request.Adapt<Project>();
+        newProject.Status = ProjectStatus.Draft;
+        newProject.CreatedBy = session.UserId;
+        newProject.CreatedDate = currentTimestamp;
+        newProject.Members.Add(
+            new ProjectMember
+            {
+                ProjectId = newProject.Id,
+                UserId = session.UserId,
+                Role = ProjectRole.ProjectOwner,
+                CreatedBy = session.UserId,
+                CreatedDate = currentTimestamp,
+            }
+        );
+
+        context.Projects.Add(newProject);
+        await context.SaveChangesAsync(cancellationToken);
+
+        return Result.Success(newProject.Adapt<ProjectResponse>());
     }
 }

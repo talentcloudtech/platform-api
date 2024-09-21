@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 using Ardalis.Result;
 using MediatR;
 using Platform.Domain.Entities.Common;
@@ -18,9 +19,15 @@ public record UpdateProjectRequest : IRequest<Result<ProjectResponse>>
     public ProjectId Id { get; init; }
 
     /// <summary>
-    /// Gets the name of the project.
+    /// Gets or sets the workspace identifier.
     /// </summary>
-    public string Name { get; init; } = null!;
+    [JsonIgnore]
+    public WorkspaceId WorkspaceId { get; init; }
+
+    /// <summary>
+    /// Gets or sets the title of the project.
+    /// </summary>
+    public string Title { get; init; } = null!;
 
     /// <summary>
     /// Gets or sets the description of the project.
@@ -28,7 +35,22 @@ public record UpdateProjectRequest : IRequest<Result<ProjectResponse>>
     public string? Description { get; init; }
 
     /// <summary>
-    /// Gets the status of the project.
+    /// Gets or sets the start date of the project.
+    /// </summary>
+    public DateTime StartDate { get; init; }
+
+    /// <summary>
+    /// Gets or sets the end date of the project.
+    /// </summary>
+    public DateTime? EndDate { get; init; }
+
+    /// <summary>
+    /// Gets or sets the budget for the project.
+    /// </summary>
+    public decimal? Budget { get; init; }
+
+    /// <summary>
+    /// Gets the current status of the project.
     /// </summary>
     public ProjectStatus Status { get; init; }
 }

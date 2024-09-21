@@ -1,0 +1,71 @@
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Ardalis.Result;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Platform.Application.Common;
+using Platform.Domain.Auth.Interfaces;
+using Platform.Domain.Entities.Enums;
+
+namespace Platform.Application.Features.ProjectMembers.DeleteProjectMember;
+
+/// <summary>
+/// Handler for deleting a project member.
+/// </summary>
+/// <param name="context">The database context.</param>
+/// <param name="session">The current session.</param>
+/// <returns>A <see cref="Result"/> indicating the success or failure of the operation.</returns>
+public class DeleteProjectMemberHandler(IContext context, ICurrentSession session) : IRequestHandler<DeleteProjectMemberRequest, Result>
+{
+    /// <summary>
+    /// Handles the request to delete a project member.
+    /// </summary>
+    /// <param name="request">The request containing the project and workspace IDs and the user ID to remove.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A <see cref="Result"/> indicating the success or failure of the operation.</returns>
+    public async Task<Result> Handle(DeleteProjectMemberRequest request, CancellationToken cancellationToken)
+    {
+        var project = await context
+            .Projects.Include(x => x.Members)
+            .Include(x => x.Workspace.Members)
+            .FirstOrDefaultAsync(x => x.Id == request.ProjectId && x.WorkspaceId == request.WorkspaceId, cancellationToken);
+
+        if (project == null)
+            return Result.NotFound("Project not found.");
+
+        if (
+            !project.Workspace.Members.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner)
+            && !project.Members.Any(x =>
+                x.UserId == session.UserId && (x.Role == ProjectRole.ProjectOwner || x.Role == ProjectRole.ProjectAdmin || x.Role == ProjectRole.ProjectManager)
+            )
+        )
+            return Result.Forbidden("You don't have permission to remove members from this project.");
+
+        var member = project.Members.FirstOrDefault(x => x.UserId == request.UserId);
+        if (member == null)
+            return Result.Invalid(
+                new ValidationError
+                {
+                    Identifier = nameof(request.UserId),
+                    ErrorMessage = "Project member not found.",
+                    ErrorCode = "PROJECT_MEMBER_NOT_FOUND",
+                }
+            );
+
+        if (request.UserId == session.UserId)
+            return Result.Invalid(
+                new ValidationError
+                {
+                    Identifier = nameof(request.UserId),
+                    ErrorMessage = "You cannot remove yourself from the project.",
+                    ErrorCode = "SELF_REMOVE",
+                }
+            );
+
+        context.ProjectMembers.Remove(member);
+        await context.SaveChangesAsync(cancellationToken);
+
+        return Result.Success();
+    }
+}

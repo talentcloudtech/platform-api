@@ -1,4 +1,4 @@
-namespace Platform.Domain.Enums;
+namespace Platform.Domain.Entities.Enums;
 
 /// <summary>
 /// Enum representing the different roles of a workspace member.

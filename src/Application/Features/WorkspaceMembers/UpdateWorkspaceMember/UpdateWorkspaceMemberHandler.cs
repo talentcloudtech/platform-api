@@ -8,7 +8,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
 using Platform.Domain.Auth.Interfaces;
-using Platform.Domain.Enums;
+using Platform.Domain.Entities.Enums;
 
 namespace Platform.Application.Features.WorkspaceMembers.UpdateWorkspaceMember;
 

@@ -21,6 +21,11 @@ public class Project : Entity<ProjectId>
     public WorkspaceId WorkspaceId { get; set; }
 
     /// <summary>
+    /// Gets or sets the workspace associated with this project.
+    /// </summary>
+    public Workspace Workspace { get; set; } = null!;
+
+    /// <summary>
     /// Gets or sets the title of the project.
     /// </summary>
     public string Title { get; set; } = null!;

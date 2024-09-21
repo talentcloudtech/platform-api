@@ -34,5 +34,6 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Project>
         builder.Property(x => x.UpdatedDate).HasConversion<DateTime>();
 
         builder.HasMany(x => x.Members).WithOne(m => m.Project).HasForeignKey(m => m.ProjectId).OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(pm => pm.Workspace).WithMany(p => p.Projects).HasForeignKey(pm => pm.WorkspaceId).OnDelete(DeleteBehavior.Restrict);
     }
 }
