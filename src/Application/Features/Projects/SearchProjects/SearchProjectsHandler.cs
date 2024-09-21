@@ -37,7 +37,7 @@ public class SearchProjectsHandler : IRequestHandler<SearchProjectsRequest, Resu
     {
         var projects = _context
             .Projects.WhereIf(!string.IsNullOrEmpty(request.Name), x => EF.Functions.Like(x.Title, $"%{request.Name}%"))
-            .WhereIf(request.Status.HasValue, x => x.Status == request.Status.Value);
+            .WhereIf(request.Statuses.Any(), x => request.Statuses.Contains(x.Status));
 
         return await projects.ProjectToType<ProjectResponse>().OrderBy(x => x.Name).ToPaginatedListAsync(request.CurrentPage, request.PageSize);
     }

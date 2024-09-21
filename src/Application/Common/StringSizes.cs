@@ -6,6 +6,11 @@
 public static class StringSizes
 {
     /// <summary>
+    /// The maximum size for an Id.
+    /// </summary>
+    public const int Id = 25;
+
+    /// <summary>
     /// The maximum size for a small string.
     /// </summary>
     public const int Small = 25;

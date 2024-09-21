@@ -30,18 +30,11 @@ public class CreateWorkspaceHandler(IContext context, ICurrentSession session) :
     {
         var currentTimeStamp = DateTime.UtcNow;
 
-        var newWorkspace = new Workspace
-        {
-            Name = request.Name,
-            ContactEmail = request.ContactEmail,
-            Urls = request.Urls,
-            Address = request.Address,
-            Logo = request.Logo,
-            CreatedBy = session.UserId,
-            CreatedDate = currentTimeStamp,
-            Members = new List<WorkspaceMember>(),
-        };
-        newWorkspace.Members.Add(
+        var newWorkspace = request.Adapt<Workspace>();
+        newWorkspace.CreatedBy = session.UserId;
+        newWorkspace.CreatedDate = currentTimeStamp;
+        newWorkspace.Members =
+        [
             new WorkspaceMember
             {
                 WorkspaceId = newWorkspace.Id,
@@ -49,8 +42,8 @@ public class CreateWorkspaceHandler(IContext context, ICurrentSession session) :
                 Role = WorkspaceRole.WorkspaceOwner,
                 CreatedBy = session.UserId,
                 CreatedDate = currentTimeStamp,
-            }
-        );
+            },
+        ];
 
         context.Workspaces.Add(newWorkspace);
         await context.SaveChangesAsync(cancellationToken);
