@@ -27,9 +27,6 @@ public class MessageConfiguration : IEntityTypeConfiguration<Message>
         builder.Property(x => x.Body).HasMaxLength(StringSizes.Max).IsRequired();
         builder.Property(x => x.MessageType).HasConversion<string>();
 
-        builder.HasMany(m => m.Recipients)
-            .WithOne(r => r.Message)
-            .HasForeignKey(r => r.MessageId)
-            .OnDelete(DeleteBehavior.Cascade);
+        builder.HasMany(m => m.Recipients).WithOne(r => r.Message).HasForeignKey(r => r.MessageId).OnDelete(DeleteBehavior.Cascade);
     }
 }

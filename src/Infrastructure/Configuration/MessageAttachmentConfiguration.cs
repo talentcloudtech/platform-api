@@ -29,15 +29,8 @@ public class MessageAttachmentConfiguration : IEntityTypeConfiguration<MessageAt
         builder.Property(x => x.ProjectId).HasMaxLength(25).HasConversion<ProjectId.EfCoreValueConverter>();
         builder.Property(x => x.WorkspaceId).HasMaxLength(25).HasConversion<WorkspaceId.EfCoreValueConverter>();
 
-        builder.HasOne(ma => ma.Message)
-            .WithMany()
-            .HasForeignKey(ma => ma.MessageId)
-            .OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne(ma => ma.Message).WithMany().HasForeignKey(ma => ma.MessageId).OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasOne(ma => ma.Reply)
-            .WithMany()
-            .HasForeignKey(ma => ma.ReplyId)
-            .OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne(ma => ma.Reply).WithMany().HasForeignKey(ma => ma.ReplyId).OnDelete(DeleteBehavior.Restrict);
     }
-
 }

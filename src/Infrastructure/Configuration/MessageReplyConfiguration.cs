@@ -24,9 +24,6 @@ public class MessageReplyConfiguration : IEntityTypeConfiguration<MessageReply>
         builder.Property(x => x.SenderId).HasMaxLength(25).HasConversion<UserId.EfCoreValueConverter>();
         builder.Property(x => x.Body).HasMaxLength(StringSizes.Max).IsRequired();
 
-        builder.HasOne(mr => mr.OriginalMessage)
-            .WithMany()
-            .HasForeignKey(mr => mr.OriginalMessageId)
-            .OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne(mr => mr.OriginalMessage).WithMany().HasForeignKey(mr => mr.OriginalMessageId).OnDelete(DeleteBehavior.Restrict);
     }
 }

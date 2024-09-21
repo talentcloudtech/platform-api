@@ -23,5 +23,5 @@ public enum MessageType
     /// <summary>
     /// Represents a regular message.
     /// </summary>
-    Message = 4
+    Message = 4,
 }

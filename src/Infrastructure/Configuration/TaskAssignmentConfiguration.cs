@@ -24,9 +24,6 @@ public class ProjectTaskAssignmentConfiguration : IEntityTypeConfiguration<Proje
         builder.Property(x => x.UserId).HasMaxLength(25).HasConversion<UserId.EfCoreValueConverter>();
         builder.Property(x => x.AssignedBy).HasMaxLength(25).HasConversion<UserId.EfCoreValueConverter>();
 
-        builder.HasOne(ta => ta.ProjectTask)
-            .WithMany(t => t.Assignments)
-            .HasForeignKey(ta => ta.TaskId)
-            .OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne(ta => ta.ProjectTask).WithMany(t => t.Assignments).HasForeignKey(ta => ta.TaskId).OnDelete(DeleteBehavior.Restrict);
     }
 }

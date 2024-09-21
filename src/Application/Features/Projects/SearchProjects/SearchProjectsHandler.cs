@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Ardalis.Result;
 using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +14,7 @@ namespace Platform.Application.Features.Projects.SearchProjects;
 /// <summary>
 /// Handles the request to search for projects with optional filtering and pagination.
 /// </summary>
-public class SearchProjectsHandler : IRequestHandler<SearchProjectsRequest, PaginatedList<ProjectResponse>>
+public class SearchProjectsHandler : IRequestHandler<SearchProjectsRequest, Result<PaginatedList<ProjectResponse>>>
 {
     private readonly IContext _context;
 
@@ -32,7 +33,7 @@ public class SearchProjectsHandler : IRequestHandler<SearchProjectsRequest, Pagi
     /// <param name="request">The search criteria for filtering and paginating projects.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A paginated list of <see cref="ProjectResponse"/> matching the search criteria.</returns>
-    public async Task<PaginatedList<ProjectResponse>> Handle(SearchProjectsRequest request, CancellationToken cancellationToken)
+    public async Task<Result<PaginatedList<ProjectResponse>>> Handle(SearchProjectsRequest request, CancellationToken cancellationToken)
     {
         var projects = _context
             .Projects.WhereIf(!string.IsNullOrEmpty(request.Name), x => EF.Functions.Like(x.Title, $"%{request.Name}%"))

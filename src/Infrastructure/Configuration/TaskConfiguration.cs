@@ -1,3 +1,4 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Platform.Application.Common;
@@ -27,10 +28,11 @@ public class ProjectTaskConfiguration : IEntityTypeConfiguration<ProjectTask>
         builder.Property(x => x.Cost).HasColumnType("decimal(18,2)");
         builder.Property(x => x.Status).HasConversion<string>();
         builder.Property(x => x.Priority).HasConversion<string>();
+        builder.Property(x => x.CreatedBy).HasMaxLength(25).HasConversion<UserId.EfCoreValueConverter>();
+        builder.Property(x => x.CreatedDate).HasConversion<DateTime>();
+        builder.Property(x => x.UpdatedBy).HasMaxLength(25).HasConversion<UserId.EfCoreValueConverter>();
+        builder.Property(x => x.UpdatedDate).HasConversion<DateTime>();
 
-        builder.HasOne(t => t.Project)
-            .WithMany(p => p.ProjectTasks)
-            .HasForeignKey(t => t.ProjectId)
-            .OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne(t => t.Project).WithMany(p => p.ProjectTasks).HasForeignKey(t => t.ProjectId).OnDelete(DeleteBehavior.Restrict);
     }
 }

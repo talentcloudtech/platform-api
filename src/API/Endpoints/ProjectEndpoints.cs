@@ -1,4 +1,3 @@
-using Ardalis.Result.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -32,7 +31,7 @@ public static class ProjectEndpoints
                 async (IMediator mediator, [AsParameters] SearchProjectsRequest request) =>
                 {
                     var result = await mediator.Send(request);
-                    return result;
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Searches for projects.");

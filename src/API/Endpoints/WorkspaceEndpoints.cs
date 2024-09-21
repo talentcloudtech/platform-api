@@ -1,0 +1,84 @@
+using MediatR;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
+using Platform.Application.Extensions;
+using Platform.Application.Features.Workspaces.CreateWorkspace;
+using Platform.Application.Features.Workspaces.DeleteWorkspace;
+using Platform.Application.Features.Workspaces.GetWorkspaceById;
+using Platform.Application.Features.Workspaces.SearchWorkspaces;
+using Platform.Application.Features.Workspaces.UpdateWorkspace;
+using Platform.Domain.Auth.Interfaces;
+
+namespace Platform.API.Endpoints;
+
+/// <summary>
+/// Endpoints for the Workspace entity.
+/// </summary>
+public static class WorkspaceEndpoints
+{
+    /// <summary>
+    /// Maps the workspace endpoints.
+    /// </summary>
+    /// <param name="builder">The endpoint route builder.</param>
+    public static void MapWorkspaceEndpoints(this IEndpointRouteBuilder builder)
+    {
+        var group = builder.MapGroup("api/workspaces").WithTags("Workspace").RequireAuthorization();
+
+        group
+            .MapGet(
+                "/",
+                async (IMediator mediator, [AsParameters] SearchWorkspacesRequest request) =>
+                {
+                    var result = await mediator.Send(request);
+                    return result;
+                }
+            )
+            .WithSummary("Searches for workspaces.");
+
+        group
+            .MapGet(
+                "{workSpaceId}",
+                async (IMediator mediator, ICurrentSession currentSession, string workspaceId) =>
+                {
+                    var result = await mediator.Send(new GetWorkspaceByIdRequest(workspaceId));
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Retrieves a workspace by its unique identifier.");
+
+        group
+            .MapPost(
+                "/",
+                async (IMediator mediator, ICurrentSession currentSession, CreateWorkspaceRequest request) =>
+                {
+                    var result = await mediator.Send(request);
+
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Creates a new workspace.");
+
+        group
+            .MapPut(
+                "{workSpaceId}",
+                async (IMediator mediator, ICurrentSession currentSession, string workspaceId, UpdateWorkspaceRequest request) =>
+                {
+                    var result = await mediator.Send(request with { Id = workspaceId });
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Updates a workspace by its unique identifier.");
+
+        group
+            .MapDelete(
+                "{workSpaceId}",
+                async (IMediator mediator, ICurrentSession currentSession, string workspaceId) =>
+                {
+                    var result = await mediator.Send(new DeleteWorkspaceRequest(workspaceId));
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Deletes a workspace by its unique identifier.");
+    }
+}

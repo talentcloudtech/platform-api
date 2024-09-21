@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Platform.Domain.Entities.Common;
 
 namespace Platform.Domain.Entities;
+
 /// <summary>
 /// Represents a workspace entity in the system.
 /// </summary>

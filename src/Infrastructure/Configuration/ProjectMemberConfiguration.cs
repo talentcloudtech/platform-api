@@ -1,6 +1,6 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Platform.Application.Common;
 using Platform.Domain.Entities;
 using Platform.Domain.Entities.Common;
 
@@ -23,10 +23,11 @@ public class ProjectMemberConfiguration : IEntityTypeConfiguration<ProjectMember
         builder.Property(x => x.ProjectId).HasMaxLength(25).HasConversion<ProjectId.EfCoreValueConverter>();
         builder.Property(x => x.UserId).HasMaxLength(25).HasConversion<UserId.EfCoreValueConverter>();
         builder.Property(x => x.Role).HasConversion<string>();
+        builder.Property(x => x.CreatedBy).HasMaxLength(25).HasConversion<UserId.EfCoreValueConverter>();
+        builder.Property(x => x.CreatedDate).HasConversion<DateTime>();
+        builder.Property(x => x.UpdatedBy).HasMaxLength(25).HasConversion<UserId.EfCoreValueConverter>();
+        builder.Property(x => x.UpdatedDate).HasConversion<DateTime>();
 
-        builder.HasOne(pm => pm.Project)
-            .WithMany(p => p.Members)
-            .HasForeignKey(pm => pm.ProjectId)
-            .OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne(pm => pm.Project).WithMany(p => p.Members).HasForeignKey(pm => pm.ProjectId).OnDelete(DeleteBehavior.Restrict);
     }
 }
