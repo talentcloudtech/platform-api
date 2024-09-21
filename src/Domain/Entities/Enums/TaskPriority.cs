@@ -23,5 +23,5 @@ public enum TaskPriority
     /// <summary>
     /// Represents a task with low priority.
     /// </summary>
-    Low = 4
+    Low = 4,
 }

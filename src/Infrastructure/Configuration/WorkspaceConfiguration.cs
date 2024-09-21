@@ -1,10 +1,10 @@
+using System;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Platform.Application.Common;
 using Platform.Domain.Entities;
 using Platform.Domain.Entities.Common;
-using System;
-using System.Linq;
 
 namespace Platform.Infrastructure.Configuration;
 
@@ -27,14 +27,13 @@ public class WorkspaceConfiguration : IEntityTypeConfiguration<Workspace>
         builder.Property(x => x.Address).HasMaxLength(StringSizes.ShortAddress);
         builder.Property(x => x.Logo).HasMaxLength(StringSizes.Url);
 
-        builder.Property(x => x.Urls).HasConversion(
-            v => string.Join(',', v),
-            v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList()
-        );
+        builder.Property(x => x.Urls).HasConversion(v => string.Join(',', v), v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList());
 
-        builder.HasMany(w => w.Members)
-            .WithOne(m => m.Workspace)
-            .HasForeignKey(m => m.WorkspaceId)
-            .OnDelete(DeleteBehavior.Cascade);
+        builder.Property(x => x.CreatedBy).HasMaxLength(25).HasConversion<UserId.EfCoreValueConverter>();
+        builder.Property(x => x.CreatedDate).HasConversion<DateTime>();
+        builder.Property(x => x.UpdatedBy).HasMaxLength(25).HasConversion<UserId.EfCoreValueConverter>();
+        builder.Property(x => x.UpdatedDate).HasConversion<DateTime>();
+
+        builder.HasMany(w => w.Members).WithOne(m => m.Workspace).HasForeignKey(m => m.WorkspaceId).OnDelete(DeleteBehavior.Cascade);
     }
 }

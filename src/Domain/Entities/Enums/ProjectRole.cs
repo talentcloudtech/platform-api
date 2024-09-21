@@ -23,5 +23,5 @@ public enum ProjectRole
     /// <summary>
     /// Represents a project member role.
     /// </summary>
-    ProjectMember = 4
+    ProjectMember = 4,
 }

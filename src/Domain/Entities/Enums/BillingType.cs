@@ -23,5 +23,5 @@ public enum BillingType
     /// <summary>
     /// Represents a monthly billing type, where charges are applied on a monthly basis.
     /// </summary>
-    Monthly = 4
+    Monthly = 4,
 }

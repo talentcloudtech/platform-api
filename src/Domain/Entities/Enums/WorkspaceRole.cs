@@ -13,5 +13,5 @@ public enum WorkspaceRole
     /// <summary>
     /// Represents a member of the workspace.
     /// </summary>
-    WorkspaceMember = 2
+    WorkspaceMember = 2,
 }

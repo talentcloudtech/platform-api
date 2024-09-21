@@ -23,5 +23,5 @@ public enum WorkspaceMemberStatus
     /// <summary>
     /// Represents a workspace member who has been cancelled.
     /// </summary>
-    Cancelled = 4
+    Cancelled = 4,
 }

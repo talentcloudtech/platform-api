@@ -23,9 +23,6 @@ public class MessageRecipientConfiguration : IEntityTypeConfiguration<MessageRec
         builder.Property(x => x.MessageId).HasMaxLength(25).HasConversion<MessageId.EfCoreValueConverter>();
         builder.Property(x => x.RecipientId).HasMaxLength(25).HasConversion<UserId.EfCoreValueConverter>();
 
-        builder.HasOne(mr => mr.Message)
-            .WithMany(m => m.Recipients)
-            .HasForeignKey(mr => mr.MessageId)
-            .OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne(mr => mr.Message).WithMany(m => m.Recipients).HasForeignKey(mr => mr.MessageId).OnDelete(DeleteBehavior.Restrict);
     }
 }

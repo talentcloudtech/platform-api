@@ -54,4 +54,9 @@ public class WorkspaceMember : Entity<WorkspaceMemberId>
     /// Gets or sets the workspace associated with this workspace member.
     /// </summary>
     public Workspace Workspace { get; set; } = null!;
+
+    /// <summary>
+    /// Gets or sets the user associated with this workspace member.
+    /// </summary>
+    public ApplicationUser User { get; set; } = null!;
 }

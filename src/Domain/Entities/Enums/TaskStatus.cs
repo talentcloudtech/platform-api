@@ -28,5 +28,5 @@ public enum TaskStatus
     /// <summary>
     /// Represents a task that has been cancelled.
     /// </summary>
-    Cancelled = 5
+    Cancelled = 5,
 }
