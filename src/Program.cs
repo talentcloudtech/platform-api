@@ -87,6 +87,7 @@ app.MapWorkspaceEndpoints();
 app.MapWorkspaceMemberEndpoints();
 app.MapProjectEndpoints();
 app.MapProjectMemberEndpoints();
+app.MapProjectTaskEndpoints();
 
 app.MapGet("/", () => Results.Redirect("/swagger"));
 

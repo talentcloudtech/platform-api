@@ -76,17 +76,12 @@ public class CreateProjectMemberHandler(IContext context, ICurrentSession sessio
                 }
             );
 
-        var newMember = new ProjectMember
-        {
-            ProjectId = request.ProjectId,
-            UserId = request.UserId,
-            Role = request.Role,
-            AllocatedMinMinutePerDay = request.AllocatedMinMinutePerDay,
-            CreatedBy = session.UserId,
-            CreatedDate = DateTime.UtcNow,
-        };
+        var newMember = request.Adapt<ProjectMember>();
+        newMember.CreatedBy = session.UserId;
+        newMember.CreatedDate = DateTime.UtcNow;
 
         context.ProjectMembers.Add(newMember);
+
         await context.SaveChangesAsync(cancellationToken);
 
         return Result.Success(newMember.Adapt<ProjectMemberResponse>());

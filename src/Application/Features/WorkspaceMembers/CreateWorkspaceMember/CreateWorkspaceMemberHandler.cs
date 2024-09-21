@@ -69,14 +69,9 @@ public class CreateWorkspaceMemberHandler(IContext context, ICurrentSession sess
                 }
             );
 
-        var newMember = new WorkspaceMember
-        {
-            WorkspaceId = request.WorkspaceId,
-            UserId = request.UserId,
-            Role = request.Role,
-            CreatedBy = session.UserId,
-            CreatedDate = DateTime.UtcNow,
-        };
+        var newMember = request.Adapt<WorkspaceMember>();
+        newMember.CreatedBy = session.UserId;
+        newMember.CreatedDate = DateTime.UtcNow;
 
         context.WorkspaceMembers.Add(newMember);
         await context.SaveChangesAsync(cancellationToken);
