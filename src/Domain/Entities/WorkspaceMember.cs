@@ -1,7 +1,6 @@
 using System;
 using Platform.Domain.Entities.Common;
 using Platform.Domain.Entities.Enums;
-using Platform.Domain.Enums;
 
 namespace Platform.Domain.Entities;
 

@@ -6,7 +6,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
 using Platform.Domain.Auth.Interfaces;
-using Platform.Domain.Enums;
+using Platform.Domain.Entities.Enums;
 
 namespace Platform.Application.Features.Workspaces.DeleteWorkspace;
 
@@ -26,7 +26,10 @@ public class DeleteWorkspaceHandler(IContext context, ICurrentSession session) :
     /// <returns>The result of the operation.</returns>
     public async Task<Result> Handle(DeleteWorkspaceRequest request, CancellationToken cancellationToken)
     {
-        var workspace = await context.Workspaces.Include(x => x.Members).FirstOrDefaultAsync(predicate: w => w.Id == request.WorkspaceId, cancellationToken);
+        var workspace = await context
+            .Workspaces.Include(x => x.Members)
+            .Include(x => x.Projects)
+            .FirstOrDefaultAsync(predicate: w => w.Id == request.WorkspaceId, cancellationToken);
 
         if (workspace == null)
         {
@@ -38,6 +41,7 @@ public class DeleteWorkspaceHandler(IContext context, ICurrentSession session) :
         }
 
         context.WorkspaceMembers.RemoveRange(workspace.Members);
+        context.Projects.RemoveRange(workspace.Projects);
         context.Workspaces.Remove(workspace);
         await context.SaveChangesAsync(cancellationToken);
 

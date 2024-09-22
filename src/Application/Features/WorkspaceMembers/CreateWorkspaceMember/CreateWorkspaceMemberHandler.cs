@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
 using Platform.Domain.Auth.Interfaces;
 using Platform.Domain.Entities;
-using Platform.Domain.Enums;
+using Platform.Domain.Entities.Enums;
 
 namespace Platform.Application.Features.WorkspaceMembers.CreateWorkspaceMember;
 
@@ -69,14 +69,9 @@ public class CreateWorkspaceMemberHandler(IContext context, ICurrentSession sess
                 }
             );
 
-        var newMember = new WorkspaceMember
-        {
-            WorkspaceId = request.WorkspaceId,
-            UserId = request.UserId,
-            Role = request.Role,
-            CreatedBy = session.UserId,
-            CreatedDate = DateTime.UtcNow,
-        };
+        var newMember = request.Adapt<WorkspaceMember>();
+        newMember.CreatedBy = session.UserId;
+        newMember.CreatedDate = DateTime.UtcNow;
 
         context.WorkspaceMembers.Add(newMember);
         await context.SaveChangesAsync(cancellationToken);

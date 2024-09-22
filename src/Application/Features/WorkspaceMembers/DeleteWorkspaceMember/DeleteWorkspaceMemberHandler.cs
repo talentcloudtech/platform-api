@@ -6,7 +6,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
 using Platform.Domain.Auth.Interfaces;
-using Platform.Domain.Enums;
+using Platform.Domain.Entities.Enums;
 
 namespace Platform.Application.Features.WorkspaceMembers.DeleteWorkspaceMember;
 
@@ -40,6 +40,16 @@ public class DeleteWorkspaceMemberHandler(IContext context, ICurrentSession sess
                     Identifier = "UserId",
                     ErrorMessage = "Workspace member not found.",
                     ErrorCode = "WORKSPACE_MEMBER_NOT_FOUND",
+                }
+            );
+
+        if (request.UserId == session.UserId)
+            return Result.Invalid(
+                new ValidationError
+                {
+                    Identifier = "UserId",
+                    ErrorMessage = "You cannot remove yourself from the workspace.",
+                    ErrorCode = "SELF_REMOVE",
                 }
             );
 

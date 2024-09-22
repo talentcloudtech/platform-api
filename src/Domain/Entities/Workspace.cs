@@ -44,4 +44,9 @@ public class Workspace : AuditableEntity<WorkspaceId>
     /// Gets or sets the members of the workspace.
     /// </summary>
     public ICollection<WorkspaceMember> Members { get; set; } = new List<WorkspaceMember>();
+
+    /// <summary>
+    /// Gets or sets the collection of projects.
+    /// </summary>
+    public ICollection<Project> Projects { get; set; } = new List<Project>();
 }

@@ -14,19 +14,9 @@ namespace Platform.Application.Features.Projects.SearchProjects;
 /// <summary>
 /// Handles the request to search for projects with optional filtering and pagination.
 /// </summary>
-public class SearchProjectsHandler : IRequestHandler<SearchProjectsRequest, Result<PaginatedList<ProjectResponse>>>
+/// <param name="context">The context to access the database.</param>
+public class SearchProjectsHandler(IContext context) : IRequestHandler<SearchProjectsRequest, Result<PaginatedList<ProjectResponse>>>
 {
-    private readonly IContext _context;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SearchProjectsHandler"/> class.
-    /// </summary>
-    /// <param name="context">The context to access the database.</param>
-    public SearchProjectsHandler(IContext context)
-    {
-        _context = context;
-    }
-
     /// <summary>
     /// Handles the request to search for projects based on the provided filtering and pagination options.
     /// </summary>
@@ -35,10 +25,11 @@ public class SearchProjectsHandler : IRequestHandler<SearchProjectsRequest, Resu
     /// <returns>A paginated list of <see cref="ProjectResponse"/> matching the search criteria.</returns>
     public async Task<Result<PaginatedList<ProjectResponse>>> Handle(SearchProjectsRequest request, CancellationToken cancellationToken)
     {
-        var projects = _context
-            .Projects.WhereIf(!string.IsNullOrEmpty(request.Name), x => EF.Functions.Like(x.Title, $"%{request.Name}%"))
+        var projects = context
+            .Projects.Where(x => x.WorkspaceId == request.WorkspaceId)
+            .WhereIf(!string.IsNullOrEmpty(request.Title), x => EF.Functions.Like(x.Title, $"%{request.Title}%"))
             .WhereIf(request.Statuses.Any(), x => request.Statuses.Contains(x.Status));
 
-        return await projects.ProjectToType<ProjectResponse>().OrderBy(x => x.Name).ToPaginatedListAsync(request.CurrentPage, request.PageSize);
+        return await projects.ProjectToType<ProjectResponse>().OrderBy(x => x.Title).ToPaginatedListAsync(request.CurrentPage, request.PageSize);
     }
 }
