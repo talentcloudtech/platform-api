@@ -7,7 +7,7 @@ namespace Platform.Domain.Entities;
 /// <summary>
 /// Represents a member of a workspace in the system.
 /// </summary>
-public class WorkspaceMember : Entity<WorkspaceMemberId>
+public class WorkspaceMember : AuditableEntity<WorkspaceMemberId>
 {
     /// <summary>
     /// Gets or sets the unique identifier for the workspace member.
@@ -28,26 +28,6 @@ public class WorkspaceMember : Entity<WorkspaceMemberId>
     /// Gets or sets the role of the member in the workspace.
     /// </summary>
     public WorkspaceRole Role { get; set; }
-
-    /// <summary>
-    /// Gets or sets the date when the workspace member was created.
-    /// </summary>
-    public DateTime CreatedDate { get; set; }
-
-    /// <summary>
-    /// Gets or sets the identifier of the user who created this workspace member.
-    /// </summary>
-    public UserId CreatedBy { get; set; }
-
-    /// <summary>
-    /// Gets or sets the date when the workspace member was last updated. Null if never updated.
-    /// </summary>
-    public DateTime? UpdatedDate { get; set; }
-
-    /// <summary>
-    /// Gets or sets the identifier of the user who last updated this workspace member. Null if never updated.
-    /// </summary>
-    public UserId? UpdatedBy { get; set; }
 
     /// <summary>
     /// Gets or sets the workspace associated with this workspace member.

@@ -77,7 +77,5 @@ public class MemberProfileConfiguration : IEntityTypeConfiguration<MemberProfile
         );
 
         builder.Property(x => x.ExternalLinks).HasColumnType("text[]").IsRequired(false);
-
-        builder.HasOne(x => x.User).WithOne(p => p.MemberProfile).HasForeignKey<ApplicationUser>(p => p.Id);
     }
 }

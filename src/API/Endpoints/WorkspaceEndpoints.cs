@@ -63,7 +63,7 @@ public static class WorkspaceEndpoints
         group
             .MapPut(
                 "{workSpaceId}",
-                async (IMediator mediator, ICurrentSession currentSession, string workspaceId, UpdateWorkspaceRequest request) =>
+                async (IMediator mediator, ICurrentSession currentSession, WorkspaceId workspaceId, UpdateWorkspaceRequest request) =>
                 {
                     var result = await mediator.Send(request with { Id = workspaceId });
                     return result.ToPlatformApiResult();
@@ -74,7 +74,7 @@ public static class WorkspaceEndpoints
         group
             .MapDelete(
                 "{workSpaceId}",
-                async (IMediator mediator, ICurrentSession currentSession, string workspaceId) =>
+                async (IMediator mediator, ICurrentSession currentSession, WorkspaceId workspaceId) =>
                 {
                     var result = await mediator.Send(new DeleteWorkspaceRequest(workspaceId));
                     return result.ToPlatformApiResult();

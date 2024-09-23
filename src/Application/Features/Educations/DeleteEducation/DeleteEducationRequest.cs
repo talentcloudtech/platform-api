@@ -9,4 +9,4 @@ namespace Platform.Application.Features.Educations.DeleteEducation;
 /// <param name="MemberProfileId">The unique identifier of the member profile.</param>
 /// <param name="EducationId">The unique identifier of the education.</param>
 /// </summary>
-public record DeleteEducationRequest(UserId MemberProfileId, string EducationId) : IRequest<Result>;
+public record DeleteEducationRequest(UserId MemberProfileId, EducationId EducationId) : IRequest<Result>;

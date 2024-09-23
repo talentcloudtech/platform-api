@@ -20,7 +20,7 @@ public record UpdateMemberSkillRequest : IRequest<Result<MemberSkillResponse>>
     /// Gets or sets the unique identifier of the language entry.
     /// </summary>
     [JsonIgnore]
-    public string MemberSkillId { get; set; } = null!;
+    public MemberSkillId MemberSkillId { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets the skill identifier.

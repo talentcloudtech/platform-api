@@ -21,7 +21,7 @@ public record UpdateEducationRequest : IRequest<Result<EducationResponse>>
     /// The unique identifier of the education.
     /// </summary>
     [JsonIgnore]
-    public string EducationId { get; init; } = null!;
+    public EducationId EducationId { get; init; } = null!;
 
     /// <summary>
     /// Gets or sets the name of the educational institute.

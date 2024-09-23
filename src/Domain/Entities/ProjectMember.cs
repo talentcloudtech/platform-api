@@ -7,7 +7,7 @@ namespace Platform.Domain.Entities;
 /// <summary>
 /// Represents a project member entity in the system.
 /// </summary>
-public class ProjectMember : Entity<ProjectMemberId>
+public class ProjectMember : AuditableEntity<ProjectMemberId>
 {
     /// <summary>
     /// Gets or sets the unique identifier for the project member.
@@ -33,26 +33,6 @@ public class ProjectMember : Entity<ProjectMemberId>
     /// Gets or sets the allocated minimum minutes per day for this project member.
     /// </summary>
     public int AllocatedMinMinutePerDay { get; set; }
-
-    /// <summary>
-    /// Gets or sets the date when the project member was created.
-    /// </summary>
-    public DateTime CreatedDate { get; set; }
-
-    /// <summary>
-    /// Gets or sets the identifier of the user who created this project member.
-    /// </summary>
-    public UserId CreatedBy { get; set; }
-
-    /// <summary>
-    /// Gets or sets the date when the project member was last updated.
-    /// </summary>
-    public DateTime? UpdatedDate { get; set; }
-
-    /// <summary>
-    /// Gets or sets the identifier of the user who last updated this project member.
-    /// </summary>
-    public UserId? UpdatedBy { get; set; }
 
     /// <summary>
     /// Gets or sets the project associated with this project member.

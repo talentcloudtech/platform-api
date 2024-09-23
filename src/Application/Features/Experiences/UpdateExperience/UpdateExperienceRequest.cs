@@ -21,7 +21,7 @@ public record UpdateExperienceRequest : IRequest<Result<ExperienceResponse>>
     /// Gets or sets the unique identifier of the experience.
     /// </summary>
     [JsonIgnore]
-    public string ExperienceId { get; init; } = null!;
+    public ExperienceId ExperienceId { get; init; } = null!;
 
     /// <summary>
     /// Gets or sets the name of the company.

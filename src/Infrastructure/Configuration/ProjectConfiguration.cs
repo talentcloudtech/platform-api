@@ -28,12 +28,13 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Project>
         builder.Property(x => x.EndDate).HasConversion<DateTime>();
         builder.Property(x => x.Budget).HasColumnType("decimal(18, 2)");
         builder.Property(x => x.Status).HasConversion<string>();
+
         builder.Property(x => x.CreatedBy).HasMaxLength(25).HasConversion<UserId.EfCoreValueConverter>();
         builder.Property(x => x.CreatedDate).HasConversion<DateTime>();
         builder.Property(x => x.UpdatedBy).HasMaxLength(25).HasConversion<UserId.EfCoreValueConverter>();
         builder.Property(x => x.UpdatedDate).HasConversion<DateTime>();
 
-        builder.HasMany(x => x.Members).WithOne(m => m.Project).HasForeignKey(m => m.ProjectId).OnDelete(DeleteBehavior.Cascade);
-        builder.HasOne(pm => pm.Workspace).WithMany(p => p.Projects).HasForeignKey(pm => pm.WorkspaceId).OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne(p => p.Workspace).WithMany(w => w.Projects).HasForeignKey(p => p.WorkspaceId).OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(p => p.User).WithMany(u => u.Projects).HasForeignKey(p => p.CreatedBy).OnDelete(DeleteBehavior.Restrict);
     }
 }

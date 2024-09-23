@@ -6,7 +6,7 @@ namespace Platform.Domain.Entities;
 /// <summary>
 /// Represents a task assignment entity in the system.
 /// </summary>
-public class ProjectTaskAssignment : Entity<ProjectTaskAssignmentId>
+public class ProjectTaskAssignment : AuditableEntity<ProjectTaskAssignmentId>
 {
     /// <summary>
     /// Gets or sets the unique identifier for the task assignment.
@@ -42,4 +42,9 @@ public class ProjectTaskAssignment : Entity<ProjectTaskAssignmentId>
     /// Gets or sets the task associated with this assignment.
     /// </summary>
     public ProjectTask ProjectTask { get; set; } = null!;
+
+    /// <summary>
+    /// Gets or sets the user associated with this assignment.
+    /// </summary>
+    public ApplicationUser User { get; set; } = null!;
 }

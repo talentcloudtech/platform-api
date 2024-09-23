@@ -23,6 +23,7 @@ using Platform.Application.Features.ProjectInfos.CreateProjectInfo;
 using Platform.Application.Features.ProjectInfos.DeleteProjectInfo;
 using Platform.Application.Features.ProjectInfos.UpdateProjectInfo;
 using Platform.Domain.Auth.Interfaces;
+using Platform.Domain.Entities.Common;
 
 namespace Platform.API.Endpoints;
 
@@ -121,7 +122,7 @@ public static class MemberProfileEndpoints
         group
             .MapPut(
                 "{experienceId}",
-                async (IMediator mediator, ICurrentSession currentSession, string experienceId, UpdateExperienceRequest request) =>
+                async (IMediator mediator, ICurrentSession currentSession, ExperienceId experienceId, UpdateExperienceRequest request) =>
                 {
                     var result = await mediator.Send(request with { MemberProfileId = currentSession.UserId, ExperienceId = experienceId });
                     return result.ToPlatformApiResult();
@@ -132,7 +133,7 @@ public static class MemberProfileEndpoints
         group
             .MapDelete(
                 "{experienceId}",
-                async (IMediator mediator, ICurrentSession currentSession, string experienceId) =>
+                async (IMediator mediator, ICurrentSession currentSession, ExperienceId experienceId) =>
                 {
                     var result = await mediator.Send(new DeleteExperienceRequest(currentSession.UserId, experienceId));
                     return result.ToPlatformApiResult();
@@ -164,7 +165,7 @@ public static class MemberProfileEndpoints
         group
             .MapPut(
                 "{educationId}",
-                async (IMediator mediator, ICurrentSession currentSession, string educationId, UpdateEducationRequest request) =>
+                async (IMediator mediator, ICurrentSession currentSession, EducationId educationId, UpdateEducationRequest request) =>
                 {
                     var result = await mediator.Send(request with { MemberProfileId = currentSession.UserId, EducationId = educationId });
                     return result.ToPlatformApiResult();
@@ -175,7 +176,7 @@ public static class MemberProfileEndpoints
         group
             .MapDelete(
                 "{educationId}",
-                async (IMediator mediator, ICurrentSession currentSession, string educationId) =>
+                async (IMediator mediator, ICurrentSession currentSession, EducationId educationId) =>
                 {
                     var result = await mediator.Send(new DeleteEducationRequest(currentSession.UserId, educationId));
                     return result.ToPlatformApiResult();
@@ -208,7 +209,7 @@ public static class MemberProfileEndpoints
         group
             .MapPut(
                 "{languageId}",
-                async (IMediator mediator, ICurrentSession currentSession, string languageId, UpdateLanguageRequest request) =>
+                async (IMediator mediator, ICurrentSession currentSession, LanguageId languageId, UpdateLanguageRequest request) =>
                 {
                     var result = await mediator.Send(request with { MemberProfileId = currentSession.UserId, LanguageId = languageId });
                     return result.ToPlatformApiResult();
@@ -219,7 +220,7 @@ public static class MemberProfileEndpoints
         group
             .MapDelete(
                 "{languageId}",
-                async (IMediator mediator, ICurrentSession currentSession, string languageId) =>
+                async (IMediator mediator, ICurrentSession currentSession, LanguageId languageId) =>
                 {
                     var result = await mediator.Send(new DeleteLanguageRequest(currentSession.UserId, languageId));
                     return result.ToPlatformApiResult();
@@ -251,7 +252,7 @@ public static class MemberProfileEndpoints
         group
             .MapPut(
                 "{projectId}",
-                async (IMediator mediator, ICurrentSession currentSession, string projectId, UpdateProjectInfoRequest request) =>
+                async (IMediator mediator, ICurrentSession currentSession, ProjectInfoId projectId, UpdateProjectInfoRequest request) =>
                 {
                     var result = await mediator.Send(request with { MemberProfileId = currentSession.UserId, ProjectInfoId = projectId });
                     return result.ToPlatformApiResult();
@@ -262,7 +263,7 @@ public static class MemberProfileEndpoints
         group
             .MapDelete(
                 "{projectId}",
-                async (IMediator mediator, ICurrentSession currentSession, string projectId) =>
+                async (IMediator mediator, ICurrentSession currentSession, ProjectInfoId projectId) =>
                 {
                     var result = await mediator.Send(new DeleteProjectInfoRequest(currentSession.UserId, projectId));
                     return result.ToPlatformApiResult();
@@ -294,7 +295,7 @@ public static class MemberProfileEndpoints
         group
             .MapPut(
                 "{memberSkillId}",
-                async (IMediator mediator, ICurrentSession currentSession, string memberSkillId, UpdateMemberSkillRequest request) =>
+                async (IMediator mediator, ICurrentSession currentSession, MemberSkillId memberSkillId, UpdateMemberSkillRequest request) =>
                 {
                     var result = await mediator.Send(
                         request with
@@ -312,7 +313,7 @@ public static class MemberProfileEndpoints
         group
             .MapDelete(
                 "{memberSkillId}",
-                async (IMediator mediator, ICurrentSession currentSession, string memberSkillId) =>
+                async (IMediator mediator, ICurrentSession currentSession, MemberSkillId memberSkillId) =>
                 {
                     var result = await mediator.Send(new DeleteMemberSkillRequest(currentSession.UserId, memberSkillId));
                     return result.ToPlatformApiResult();

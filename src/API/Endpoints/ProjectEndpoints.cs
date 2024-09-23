@@ -42,7 +42,7 @@ public static class ProjectEndpoints
         group
             .MapGet(
                 "{id}",
-                async (IMediator mediator, WorkspaceId workspaceId, string id) =>
+                async (IMediator mediator, WorkspaceId workspaceId, ProjectId id) =>
                 {
                     var result = await mediator.Send(new GetProjectByIdRequest(workspaceId, id));
                     return result.ToPlatformApiResult();
@@ -64,7 +64,7 @@ public static class ProjectEndpoints
         group
             .MapPut(
                 "{id}",
-                async (IMediator mediator, WorkspaceId workspaceId, string id, UpdateProjectRequest request) =>
+                async (IMediator mediator, WorkspaceId workspaceId, ProjectId id, UpdateProjectRequest request) =>
                 {
                     var result = await mediator.Send(request with { WorkspaceId = workspaceId, Id = id });
                     return result.ToPlatformApiResult();
@@ -75,7 +75,7 @@ public static class ProjectEndpoints
         group
             .MapDelete(
                 "{id}",
-                async (IMediator mediator, WorkspaceId workspaceId, string id) =>
+                async (IMediator mediator, WorkspaceId workspaceId, ProjectId id) =>
                 {
                     var result = await mediator.Send(new DeleteProjectRequest(workspaceId, id));
                     return result.ToPlatformApiResult();

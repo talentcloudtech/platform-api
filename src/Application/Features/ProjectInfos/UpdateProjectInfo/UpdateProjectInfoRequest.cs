@@ -21,7 +21,7 @@ public record UpdateProjectInfoRequest : IRequest<Result<ProjectInfoResponse>>
     /// Gets or sets the ID of the project to update.
     /// </summary>
     [JsonIgnore]
-    public string ProjectInfoId { get; init; } = null!;
+    public ProjectInfoId ProjectInfoId { get; init; } = null!;
 
     /// <summary>
     /// Gets or sets the title of the project.

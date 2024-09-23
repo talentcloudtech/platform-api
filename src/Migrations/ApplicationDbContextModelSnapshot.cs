@@ -258,7 +258,8 @@ namespace Platform.Migrations
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -274,7 +275,8 @@ namespace Platform.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("text");
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -290,6 +292,10 @@ namespace Platform.Migrations
                         .HasColumnType("character varying(25)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("WorkspaceId");
 
                     b.ToTable("Contracts");
                 });
@@ -570,6 +576,8 @@ namespace Platform.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("WorkspaceId");
+
                     b.ToTable("Projects");
                 });
 
@@ -680,7 +688,11 @@ namespace Platform.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedBy");
+
                     b.HasIndex("ProjectId");
+
+                    b.HasIndex("WorkspaceId");
 
                     b.ToTable("ProjectTasks");
                 });
@@ -699,6 +711,14 @@ namespace Platform.Migrations
                     b.Property<DateTime>("AssignedDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("TaskId")
                         .IsRequired()
                         .HasMaxLength(25)
@@ -706,6 +726,13 @@ namespace Platform.Migrations
 
                     b.Property<int>("TimeSpent")
                         .HasColumnType("integer");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -715,6 +742,8 @@ namespace Platform.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("TaskId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("ProjectTaskAssignments");
                 });
@@ -825,6 +854,8 @@ namespace Platform.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedBy");
+
                     b.ToTable("Workspaces");
                 });
 
@@ -919,6 +950,25 @@ namespace Platform.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Platform.Domain.Entities.Contract", b =>
+                {
+                    b.HasOne("Platform.Domain.Entities.ApplicationUser", "User")
+                        .WithMany("Contracts")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Platform.Domain.Entities.Workspace", "Workspace")
+                        .WithMany("Contracts")
+                        .HasForeignKey("WorkspaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+
+                    b.Navigation("Workspace");
                 });
 
             modelBuilder.Entity("Platform.Domain.Entities.MemberProfile", b =>
@@ -1193,6 +1243,17 @@ namespace Platform.Migrations
                     b.Navigation("OriginalMessage");
                 });
 
+            modelBuilder.Entity("Platform.Domain.Entities.Project", b =>
+                {
+                    b.HasOne("Platform.Domain.Entities.Workspace", "Workspace")
+                        .WithMany("Projects")
+                        .HasForeignKey("WorkspaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Workspace");
+                });
+
             modelBuilder.Entity("Platform.Domain.Entities.ProjectMember", b =>
                 {
                     b.HasOne("Platform.Domain.Entities.Project", "Project")
@@ -1201,18 +1262,40 @@ namespace Platform.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Platform.Domain.Entities.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Project");
                 });
 
             modelBuilder.Entity("Platform.Domain.Entities.ProjectTask", b =>
                 {
+                    b.HasOne("Platform.Domain.Entities.ApplicationUser", "User")
+                        .WithMany("Tasks")
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Platform.Domain.Entities.Project", "Project")
                         .WithMany("ProjectTasks")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Platform.Domain.Entities.Workspace", "Workspace")
+                        .WithMany("ProjectTasks")
+                        .HasForeignKey("WorkspaceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Project");
+
+                    b.Navigation("User");
+
+                    b.Navigation("Workspace");
                 });
 
             modelBuilder.Entity("Platform.Domain.Entities.ProjectTaskAssignment", b =>
@@ -1223,7 +1306,15 @@ namespace Platform.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Platform.Domain.Entities.ApplicationUser", "User")
+                        .WithMany("TaskAssignments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("ProjectTask");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Platform.Domain.Entities.RefreshToken", b =>
@@ -1237,8 +1328,25 @@ namespace Platform.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Platform.Domain.Entities.Workspace", b =>
+                {
+                    b.HasOne("Platform.Domain.Entities.ApplicationUser", "User")
+                        .WithMany("Workspaces")
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Platform.Domain.Entities.WorkspaceMember", b =>
                 {
+                    b.HasOne("Platform.Domain.Entities.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Platform.Domain.Entities.Workspace", "Workspace")
                         .WithMany("Members")
                         .HasForeignKey("WorkspaceId")
@@ -1250,9 +1358,23 @@ namespace Platform.Migrations
 
             modelBuilder.Entity("Platform.Domain.Entities.ApplicationUser", b =>
                 {
+                    b.Navigation("Contracts");
+
                     b.Navigation("MemberProfile");
 
+                    b.Navigation("ProjectMembers");
+
+                    b.Navigation("Projects");
+
                     b.Navigation("RefreshTokens");
+
+                    b.Navigation("TaskAssignments");
+
+                    b.Navigation("Tasks");
+
+                    b.Navigation("WorkspaceMembers");
+
+                    b.Navigation("Workspaces");
                 });
 
             modelBuilder.Entity("Platform.Domain.Entities.Message", b =>
@@ -1274,7 +1396,11 @@ namespace Platform.Migrations
 
             modelBuilder.Entity("Platform.Domain.Entities.Workspace", b =>
                 {
+                    b.Navigation("Contracts");
+
                     b.Navigation("Members");
+
+                    b.Navigation("Projects");
                 });
 #pragma warning restore 612, 618
         }

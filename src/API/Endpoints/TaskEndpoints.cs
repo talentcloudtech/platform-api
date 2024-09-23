@@ -8,6 +8,7 @@ using Platform.Application.Features.Tasks.DeleteTask;
 using Platform.Application.Features.Tasks.GetTaskById;
 using Platform.Application.Features.Tasks.SearchTasks;
 using Platform.Application.Features.Tasks.UpdateTask;
+using Platform.Domain.Entities.Common;
 
 namespace Platform.Api.Endpoints;
 
@@ -27,7 +28,7 @@ public static class TaskEndpoints
         group
             .MapGet(
                 "/",
-                async (IMediator mediator, string workspaceId, string projectId, [AsParameters] SearchTasksRequest request) =>
+                async (IMediator mediator, WorkspaceId workspaceId, ProjectId projectId, [AsParameters] SearchTasksRequest request) =>
                 {
                     var result = await mediator.Send(request with { WorkspaceId = workspaceId, ProjectId = projectId });
                     return result.ToPlatformApiResult();
@@ -38,7 +39,7 @@ public static class TaskEndpoints
         group
             .MapGet(
                 "{taskId}",
-                async (IMediator mediator, string workspaceId, string projectId, string taskId) =>
+                async (IMediator mediator, WorkspaceId workspaceId, ProjectId projectId, ProjectTaskId taskId) =>
                 {
                     var result = await mediator.Send(new GetTaskByIdRequest(workspaceId, projectId, taskId));
                     return result.ToPlatformApiResult();
@@ -49,7 +50,7 @@ public static class TaskEndpoints
         group
             .MapPost(
                 "/",
-                async (IMediator mediator, string workspaceId, string projectId, CreateTaskRequest request) =>
+                async (IMediator mediator, WorkspaceId workspaceId, ProjectId projectId, CreateTaskRequest request) =>
                 {
                     var result = await mediator.Send(request with { WorkspaceId = workspaceId, ProjectId = projectId });
                     return result.ToPlatformApiResult();
@@ -60,7 +61,7 @@ public static class TaskEndpoints
         group
             .MapPut(
                 "{taskId}",
-                async (IMediator mediator, string workspaceId, string projectId, string taskId, UpdateTaskRequest request) =>
+                async (IMediator mediator, WorkspaceId workspaceId, ProjectId projectId, ProjectTaskId taskId, UpdateTaskRequest request) =>
                 {
                     var result = await mediator.Send(request with { WorkspaceId = workspaceId, ProjectId = projectId, Id = taskId });
                     return result.ToPlatformApiResult();
@@ -71,7 +72,7 @@ public static class TaskEndpoints
         group
             .MapDelete(
                 "{taskId}",
-                async (IMediator mediator, string workspaceId, string projectId, string taskId) =>
+                async (IMediator mediator, WorkspaceId workspaceId, ProjectId projectId, ProjectTaskId taskId) =>
                 {
                     var result = await mediator.Send(new DeleteTaskRequest(workspaceId, projectId, taskId));
                     return result.ToPlatformApiResult();

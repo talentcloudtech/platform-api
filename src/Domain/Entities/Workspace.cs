@@ -41,6 +41,11 @@ public class Workspace : AuditableEntity<WorkspaceId>
     public string? Logo { get; set; }
 
     /// <summary>
+    /// Gets or sets the user associated with this project.
+    /// </summary>
+    public ApplicationUser User { get; set; } = null!;
+
+    /// <summary>
     /// Gets or sets the members of the workspace.
     /// </summary>
     public ICollection<WorkspaceMember> Members { get; set; } = new List<WorkspaceMember>();
@@ -49,4 +54,14 @@ public class Workspace : AuditableEntity<WorkspaceId>
     /// Gets or sets the collection of projects.
     /// </summary>
     public ICollection<Project> Projects { get; set; } = new List<Project>();
+
+    /// <summary>
+    /// Gets or sets the collection of tasks.
+    /// </summary>
+    public ICollection<ProjectTask> ProjectTasks { get; set; } = new List<ProjectTask>();
+
+    /// <summary>
+    /// Gets or sets the collection of contracts.
+    /// </summary>
+    public ICollection<Contract> Contracts { get; set; } = new List<Contract>();
 }
