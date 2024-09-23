@@ -9,6 +9,7 @@ using Platform.Application.Features.Workspaces.GetWorkspaceById;
 using Platform.Application.Features.Workspaces.SearchWorkspaces;
 using Platform.Application.Features.Workspaces.UpdateWorkspace;
 using Platform.Domain.Auth.Interfaces;
+using Platform.Domain.Entities.Common;
 
 namespace Platform.API.Endpoints;
 
@@ -31,7 +32,7 @@ public static class WorkspaceEndpoints
                 async (IMediator mediator, [AsParameters] SearchWorkspacesRequest request) =>
                 {
                     var result = await mediator.Send(request);
-                    return result;
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Searches for workspaces.");
@@ -39,7 +40,7 @@ public static class WorkspaceEndpoints
         group
             .MapGet(
                 "{workSpaceId}",
-                async (IMediator mediator, ICurrentSession currentSession, string workspaceId) =>
+                async (IMediator mediator, ICurrentSession currentSession, WorkspaceId workspaceId) =>
                 {
                     var result = await mediator.Send(new GetWorkspaceByIdRequest(workspaceId));
                     return result.ToPlatformApiResult();
