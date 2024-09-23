@@ -1,29 +1,27 @@
-﻿using System.Threading;
+﻿using System;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.Result;
 using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
+using Platform.Domain.Auth.Interfaces;
+using Platform.Domain.Entities;
+using Platform.Domain.Entities.Common;
+using Platform.Domain.Entities.Enums;
 
 namespace Platform.Application.Features.Projects.UpdateProject;
 
 /// <summary>
 /// Handles the update project request.
 /// </summary>
-public class UpdateProjectHandler : IRequestHandler<UpdateProjectRequest, Result<ProjectResponse>>
+/// <param name="context">The context.</param>
+/// <param name="session">The current session.</param>
+/// <returns>The result of the update operation.</returns>
+public class UpdateProjectHandler(IContext context, ICurrentSession session) : IRequestHandler<UpdateProjectRequest, Result<ProjectResponse>>
 {
-    private readonly IContext _context;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="UpdateProjectHandler"/> class.
-    /// </summary>
-    /// <param name="context">The context.</param>
-    public UpdateProjectHandler(IContext context)
-    {
-        _context = context;
-    }
-
     /// <summary>
     /// Handles the update project request.
     /// </summary>
@@ -32,17 +30,32 @@ public class UpdateProjectHandler : IRequestHandler<UpdateProjectRequest, Result
     /// <returns>The result of the update operation.</returns>
     public async Task<Result<ProjectResponse>> Handle(UpdateProjectRequest request, CancellationToken cancellationToken)
     {
-        var originalProject = await _context.Projects.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+        var originalProject = await context
+            .Projects.Include(x => x.Workspace.Members)
+            .Include(x => x.Members)
+            .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
         if (originalProject == null)
-            return Result.NotFound();
+            return Result.NotFound("Project not found.");
 
-        originalProject.Name = request.Name;
-        // originalProject.Description = request.Description;
-        // originalProject.Status = request.Status;
+        if (
+            !originalProject.Workspace.Members.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner)
+            && !originalProject.Members.Any(x =>
+                x.UserId == session.UserId && (x.Role == ProjectRole.ProjectOwner || x.Role == ProjectRole.ProjectAdmin || x.Role == ProjectRole.ProjectManager)
+            )
+        )
+            return Result.Forbidden("You don't have permission to update this project.");
 
-        _context.Projects.Update(originalProject);
+        originalProject.Title = request.Title;
+        originalProject.Description = request.Description;
+        originalProject.StartDate = request.StartDate;
+        originalProject.EndDate = request.EndDate;
+        originalProject.Budget = request.Budget;
+        originalProject.Status = request.Status;
+        originalProject.UpdatedBy = session.UserId;
+        originalProject.UpdatedDate = DateTime.UtcNow;
 
-        await _context.SaveChangesAsync(cancellationToken);
+        context.Projects.Update(originalProject);
+        await context.SaveChangesAsync(cancellationToken);
 
         return originalProject.Adapt<ProjectResponse>();
     }

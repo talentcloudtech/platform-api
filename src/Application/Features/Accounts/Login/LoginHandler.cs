@@ -56,13 +56,7 @@ public class LoginHandler(
 
         if (!user.EmailConfirmed)
         {
-            return Result.Invalid(
-                new ValidationError
-                {
-                    Identifier = "email_not_confirmed",
-                    ErrorMessage = "Email not confirmed.",
-                }
-            );
+            return Result.Invalid(new ValidationError { Identifier = "email_not_confirmed", ErrorMessage = "Email not confirmed." });
         }
 
         var result = await signInManager.PasswordSignInAsync(user, request.Password, false, true);

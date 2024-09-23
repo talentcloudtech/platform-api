@@ -6,6 +6,11 @@
 public static class StringSizes
 {
     /// <summary>
+    /// The maximum size for an Id.
+    /// </summary>
+    public const int Id = 25;
+
+    /// <summary>
     /// The maximum size for a small string.
     /// </summary>
     public const int Small = 25;
@@ -39,4 +44,24 @@ public static class StringSizes
     /// The maximum size for a bio.
     /// </summary>
     public const int Url = 500;
+
+    /// <summary>
+    /// The maximum size for an email.
+    /// </summary>
+    public const int Email = 255;
+
+    /// <summary>
+    /// The maximum size for a short address.
+    /// </summary>
+    public const int ShortAddress = 255;
+
+    /// <summary>
+    /// The maximum size for a file name.
+    /// </summary>
+    public const int FileName = 255;
+
+    /// <summary>
+    /// The maximum size for a file type.
+    /// </summary>
+    public const int FileType = 255;
 }

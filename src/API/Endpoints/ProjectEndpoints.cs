@@ -1,4 +1,3 @@
-using Ardalis.Result.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -9,7 +8,6 @@ using Platform.Application.Features.Projects.DeleteProject;
 using Platform.Application.Features.Projects.GetProjectById;
 using Platform.Application.Features.Projects.SearchProjects;
 using Platform.Application.Features.Projects.UpdateProject;
-using Platform.Domain.Entities.Common;
 
 namespace Platform.Api.Endpoints;
 
@@ -24,15 +22,15 @@ public static class ProjectEndpoints
     /// <param name="builder">The endpoint route builder.</param>
     public static void MapProjectEndpoints(this IEndpointRouteBuilder builder)
     {
-        var group = builder.MapGroup("api/projects").WithTags("Project").RequireAuthorization();
+        var group = builder.MapGroup("api/workspaces/{workspaceId}/projects").WithTags("Project").RequireAuthorization();
 
         group
             .MapGet(
                 "/",
-                async (IMediator mediator, [AsParameters] SearchProjectsRequest request) =>
+                async (IMediator mediator, string workSpaceId, [AsParameters] SearchProjectsRequest request) =>
                 {
-                    var result = await mediator.Send(request);
-                    return result;
+                    var result = await mediator.Send(request with { WorkspaceId = workSpaceId });
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Searches for projects.");
@@ -40,9 +38,9 @@ public static class ProjectEndpoints
         group
             .MapGet(
                 "{id}",
-                async (IMediator mediator, ProjectId id) =>
+                async (IMediator mediator, string workSpaceId, string id) =>
                 {
-                    var result = await mediator.Send(new GetProjectByIdRequest(id));
+                    var result = await mediator.Send(new GetProjectByIdRequest(workSpaceId, id));
                     return result.ToPlatformApiResult();
                 }
             )
@@ -51,9 +49,9 @@ public static class ProjectEndpoints
         group
             .MapPost(
                 "/",
-                async (IMediator mediator, CreateProjectRequest request) =>
+                async (IMediator mediator, string workSpaceId, CreateProjectRequest request) =>
                 {
-                    var result = await mediator.Send(request);
+                    var result = await mediator.Send(request with { WorkspaceId = workSpaceId });
                     return result.ToPlatformApiResult();
                 }
             )
@@ -62,9 +60,9 @@ public static class ProjectEndpoints
         group
             .MapPut(
                 "{id}",
-                async (IMediator mediator, ProjectId id, UpdateProjectRequest request) =>
+                async (IMediator mediator, string workSpaceId, string id, UpdateProjectRequest request) =>
                 {
-                    var result = await mediator.Send(request with { Id = id });
+                    var result = await mediator.Send(request with { WorkspaceId = workSpaceId, Id = id });
                     return result.ToPlatformApiResult();
                 }
             )
@@ -73,9 +71,9 @@ public static class ProjectEndpoints
         group
             .MapDelete(
                 "{id}",
-                async (IMediator mediator, ProjectId id) =>
+                async (IMediator mediator, string workspaceId, string id) =>
                 {
-                    var result = await mediator.Send(new DeleteProjectRequest(id));
+                    var result = await mediator.Send(new DeleteProjectRequest(workspaceId, id));
                     return result.ToPlatformApiResult();
                 }
             )
