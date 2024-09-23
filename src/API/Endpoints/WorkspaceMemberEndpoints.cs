@@ -60,7 +60,7 @@ public static class WorkspaceMemberEndpoints
             .WithSummary("Creates a new workspace member.");
 
         group
-            .MapPut(
+            .MapPatch(
                 "{userId}",
                 async (IMediator mediator, ICurrentSession currentSession, WorkspaceId workspaceId, UserId userId, UpdateWorkspaceMemberRequest request) =>
                 {
