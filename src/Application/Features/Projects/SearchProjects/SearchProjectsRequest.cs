@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Ardalis.Result;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Platform.Application.Common.Responses;
 using Platform.Domain.Entities.Common;
 using Platform.Domain.Entities.Enums;
@@ -16,7 +17,7 @@ namespace Platform.Application.Features.Projects.SearchProjects;
 /// <param name="CurrentPage">The current page number for pagination. Defaults to 1.</param>
 /// <param name="PageSize">The number of items per page for pagination. Defaults to 10.</param>
 /// <returns>A paginated list of <see cref="ProjectResponse"/> matching the search criteria.</returns>
-public record SearchProjectsRequest(string? Title = null, List<ProjectStatus>? Statuses = null, int CurrentPage = 1, int PageSize = 10)
+public record SearchProjectsRequest(string? Title = null, ProjectStatus[]? Statuses = null, int CurrentPage = 1, int PageSize = 10)
     : IRequest<Result<PaginatedList<ProjectResponse>>>
 {
     /// <summary>
@@ -28,5 +29,5 @@ public record SearchProjectsRequest(string? Title = null, List<ProjectStatus>? S
     /// <summary>
     /// Gets or sets the list of statuses to filter projects by.
     /// </summary>
-    public List<ProjectStatus> Statuses { get; init; } = Statuses ?? new() { ProjectStatus.Draft, ProjectStatus.InProgress };
+    public ProjectStatus[] Statuses { get; init; } = Statuses ?? new[] { ProjectStatus.Draft, ProjectStatus.InProgress };
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using StronglyTypedIds;
+﻿using StronglyTypedIds;
 
 [assembly: StronglyTypedIdDefaults(Template.String, "string-efcore")]
 
