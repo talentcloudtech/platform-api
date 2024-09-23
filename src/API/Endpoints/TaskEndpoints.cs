@@ -22,6 +22,18 @@ public static class TaskEndpoints
     /// <param name="builder">The endpoint route builder.</param>
     public static void MapProjectTaskEndpoints(this IEndpointRouteBuilder builder)
     {
+        builder
+            .MapGet(
+                "api/tasks",
+                async (IMediator mediator, [AsParameters] SearchUsersTaskRequest request) =>
+                {
+                    var result = await mediator.Send(request);
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Searches for user's tasks.")
+            .RequireAuthorization();
+
         var group = builder.MapGroup("api/workspaces/{workspaceId}/projects/{projectId}/tasks").WithTags("Task").RequireAuthorization();
 
         group

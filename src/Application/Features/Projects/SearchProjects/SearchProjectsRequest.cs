@@ -24,7 +24,7 @@ public record SearchProjectsRequest(string? Title = null, ProjectStatus[]? Statu
     /// Gets or sets the workspace ID to filter projects by.
     /// </summary>
     [JsonIgnore]
-    public WorkspaceId WorkspaceId { get; set; }
+    public WorkspaceId WorkspaceId { get; init; }
 
     /// <summary>
     /// Gets or sets the list of statuses to filter projects by.

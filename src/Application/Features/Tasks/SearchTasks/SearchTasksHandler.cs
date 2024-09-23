@@ -42,8 +42,8 @@ public class SearchTasksHandler(IContext context, ICurrentSession session) : IRe
         var tasks = context
             .ProjectTasks.Where(x => x.ProjectId == request.ProjectId)
             .WhereIf(!string.IsNullOrEmpty(request.Title), x => EF.Functions.Like(x.Title, $"%{request.Title}%"))
-            .WhereIf(request.Status.HasValue, x => x.Status == request.Status)
-            .WhereIf(request.Priority.HasValue, x => x.Priority == request.Priority);
+            .WhereIf(request.Statuses.Any(), x => request.Statuses.Contains(x.Status))
+            .WhereIf(request.Priorities.Any(), x => request.Priorities.Contains(x.Priority));
 
         return await tasks.ProjectToType<TaskResponse>().OrderBy(x => x.Title).ToPaginatedListAsync(request.CurrentPage, request.PageSize);
     }

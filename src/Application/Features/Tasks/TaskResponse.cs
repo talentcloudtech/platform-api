@@ -11,6 +11,11 @@ namespace Platform.Application.Features.Tasks;
 public class TaskResponse
 {
     /// <summary>
+    /// Gets or sets the workspace identifier associated with this task.
+    /// </summary>
+    public WorkspaceId WorkspaceId { get; init; }
+
+    /// <summary>
     /// Gets or sets the unique identifier for the project task.
     /// </summary>
     public ProjectTaskId Id { get; init; }

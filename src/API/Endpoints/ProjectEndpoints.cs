@@ -1,11 +1,8 @@
-using Ardalis.Result.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Platform.Application.Common.Responses;
 using Platform.Application.Extensions;
-using Platform.Application.Features.Projects;
 using Platform.Application.Features.Projects.CreateProject;
 using Platform.Application.Features.Projects.DeleteProject;
 using Platform.Application.Features.Projects.GetProjectById;
@@ -26,6 +23,18 @@ public static class ProjectEndpoints
     /// <param name="builder">The endpoint route builder.</param>
     public static void MapProjectEndpoints(this IEndpointRouteBuilder builder)
     {
+        builder
+            .MapGet(
+                "api/projects",
+                async (IMediator mediator, [AsParameters] SearchUsersProjectRequest request) =>
+                {
+                    var result = await mediator.Send(request);
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Searches for user's projects.")
+            .RequireAuthorization();
+
         var group = builder.MapGroup("api/workspaces/{workspaceId}/projects").WithTags("Project").RequireAuthorization();
 
         group
