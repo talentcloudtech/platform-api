@@ -58,7 +58,7 @@ public static class ProjectEndpoints
             .WithSummary("Creates a new project.");
 
         group
-            .MapPut(
+            .MapPatch(
                 "{id}",
                 async (IMediator mediator, string workSpaceId, string id, UpdateProjectRequest request) =>
                 {

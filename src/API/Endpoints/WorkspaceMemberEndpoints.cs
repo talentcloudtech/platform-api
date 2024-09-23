@@ -31,7 +31,7 @@ public static class WorkspaceMemberEndpoints
                 async (IMediator mediator, string workspaceId, [AsParameters] SearchWorkspaceMembersRequest request) =>
                 {
                     var result = await mediator.Send(request with { WorkspaceId = workspaceId });
-                    return Results.Ok(result);
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Searches for workspace members.");
@@ -59,7 +59,7 @@ public static class WorkspaceMemberEndpoints
             .WithSummary("Creates a new workspace member.");
 
         group
-            .MapPut(
+            .MapPatch(
                 "{userId}",
                 async (IMediator mediator, ICurrentSession currentSession, string workspaceId, string userId, UpdateWorkspaceMemberRequest request) =>
                 {

@@ -58,7 +58,7 @@ public static class TaskEndpoints
             .WithSummary("Creates a new task.");
 
         group
-            .MapPut(
+            .MapPatch(
                 "{taskId}",
                 async (IMediator mediator, string workspaceId, string projectId, string taskId, UpdateTaskRequest request) =>
                 {
