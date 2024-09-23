@@ -23,7 +23,7 @@ public class WorkspaceConfiguration : IEntityTypeConfiguration<Workspace>
 
         builder.Property(x => x.Id).HasMaxLength(25).HasConversion<WorkspaceId.EfCoreValueConverter>();
         builder.Property(x => x.Name).HasMaxLength(StringSizes.Title).IsRequired();
-        builder.Property(x => x.ContactEmail).HasMaxLength(StringSizes.Email).IsRequired();
+        builder.Property(x => x.ContactEmail).HasMaxLength(StringSizes.Email);
         builder.Property(x => x.Address).HasMaxLength(StringSizes.ShortAddress);
         builder.Property(x => x.Logo).HasMaxLength(StringSizes.Url);
 

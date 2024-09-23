@@ -570,6 +570,8 @@ namespace Platform.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("WorkspaceId");
+
                     b.ToTable("Projects");
                 });
 
@@ -614,6 +616,8 @@ namespace Platform.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ProjectId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("ProjectMembers");
                 });
@@ -791,7 +795,6 @@ namespace Platform.Migrations
                         .HasColumnType("character varying(255)");
 
                     b.Property<string>("ContactEmail")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
@@ -864,6 +867,8 @@ namespace Platform.Migrations
                         .HasColumnType("character varying(25)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.HasIndex("WorkspaceId");
 
@@ -1193,6 +1198,17 @@ namespace Platform.Migrations
                     b.Navigation("OriginalMessage");
                 });
 
+            modelBuilder.Entity("Platform.Domain.Entities.Project", b =>
+                {
+                    b.HasOne("Platform.Domain.Entities.Workspace", "Workspace")
+                        .WithMany("Projects")
+                        .HasForeignKey("WorkspaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Workspace");
+                });
+
             modelBuilder.Entity("Platform.Domain.Entities.ProjectMember", b =>
                 {
                     b.HasOne("Platform.Domain.Entities.Project", "Project")
@@ -1201,7 +1217,15 @@ namespace Platform.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Platform.Domain.Entities.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Project");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Platform.Domain.Entities.ProjectTask", b =>
@@ -1239,11 +1263,19 @@ namespace Platform.Migrations
 
             modelBuilder.Entity("Platform.Domain.Entities.WorkspaceMember", b =>
                 {
+                    b.HasOne("Platform.Domain.Entities.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Platform.Domain.Entities.Workspace", "Workspace")
                         .WithMany("Members")
                         .HasForeignKey("WorkspaceId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("User");
 
                     b.Navigation("Workspace");
                 });
@@ -1275,6 +1307,8 @@ namespace Platform.Migrations
             modelBuilder.Entity("Platform.Domain.Entities.Workspace", b =>
                 {
                     b.Navigation("Members");
+
+                    b.Navigation("Projects");
                 });
 #pragma warning restore 612, 618
         }
