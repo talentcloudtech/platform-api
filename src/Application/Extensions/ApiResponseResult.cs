@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Platform.Application.Common;
 using Platform.Application.Common.Responses;
@@ -20,52 +21,60 @@ public static partial class ApiResponseResultExtensions
     /// <typeparam name="T">The value being returned</typeparam>
     /// <param name="result">The Ardalis.Result to convert to an Microsoft.AspNetCore.Http.IResult</param>
     /// <returns></returns>
-    public static Microsoft.AspNetCore.Http.IResult ToPlatformApiResult<T>(this Ardalis.Result.Result<T> result) =>
-        ToPlatformApiResult((Ardalis.Result.IResult)result);
+    public static Results<JsonHttpResult<ApiResponse<T>>, Ok<ApiResponse<T>>> ToPlatformApiResult<T>(this Ardalis.Result.Result<T> result)
+        where T : class =>
+        result.Status switch
+        {
+            Ardalis.Result.ResultStatus.Ok => TypedResults.Ok(new ApiResponse<T> { Success = true, Data = (T)result.GetValue() }),
+            Ardalis.Result.ResultStatus.Created => TypedResults.Ok(new ApiResponse<T> { Success = true }),
+            Ardalis.Result.ResultStatus.NoContent => TypedResults.Ok(new ApiResponse<T> { Success = true }),
+            Ardalis.Result.ResultStatus.NotFound => TypedResults.Json(
+                new ApiResponse<T>
+                {
+                    Success = false,
+                    Errors = new Dictionary<string, string[]> { { "message", new[] { "Resource not found." } } },
+                }
+            ),
+            Ardalis.Result.ResultStatus.Unauthorized => ToHttpResults<T>(result, StatusCodes.Status401Unauthorized, "Unauthorized."),
+            Ardalis.Result.ResultStatus.Forbidden => ToHttpResults<T>(result, StatusCodes.Status403Forbidden, "Forbidden."),
+            Ardalis.Result.ResultStatus.Invalid => BadRequest<T>(result),
+            Ardalis.Result.ResultStatus.Error => ToHttpResults<T>(result, StatusCodes.Status422UnprocessableEntity, "Error."),
+            Ardalis.Result.ResultStatus.Conflict => ToHttpResults<T>(result, StatusCodes.Status409Conflict, "Resource already exists."),
+            Ardalis.Result.ResultStatus.Unavailable => ToHttpResults<T>(result, StatusCodes.Status503ServiceUnavailable, "Service unavailable."),
+            Ardalis.Result.ResultStatus.CriticalError => ToHttpResults<T>(result, StatusCodes.Status500InternalServerError, "Something went wrong."),
+            _ => throw new NotSupportedException($"Result {result.Status} conversion is not supported."),
+        };
 
     /// <summary>
     /// Convert a <see cref="Ardalis.Result.Result"/> to an instance of <see cref="Microsoft.AspNetCore.Http.IResult"/>
     /// </summary>
     /// <param name="result">The Ardalis.Result to convert to an Microsoft.AspNetCore.Http.IResult</param>
     /// <returns></returns>
-    public static Microsoft.AspNetCore.Http.IResult ToPlatformApiResult(this Ardalis.Result.Result result) =>
-        ToPlatformApiResult((Ardalis.Result.IResult)result);
-
-    internal static Microsoft.AspNetCore.Http.IResult ToPlatformApiResult(this Ardalis.Result.IResult result) =>
+    public static Results<JsonHttpResult<ApiResponse<object>>, Ok<ApiResponse<object>>> ToPlatformApiResult(this Ardalis.Result.Result result) =>
         result.Status switch
         {
-            Ardalis.Result.ResultStatus.Ok => Ok(result),
-            Ardalis.Result.ResultStatus.Created => Created(result),
-            Ardalis.Result.ResultStatus.NoContent => NoContent(result),
-            Ardalis.Result.ResultStatus.NotFound => NotFoundEntity(result),
-            Ardalis.Result.ResultStatus.Unauthorized => UnAuthorized(result),
-            Ardalis.Result.ResultStatus.Forbidden => Forbidden(result),
-            Ardalis.Result.ResultStatus.Invalid => BadRequest(result),
-            Ardalis.Result.ResultStatus.Error => UnprocessableEntity(result),
-            Ardalis.Result.ResultStatus.Conflict => ConflictEntity(result),
-            Ardalis.Result.ResultStatus.Unavailable => UnavailableEntity(result),
-            Ardalis.Result.ResultStatus.CriticalError => CriticalEntity(result),
+            Ardalis.Result.ResultStatus.Ok => TypedResults.Ok(new ApiResponse<object> { Success = true, Data = result.GetValue() }),
+            Ardalis.Result.ResultStatus.Created => TypedResults.Ok(new ApiResponse<object> { Success = true, Data = result.GetValue() }),
+            Ardalis.Result.ResultStatus.NoContent => TypedResults.Ok(new ApiResponse<object> { Success = true, Data = result.GetValue() }),
+            Ardalis.Result.ResultStatus.NotFound => TypedResults.Json(
+                new ApiResponse<object>
+                {
+                    Success = false,
+                    Errors = new Dictionary<string, string[]> { { "message", new[] { "Resource not found." } } },
+                }
+            ),
+            Ardalis.Result.ResultStatus.Unauthorized => ToHttpResults<object>(result, StatusCodes.Status401Unauthorized, "Unauthorized."),
+            Ardalis.Result.ResultStatus.Forbidden => ToHttpResults<object>(result, StatusCodes.Status403Forbidden, "Forbidden."),
+            Ardalis.Result.ResultStatus.Invalid => BadRequest<object>(result),
+            Ardalis.Result.ResultStatus.Error => ToHttpResults<object>(result, StatusCodes.Status422UnprocessableEntity, "Error."),
+            Ardalis.Result.ResultStatus.Conflict => ToHttpResults<object>(result, StatusCodes.Status409Conflict, "Resource already exists."),
+            Ardalis.Result.ResultStatus.Unavailable => ToHttpResults<object>(result, StatusCodes.Status503ServiceUnavailable, "Service unavailable."),
+            Ardalis.Result.ResultStatus.CriticalError => ToHttpResults<object>(result, StatusCodes.Status500InternalServerError, "Something went wrong."),
             _ => throw new NotSupportedException($"Result {result.Status} conversion is not supported."),
         };
 
-    private static Microsoft.AspNetCore.Http.IResult Ok(Ardalis.Result.IResult result)
-    {
-        return result is Ardalis.Result.Result
-            ? Results.Ok(new ApiResponse<object> { Success = true, Data = result.GetValue() })
-            : Results.Ok(new ApiResponse<object> { Success = true, Data = result.GetValue() });
-    }
-
-    private static Microsoft.AspNetCore.Http.IResult Created(Ardalis.Result.IResult result)
-    {
-        return ToHttpResults(result, StatusCodes.Status201Created, "Created.");
-    }
-
-    private static Microsoft.AspNetCore.Http.IResult NoContent(Ardalis.Result.IResult result)
-    {
-        return ToHttpResults(result, StatusCodes.Status204NoContent, "No content.");
-    }
-
-    private static Microsoft.AspNetCore.Http.IResult BadRequest(Ardalis.Result.IResult result)
+    private static JsonHttpResult<ApiResponse<T>> BadRequest<T>(Ardalis.Result.IResult result)
+        where T : class
     {
         Dictionary<string, string[]> groupedErrors;
         if (result.ValidationErrors.Any())
@@ -79,49 +88,15 @@ public static partial class ApiResponseResultExtensions
             groupedErrors = new Dictionary<string, string[]> { { "message", new[] { result.Errors.FirstOrDefault() ?? "Bad request." } } };
         }
 
-        return Results.Json(
-            new ApiResponse<string> { Success = false, Errors = groupedErrors },
+        return TypedResults.Json(
+            new ApiResponse<T> { Success = false, Errors = groupedErrors },
             statusCode: StatusCodes.Status400BadRequest,
             contentType: "application/json"
         );
     }
 
-    private static Microsoft.AspNetCore.Http.IResult UnprocessableEntity(Ardalis.Result.IResult result)
-    {
-        return ToHttpResults(result, StatusCodes.Status422UnprocessableEntity, "Unprocessable entity.");
-    }
-
-    private static Microsoft.AspNetCore.Http.IResult NotFoundEntity(Ardalis.Result.IResult result)
-    {
-        return ToHttpResults(result, StatusCodes.Status404NotFound, "Resource not found.");
-    }
-
-    private static Microsoft.AspNetCore.Http.IResult ConflictEntity(Ardalis.Result.IResult result)
-    {
-        return ToHttpResults(result, StatusCodes.Status409Conflict, "Resource already exists.");
-    }
-
-    private static Microsoft.AspNetCore.Http.IResult CriticalEntity(Ardalis.Result.IResult result)
-    {
-        return ToHttpResults(result, StatusCodes.Status500InternalServerError, "Something went wrong.");
-    }
-
-    private static Microsoft.AspNetCore.Http.IResult UnavailableEntity(Ardalis.Result.IResult result)
-    {
-        return ToHttpResults(result, StatusCodes.Status503ServiceUnavailable, "Service unavailable.");
-    }
-
-    private static Microsoft.AspNetCore.Http.IResult Forbidden(Ardalis.Result.IResult result)
-    {
-        return ToHttpResults(result, StatusCodes.Status403Forbidden, "Forbidden.");
-    }
-
-    private static Microsoft.AspNetCore.Http.IResult UnAuthorized(Ardalis.Result.IResult result)
-    {
-        return ToHttpResults(result, StatusCodes.Status401Unauthorized, "Unauthorized.");
-    }
-
-    private static Microsoft.AspNetCore.Http.IResult ToHttpResults(Ardalis.Result.IResult result, int statusCode, string message)
+    private static JsonHttpResult<ApiResponse<T>> ToHttpResults<T>(Ardalis.Result.IResult result, int statusCode, string message)
+        where T : class
     {
         Dictionary<string, string[]> groupedErrors;
         if (result.ValidationErrors.Any())
@@ -139,6 +114,6 @@ public static partial class ApiResponseResultExtensions
             groupedErrors = new Dictionary<string, string[]> { { "message", new[] { message } } };
         }
 
-        return Results.Json(new ApiResponse<string> { Success = false, Errors = groupedErrors }, statusCode: statusCode, contentType: "application/json");
+        return TypedResults.Json(new ApiResponse<T> { Success = false, Errors = groupedErrors }, statusCode: statusCode, contentType: "application/json");
     }
 }
