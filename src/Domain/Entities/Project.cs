@@ -8,7 +8,7 @@ namespace Platform.Domain.Entities;
 /// <summary>
 /// Represents a project entity in the system.
 /// </summary>
-public class Project : Entity<ProjectId>
+public class Project : AuditableEntity<ProjectId>
 {
     /// <summary>
     /// Gets or sets the unique identifier for the project.
@@ -56,26 +56,6 @@ public class Project : Entity<ProjectId>
     public ProjectStatus Status { get; set; }
 
     /// <summary>
-    /// Gets or sets the date when the project was created.
-    /// </summary>
-    public DateTime CreatedDate { get; set; }
-
-    /// <summary>
-    /// Gets or sets the identifier of the user who created the project.
-    /// </summary>
-    public UserId CreatedBy { get; set; }
-
-    /// <summary>
-    /// Gets or sets the date when the project was last updated.
-    /// </summary>
-    public DateTime? UpdatedDate { get; set; }
-
-    /// <summary>
-    /// Gets or sets the identifier of the user who last updated the project.
-    /// </summary>
-    public UserId? UpdatedBy { get; set; }
-
-    /// <summary>
     /// Gets or sets the collection of project members.
     /// </summary>
     public ICollection<ProjectMember> Members { get; set; } = new List<ProjectMember>();
@@ -84,4 +64,9 @@ public class Project : Entity<ProjectId>
     /// Gets or sets the collection of tasks associated with this project.
     /// </summary>
     public ICollection<ProjectTask> ProjectTasks { get; set; } = new List<ProjectTask>();
+
+    /// <summary>
+    /// Gets or sets the user associated with this project.
+    /// </summary>
+    public ApplicationUser User { get; set; } = null!;
 }

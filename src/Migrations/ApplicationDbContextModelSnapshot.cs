@@ -258,7 +258,8 @@ namespace Platform.Migrations
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -274,7 +275,8 @@ namespace Platform.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("UpdatedBy")
-                        .HasColumnType("text");
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
@@ -290,6 +292,10 @@ namespace Platform.Migrations
                         .HasColumnType("character varying(25)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("WorkspaceId");
 
                     b.ToTable("Contracts");
                 });
@@ -338,6 +344,56 @@ namespace Platform.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("MemberProfiles");
+                });
+
+            modelBuilder.Entity("Platform.Domain.Entities.Message", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasMaxLength(4000)
+                        .HasColumnType("character varying(4000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("MessageType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProjectId")
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.Property<int>("RecipientCount")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("ReplyAllowed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("SenderId")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<int>("TotalReplyCount")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("WorkspaceId")
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("Platform.Domain.Entities.Message", b =>
@@ -684,7 +740,11 @@ namespace Platform.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedBy");
+
                     b.HasIndex("ProjectId");
+
+                    b.HasIndex("WorkspaceId");
 
                     b.ToTable("ProjectTasks");
                 });
@@ -703,6 +763,14 @@ namespace Platform.Migrations
                     b.Property<DateTime>("AssignedDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("TaskId")
                         .IsRequired()
                         .HasMaxLength(25)
@@ -710,6 +778,13 @@ namespace Platform.Migrations
 
                     b.Property<int>("TimeSpent")
                         .HasColumnType("integer");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -719,6 +794,8 @@ namespace Platform.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("TaskId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("ProjectTaskAssignments");
                 });
@@ -828,6 +905,8 @@ namespace Platform.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedBy");
+
                     b.ToTable("Workspaces");
                 });
 
@@ -924,6 +1003,25 @@ namespace Platform.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Platform.Domain.Entities.Contract", b =>
+                {
+                    b.HasOne("Platform.Domain.Entities.ApplicationUser", "User")
+                        .WithMany("Contracts")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Platform.Domain.Entities.Workspace", "Workspace")
+                        .WithMany("Contracts")
+                        .HasForeignKey("WorkspaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+
+                    b.Navigation("Workspace");
                 });
 
             modelBuilder.Entity("Platform.Domain.Entities.MemberProfile", b =>
@@ -1230,13 +1328,29 @@ namespace Platform.Migrations
 
             modelBuilder.Entity("Platform.Domain.Entities.ProjectTask", b =>
                 {
+                    b.HasOne("Platform.Domain.Entities.ApplicationUser", "User")
+                        .WithMany("Tasks")
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Platform.Domain.Entities.Project", "Project")
                         .WithMany("ProjectTasks")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Platform.Domain.Entities.Workspace", "Workspace")
+                        .WithMany("ProjectTasks")
+                        .HasForeignKey("WorkspaceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Project");
+
+                    b.Navigation("User");
+
+                    b.Navigation("Workspace");
                 });
 
             modelBuilder.Entity("Platform.Domain.Entities.ProjectTaskAssignment", b =>
@@ -1247,7 +1361,15 @@ namespace Platform.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Platform.Domain.Entities.ApplicationUser", "User")
+                        .WithMany("TaskAssignments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("ProjectTask");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Platform.Domain.Entities.RefreshToken", b =>
@@ -1256,6 +1378,17 @@ namespace Platform.Migrations
                         .WithMany("RefreshTokens")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Platform.Domain.Entities.Workspace", b =>
+                {
+                    b.HasOne("Platform.Domain.Entities.ApplicationUser", "User")
+                        .WithMany("Workspaces")
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -1282,9 +1415,23 @@ namespace Platform.Migrations
 
             modelBuilder.Entity("Platform.Domain.Entities.ApplicationUser", b =>
                 {
+                    b.Navigation("Contracts");
+
                     b.Navigation("MemberProfile");
 
+                    b.Navigation("ProjectMembers");
+
+                    b.Navigation("Projects");
+
                     b.Navigation("RefreshTokens");
+
+                    b.Navigation("TaskAssignments");
+
+                    b.Navigation("Tasks");
+
+                    b.Navigation("WorkspaceMembers");
+
+                    b.Navigation("Workspaces");
                 });
 
             modelBuilder.Entity("Platform.Domain.Entities.Message", b =>
@@ -1306,6 +1453,8 @@ namespace Platform.Migrations
 
             modelBuilder.Entity("Platform.Domain.Entities.Workspace", b =>
                 {
+                    b.Navigation("Contracts");
+
                     b.Navigation("Members");
 
                     b.Navigation("Projects");

@@ -9,4 +9,4 @@ namespace Platform.Application.Features.ProjectInfos.DeleteProjectInfo;
 /// </summary>
 /// <param name="MemberProfileId">The ID of the member profile.</param>
 /// <param name="ProjectInfoId">The ID of the project to delete.</param>
-public record DeleteProjectInfoRequest(UserId MemberProfileId, string ProjectInfoId) : IRequest<Result>;
+public record DeleteProjectInfoRequest(UserId MemberProfileId, ProjectInfoId ProjectInfoId) : IRequest<Result>;

@@ -8,7 +8,7 @@ namespace Platform.Domain.Entities;
 /// <summary>
 /// Represents a task entity in the system.
 /// </summary>
-public class ProjectTask : Entity<ProjectTaskId>
+public class ProjectTask : AuditableEntity<ProjectTaskId>
 {
     /// <summary>
     /// Gets or sets the unique identifier for the task.
@@ -66,24 +66,9 @@ public class ProjectTask : Entity<ProjectTaskId>
     public TaskPriority Priority { get; set; }
 
     /// <summary>
-    /// Gets or sets the date when the task was created.
+    /// Gets or sets the user associated with this task.
     /// </summary>
-    public DateTime CreatedDate { get; set; }
-
-    /// <summary>
-    /// Gets or sets the identifier of the user who created the task.
-    /// </summary>
-    public UserId CreatedBy { get; set; }
-
-    /// <summary>
-    /// Gets or sets the date when the task was last updated.
-    /// </summary>
-    public DateTime? UpdatedDate { get; set; }
-
-    /// <summary>
-    /// Gets or sets the identifier of the user who last updated the task.
-    /// </summary>
-    public UserId? UpdatedBy { get; set; }
+    public ApplicationUser User { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets the project associated with this task.

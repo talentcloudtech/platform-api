@@ -7,7 +7,7 @@ namespace Platform.Domain.Entities;
 /// <summary>
 /// Represents a contract entity in the system.
 /// </summary>
-public class Contract : Entity<ContractId>
+public class Contract : AuditableEntity<ContractId>
 {
     /// <summary>
     /// Gets or sets the unique identifier for the contract.
@@ -17,17 +17,17 @@ public class Contract : Entity<ContractId>
     /// <summary>
     /// Gets or sets the user identifier associated with this contract.
     /// </summary>
-    public UserId UserId { get; set; }
+    public required UserId UserId { get; set; }
 
     /// <summary>
     /// Gets or sets the workspace identifier associated with this contract.
     /// </summary>
-    public WorkspaceId WorkspaceId { get; set; }
+    public required WorkspaceId WorkspaceId { get; set; }
 
     /// <summary>
     /// Gets or sets the billing type for this contract.
     /// </summary>
-    public BillingType BillingType { get; set; }
+    public required BillingType BillingType { get; set; }
 
     /// <summary>
     /// Gets or sets the available hours or units per day for this contract.
@@ -42,7 +42,7 @@ public class Contract : Entity<ContractId>
     /// <summary>
     /// Gets or sets the start date of the contract.
     /// </summary>
-    public DateTime StartDate { get; set; }
+    public required DateTime StartDate { get; set; }
 
     /// <summary>
     /// Gets or sets the end date of the contract. Null if the contract is ongoing.
@@ -52,25 +52,15 @@ public class Contract : Entity<ContractId>
     /// <summary>
     /// Gets or sets the status of the workspace member associated with this contract.
     /// </summary>
-    public WorkspaceMemberStatus Status { get; set; }
+    public required WorkspaceMemberStatus Status { get; set; }
 
     /// <summary>
-    /// Gets or sets the date when the contract was created.
+    /// Gets or sets the project associated with this project member.
     /// </summary>
-    public DateTime CreatedDate { get; set; }
+    public Workspace Workspace { get; set; } = null!;
 
     /// <summary>
-    /// Gets or sets the identifier of the user who created the contract.
+    /// Gets or sets the user associated with this project member.
     /// </summary>
-    public UserId CreatedBy { get; set; }
-
-    /// <summary>
-    /// Gets or sets the date when the contract was last updated. Null if never updated.
-    /// </summary>
-    public DateTime? UpdatedDate { get; set; }
-
-    /// <summary>
-    /// Gets or sets the identifier of the user who last updated the contract. Null if never updated.
-    /// </summary>
-    public UserId? UpdatedBy { get; set; }
+    public ApplicationUser User { get; set; } = null!;
 }

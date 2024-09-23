@@ -21,7 +21,7 @@ public record UpdateLanguageRequest : IRequest<Result<LanguageResponse>>
     /// Gets or sets the unique identifier of the language entry.
     /// </summary>
     [JsonIgnore]
-    public string LanguageId { get; init; } = null!;
+    public LanguageId LanguageId { get; init; } = null!;
 
     /// <summary>
     /// Gets or sets the name of the language.

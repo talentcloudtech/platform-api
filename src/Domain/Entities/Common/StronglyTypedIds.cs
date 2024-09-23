@@ -180,6 +180,57 @@ public partial struct EducationId : IStringId
 }
 
 /// <summary>
+/// Represents a strongly typed identifier for a language.
+/// </summary>
+[StronglyTypedId]
+public partial struct LanguageId : IStringId
+{
+    /// <summary>
+    /// Implicitly converts a id to a LanguageId.
+    /// </summary>
+    /// <param name="id">The id value.</param>
+    /// <returns>A new instance of LanguageId.</returns>
+    public static implicit operator LanguageId(string id)
+    {
+        return new LanguageId(id);
+    }
+}
+
+/// <summary>
+/// Represents a strongly typed identifier for a member skill.
+/// </summary>
+[StronglyTypedId]
+public partial struct MemberSkillId : IStringId
+{
+    /// <summary>
+    /// Implicitly converts a id to a MemberSkillId.
+    /// </summary>
+    /// <param name="id">The id value.</param>
+    /// <returns>A new instance of MemberSkillId.</returns>
+    public static implicit operator MemberSkillId(string id)
+    {
+        return new MemberSkillId(id);
+    }
+}
+
+/// <summary>
+/// Represents a strongly typed identifier for a member's project info.
+/// </summary>
+[StronglyTypedId]
+public partial struct ProjectInfoId : IStringId
+{
+    /// <summary>
+    /// Implicitly converts a id to a ProjectInfoId.
+    /// </summary>
+    /// <param name="id">The id value.</param>
+    /// <returns>A new instance of ProjectInfoId.</returns>
+    public static implicit operator ProjectInfoId(string id)
+    {
+        return new ProjectInfoId(id);
+    }
+}
+
+/// <summary>
 /// Represents a strongly typed identifier for a certification.
 /// </summary>
 [StronglyTypedId]

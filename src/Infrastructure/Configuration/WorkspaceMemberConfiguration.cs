@@ -30,5 +30,6 @@ public class WorkspaceMemberConfiguration : IEntityTypeConfiguration<WorkspaceMe
         builder.Property(x => x.UpdatedDate).HasConversion<DateTime>();
 
         builder.HasOne(wm => wm.Workspace).WithMany(w => w.Members).HasForeignKey(wm => wm.WorkspaceId).OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne(wm => wm.User).WithMany(u => u.WorkspaceMembers).HasForeignKey(wm => wm.UserId).OnDelete(DeleteBehavior.Restrict);
     }
 }

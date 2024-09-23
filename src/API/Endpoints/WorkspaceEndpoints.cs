@@ -9,6 +9,7 @@ using Platform.Application.Features.Workspaces.GetWorkspaceById;
 using Platform.Application.Features.Workspaces.SearchWorkspaces;
 using Platform.Application.Features.Workspaces.UpdateWorkspace;
 using Platform.Domain.Auth.Interfaces;
+using Platform.Domain.Entities.Common;
 
 namespace Platform.API.Endpoints;
 
@@ -62,7 +63,7 @@ public static class WorkspaceEndpoints
         group
             .MapPatch(
                 "{workSpaceId}",
-                async (IMediator mediator, ICurrentSession currentSession, string workspaceId, UpdateWorkspaceRequest request) =>
+                async (IMediator mediator, ICurrentSession currentSession, WorkspaceId workspaceId, UpdateWorkspaceRequest request) =>
                 {
                     var result = await mediator.Send(request with { Id = workspaceId });
                     return result.ToPlatformApiResult();
@@ -73,7 +74,7 @@ public static class WorkspaceEndpoints
         group
             .MapDelete(
                 "{workSpaceId}",
-                async (IMediator mediator, ICurrentSession currentSession, string workspaceId) =>
+                async (IMediator mediator, ICurrentSession currentSession, WorkspaceId workspaceId) =>
                 {
                     var result = await mediator.Send(new DeleteWorkspaceRequest(workspaceId));
                     return result.ToPlatformApiResult();

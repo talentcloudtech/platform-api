@@ -8,6 +8,7 @@ using Platform.Application.Features.ProjectMembers.DeleteProjectMember;
 using Platform.Application.Features.ProjectMembers.GetProjectMemberById;
 using Platform.Application.Features.ProjectMembers.SearchProjectMembers;
 using Platform.Application.Features.ProjectMembers.UpdateProjectMember;
+using Platform.Domain.Entities.Common;
 
 namespace Platform.Api.Endpoints;
 
@@ -27,7 +28,7 @@ public static class ProjectMemberEndpoints
         group
             .MapGet(
                 "/",
-                async (IMediator mediator, string workspaceId, string projectId, [AsParameters] SearchProjectMembersRequest request) =>
+                async (IMediator mediator, WorkspaceId workspaceId, ProjectId projectId, [AsParameters] SearchProjectMembersRequest request) =>
                 {
                     var result = await mediator.Send(request with { WorkspaceId = workspaceId, ProjectId = projectId });
                     return result.ToPlatformApiResult();
@@ -38,7 +39,7 @@ public static class ProjectMemberEndpoints
         group
             .MapGet(
                 "{userId}",
-                async (IMediator mediator, string workspaceId, string projectId, string userId) =>
+                async (IMediator mediator, WorkspaceId workspaceId, ProjectId projectId, UserId userId) =>
                 {
                     var result = await mediator.Send(new GetProjectMemberByIdRequest(workspaceId, projectId, userId));
                     return result.ToPlatformApiResult();
@@ -49,7 +50,7 @@ public static class ProjectMemberEndpoints
         group
             .MapPost(
                 "/",
-                async (IMediator mediator, string workspaceId, string projectId, CreateProjectMemberRequest request) =>
+                async (IMediator mediator, WorkspaceId workspaceId, ProjectId projectId, CreateProjectMemberRequest request) =>
                 {
                     var result = await mediator.Send(request with { WorkspaceId = workspaceId, ProjectId = projectId });
                     return result.ToPlatformApiResult();
@@ -60,7 +61,7 @@ public static class ProjectMemberEndpoints
         group
             .MapPatch(
                 "{userId}",
-                async (IMediator mediator, string workspaceId, string projectId, string userId, UpdateProjectMemberRequest request) =>
+                async (IMediator mediator, WorkspaceId workspaceId, ProjectId projectId, UserId userId, UpdateProjectMemberRequest request) =>
                 {
                     var result = await mediator.Send(request with { WorkspaceId = workspaceId, ProjectId = projectId, UserId = userId });
                     return result.ToPlatformApiResult();
@@ -71,7 +72,7 @@ public static class ProjectMemberEndpoints
         group
             .MapDelete(
                 "{userId}",
-                async (IMediator mediator, string workspaceId, string projectId, string userId) =>
+                async (IMediator mediator, WorkspaceId workspaceId, ProjectId projectId, UserId userId) =>
                 {
                     var result = await mediator.Send(new DeleteProjectMemberRequest(workspaceId, projectId, userId));
                     return result.ToPlatformApiResult();
