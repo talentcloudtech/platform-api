@@ -58,7 +58,7 @@ public static class ProjectMemberEndpoints
             .WithSummary("Creates a new project member.");
 
         group
-            .MapPut(
+            .MapPatch(
                 "{userId}",
                 async (IMediator mediator, string workspaceId, string projectId, string userId, UpdateProjectMemberRequest request) =>
                 {

@@ -91,6 +91,11 @@ public class ProjectTask : Entity<ProjectTaskId>
     public Project Project { get; set; } = null!;
 
     /// <summary>
+    /// Gets or sets the workspace associated with this task.
+    /// </summary>
+    public Workspace Workspace { get; set; } = null!;
+
+    /// <summary>
     /// Gets or sets the collection of task assignments.
     /// </summary>
     public ICollection<ProjectTaskAssignment> Assignments { get; set; } = new List<ProjectTaskAssignment>();

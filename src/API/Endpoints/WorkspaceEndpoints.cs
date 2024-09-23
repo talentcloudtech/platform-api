@@ -40,7 +40,7 @@ public static class WorkspaceEndpoints
         group
             .MapGet(
                 "{workSpaceId}",
-                async (IMediator mediator, ICurrentSession currentSession, WorkspaceId workspaceId) =>
+                async (IMediator mediator, ICurrentSession currentSession, string workspaceId) =>
                 {
                     var result = await mediator.Send(new GetWorkspaceByIdRequest(workspaceId));
                     return result.ToPlatformApiResult();
@@ -61,7 +61,7 @@ public static class WorkspaceEndpoints
             .WithSummary("Creates a new workspace.");
 
         group
-            .MapPut(
+            .MapPatch(
                 "{workSpaceId}",
                 async (IMediator mediator, ICurrentSession currentSession, string workspaceId, UpdateWorkspaceRequest request) =>
                 {

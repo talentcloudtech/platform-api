@@ -390,6 +390,56 @@ namespace Platform.Migrations
                     b.ToTable("Messages");
                 });
 
+            modelBuilder.Entity("Platform.Domain.Entities.Message", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.Property<string>("Body")
+                        .IsRequired()
+                        .HasMaxLength(4000)
+                        .HasColumnType("character varying(4000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("MessageType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProjectId")
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.Property<int>("RecipientCount")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("ReplyAllowed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("SenderId")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<int>("TotalReplyCount")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("WorkspaceId")
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Messages");
+                });
+
             modelBuilder.Entity("Platform.Domain.Entities.MessageAttachment", b =>
                 {
                     b.Property<string>("Id")
@@ -570,6 +620,8 @@ namespace Platform.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("WorkspaceId");
+
                     b.ToTable("Projects");
                 });
 
@@ -614,6 +666,8 @@ namespace Platform.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ProjectId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("ProjectMembers");
                 });
@@ -791,7 +845,6 @@ namespace Platform.Migrations
                         .HasColumnType("character varying(255)");
 
                     b.Property<string>("ContactEmail")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
@@ -864,6 +917,8 @@ namespace Platform.Migrations
                         .HasColumnType("character varying(25)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.HasIndex("WorkspaceId");
 
@@ -1193,6 +1248,17 @@ namespace Platform.Migrations
                     b.Navigation("OriginalMessage");
                 });
 
+            modelBuilder.Entity("Platform.Domain.Entities.Project", b =>
+                {
+                    b.HasOne("Platform.Domain.Entities.Workspace", "Workspace")
+                        .WithMany("Projects")
+                        .HasForeignKey("WorkspaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Workspace");
+                });
+
             modelBuilder.Entity("Platform.Domain.Entities.ProjectMember", b =>
                 {
                     b.HasOne("Platform.Domain.Entities.Project", "Project")
@@ -1201,7 +1267,15 @@ namespace Platform.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Platform.Domain.Entities.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Project");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Platform.Domain.Entities.ProjectTask", b =>
@@ -1239,11 +1313,19 @@ namespace Platform.Migrations
 
             modelBuilder.Entity("Platform.Domain.Entities.WorkspaceMember", b =>
                 {
+                    b.HasOne("Platform.Domain.Entities.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Platform.Domain.Entities.Workspace", "Workspace")
                         .WithMany("Members")
                         .HasForeignKey("WorkspaceId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("User");
 
                     b.Navigation("Workspace");
                 });
@@ -1275,6 +1357,8 @@ namespace Platform.Migrations
             modelBuilder.Entity("Platform.Domain.Entities.Workspace", b =>
                 {
                     b.Navigation("Members");
+
+                    b.Navigation("Projects");
                 });
 #pragma warning restore 612, 618
         }
