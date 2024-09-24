@@ -59,6 +59,11 @@ public class ApplicationUser : IdentityUser<UserId>
     /// Gets or sets the contracts associated with the user.
     /// </summary>
     public List<Contract>? Contracts { get; set; }
+
+    /// <summary>
+    /// Gets or sets the member request invitations associated with the user.
+    /// </summary>
+    public List<MemberRequestInvitation>? MemberRequestInvitations { get; set; }
 }
 
 /// <summary>

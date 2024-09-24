@@ -64,4 +64,9 @@ public class Workspace : AuditableEntity<WorkspaceId>
     /// Gets or sets the collection of contracts.
     /// </summary>
     public ICollection<Contract> Contracts { get; set; } = new List<Contract>();
+
+    /// <summary>
+    /// Gets or sets the collection of member requests.
+    /// </summary>
+    public ICollection<MemberRequest> MemberRequests { get; set; } = new List<MemberRequest>();
 }

@@ -365,3 +365,37 @@ public partial struct MessageRecipientId : IStringId
         return new MessageRecipientId(id);
     }
 }
+
+/// <summary>
+/// Represents a strongly typed identifier for a member request.
+/// </summary>
+[StronglyTypedId]
+public partial struct MemberRequestId : IStringId
+{
+    /// <summary>
+    /// Implicitly converts an id to a MemberRequestId.
+    /// </summary>
+    /// <param name="id">The id value.</param>
+    /// <returns>A new instance of MemberRequestId.</returns>
+    public static implicit operator MemberRequestId(string id)
+    {
+        return new MemberRequestId(id);
+    }
+}
+
+/// <summary>
+/// Represents a strongly typed identifier for a member request invitation.
+/// </summary>
+[StronglyTypedId]
+public partial struct MemberRequestInvitationId : IStringId
+{
+    /// <summary>
+    /// Implicitly converts an id to a MemberRequestInvitationId.
+    /// </summary>
+    /// <param name="id">The id value.</param>
+    /// <returns>A new instance of MemberRequestInvitationId.</returns>
+    public static implicit operator MemberRequestInvitationId(string id)
+    {
+        return new MemberRequestInvitationId(id);
+    }
+}
