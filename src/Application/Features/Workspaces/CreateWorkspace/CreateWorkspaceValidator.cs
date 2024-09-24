@@ -14,7 +14,7 @@ public class CreateWorkspaceValidator : AbstractValidator<CreateWorkspaceRequest
     public CreateWorkspaceValidator()
     {
         RuleFor(x => x.Name).NotEmpty().MaximumLength(StringSizes.Title);
-        RuleFor(x => x.ContactEmail).MaximumLength(StringSizes.Email);
+        RuleFor(x => x.ContactEmail).EmailAddress().MaximumLength(StringSizes.Email);
         RuleFor(x => x.Address).MaximumLength(StringSizes.ShortAddress);
         RuleFor(x => x.Logo).MaximumLength(StringSizes.Url);
     }
