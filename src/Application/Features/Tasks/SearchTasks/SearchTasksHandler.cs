@@ -29,14 +29,14 @@ public class SearchTasksHandler(IContext context, ICurrentSession session) : IRe
     public async Task<Result<PaginatedList<TaskResponse>>> Handle(SearchTasksRequest request, CancellationToken cancellationToken)
     {
         var project = await context
-            .Projects.Include(x => x.Members)
-            .Include(x => x.Workspace.Members)
+            .Projects.Include(x => x.ProjectMembers)
+            .Include(x => x.Workspace.WorkspaceMembers)
             .FirstOrDefaultAsync(x => x.Id == request.ProjectId && x.WorkspaceId == request.WorkspaceId, cancellationToken);
 
         if (project == null)
             return Result.NotFound("Project not found.");
 
-        if (!project.Members.Any(x => x.UserId == session.UserId) && !project.Workspace.Members.Any(x => x.UserId == session.UserId))
+        if (!project.ProjectMembers.Any(x => x.UserId == session.UserId) && !project.Workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId))
             return Result.Forbidden("You don't have permission to view tasks in this project.");
 
         var tasks = context

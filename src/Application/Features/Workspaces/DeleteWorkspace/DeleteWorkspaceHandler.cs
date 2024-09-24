@@ -27,7 +27,7 @@ public class DeleteWorkspaceHandler(IContext context, ICurrentSession session) :
     public async Task<Result> Handle(DeleteWorkspaceRequest request, CancellationToken cancellationToken)
     {
         var workspace = await context
-            .Workspaces.Include(x => x.Members)
+            .Workspaces.Include(x => x.WorkspaceMembers)
             .Include(x => x.Projects)
             .FirstOrDefaultAsync(predicate: w => w.Id == request.WorkspaceId, cancellationToken);
 
@@ -35,12 +35,12 @@ public class DeleteWorkspaceHandler(IContext context, ICurrentSession session) :
         {
             return Result.NotFound("Workspace not found.");
         }
-        if (!workspace.Members.Any(m => m.UserId == session.UserId && m.Role == WorkspaceRole.WorkspaceOwner))
+        if (!workspace.WorkspaceMembers.Any(m => m.UserId == session.UserId && m.Role == WorkspaceRole.WorkspaceOwner))
         {
             return Result.Forbidden("You are not allowed to delete this workspace.");
         }
 
-        context.WorkspaceMembers.RemoveRange(workspace.Members);
+        context.WorkspaceMembers.RemoveRange(workspace.WorkspaceMembers);
         context.Projects.RemoveRange(workspace.Projects);
         context.Workspaces.Remove(workspace);
         await context.SaveChangesAsync(cancellationToken);

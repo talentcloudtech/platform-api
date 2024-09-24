@@ -25,14 +25,14 @@ public class DeleteWorkspaceMemberHandler(IContext context, ICurrentSession sess
     /// <returns>The result of the operation.</returns>
     public async Task<Result> Handle(DeleteWorkspaceMemberRequest request, CancellationToken cancellationToken)
     {
-        var workspace = await context.Workspaces.Include(x => x.Members).FirstOrDefaultAsync(x => x.Id == request.WorkspaceId, cancellationToken);
+        var workspace = await context.Workspaces.Include(x => x.WorkspaceMembers).FirstOrDefaultAsync(x => x.Id == request.WorkspaceId, cancellationToken);
         if (workspace == null)
             return Result.NotFound("Workspace not found.");
 
-        if (!workspace.Members.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner))
+        if (!workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner))
             return Result.Forbidden("You are not a owner of this workspace.");
 
-        var member = workspace.Members.FirstOrDefault(x => x.UserId == request.UserId);
+        var member = workspace.WorkspaceMembers.FirstOrDefault(x => x.UserId == request.UserId);
         if (member == null)
             return Result.Invalid(
                 new ValidationError
