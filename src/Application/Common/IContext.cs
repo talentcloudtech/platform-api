@@ -49,6 +49,11 @@ public interface IContext : IDataProtectionKeyContext, IAsyncDisposable, IDispos
     public DbSet<WorkspaceMember> WorkspaceMembers { get; }
 
     /// <summary>
+    /// Gets or sets the DbSet of WorkspaceMemberInvitation entities.
+    /// </summary>
+    public DbSet<WorkspaceMemberInvitation> WorkspaceMemberInvitations { get; }
+
+    /// <summary>
     /// Gets or sets the DbSet of Contract entities.
     /// </summary>
     public DbSet<Contract> Contracts { get; }

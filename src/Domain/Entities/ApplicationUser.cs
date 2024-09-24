@@ -36,6 +36,11 @@ public class ApplicationUser : IdentityUser<UserId>
     public List<WorkspaceMember> WorkspaceMembers { get; set; } = [];
 
     /// <summary>
+    /// Gets or sets the workspace member invitations associated with the user.
+    /// </summary>
+    public List<WorkspaceMemberInvitation> WorkspaceMemberInvitations { get; set; } = [];
+
+    /// <summary>
     /// Gets or sets the projects associated with the user.
     /// </summary>
     public List<Project> Projects { get; set; } = [];

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Platform.Application.Services.Email;
 
@@ -14,6 +15,13 @@ public interface IEmailService
     /// <param name="mailRequest">The mail request containing the email details.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
     Task SendEmailAsync(MailRequest mailRequest);
+
+    /// <summary>
+    /// Sends multiple emails asynchronously.
+    /// </summary>
+    /// <param name="mailRequests">The mail requests containing the email details.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    Task SendEmailAsync(List<MailRequest> mailRequests);
 
     /// <summary>
     /// Sends a templated email asynchronously.

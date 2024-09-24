@@ -975,6 +975,50 @@ namespace Platform.Migrations
                     b.ToTable("WorkspaceMembers");
                 });
 
+            modelBuilder.Entity("Platform.Domain.Entities.WorkspaceMemberInvitation", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("WorkspaceId")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("WorkspaceId");
+
+                    b.ToTable("WorkspaceMemberInvitations");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<Platform.Domain.Entities.Common.UserId>", b =>
                 {
                     b.HasOne("Platform.Domain.Entities.ApplicationRole", null)
@@ -1461,6 +1505,25 @@ namespace Platform.Migrations
                     b.Navigation("Workspace");
                 });
 
+            modelBuilder.Entity("Platform.Domain.Entities.WorkspaceMemberInvitation", b =>
+                {
+                    b.HasOne("Platform.Domain.Entities.ApplicationUser", "User")
+                        .WithMany("WorkspaceMemberInvitations")
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Platform.Domain.Entities.Workspace", "Workspace")
+                        .WithMany("WorkspaceMemberInvitations")
+                        .HasForeignKey("WorkspaceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
+
+                    b.Navigation("Workspace");
+                });
+
             modelBuilder.Entity("Platform.Domain.Entities.ApplicationUser", b =>
                 {
                     b.Navigation("Contracts");
@@ -1478,6 +1541,8 @@ namespace Platform.Migrations
                     b.Navigation("TaskAssignments");
 
                     b.Navigation("Tasks");
+
+                    b.Navigation("WorkspaceMemberInvitations");
 
                     b.Navigation("WorkspaceMembers");
 
@@ -1510,6 +1575,8 @@ namespace Platform.Migrations
                     b.Navigation("ProjectTasks");
 
                     b.Navigation("Projects");
+
+                    b.Navigation("WorkspaceMemberInvitations");
 
                     b.Navigation("WorkspaceMembers");
                 });

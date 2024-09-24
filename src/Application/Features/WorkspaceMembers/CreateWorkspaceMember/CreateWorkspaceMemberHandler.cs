@@ -1,15 +1,16 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.Result;
-using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
 using Platform.Domain.Auth.Interfaces;
 using Platform.Domain.Entities;
 using Platform.Domain.Entities.Enums;
+using Platform.Domain.Interfaces;
 
 namespace Platform.Application.Features.WorkspaceMembers.CreateWorkspaceMember;
 
@@ -18,9 +19,10 @@ namespace Platform.Application.Features.WorkspaceMembers.CreateWorkspaceMember;
 /// </summary>
 /// <param name="context">The database context.</param>
 /// <param name="session">The current user session.</param>
+/// <param name="emailSender">The email sender.</param>
 /// <returns>The result of the operation.</returns>
-public class CreateWorkspaceMemberHandler(IContext context, ICurrentSession session)
-    : IRequestHandler<CreateWorkspaceMemberRequest, Result<WorkspaceMemberResponse>>
+public class CreateWorkspaceMemberHandler(IContext context, ICurrentSession session, IEmailSender emailSender)
+    : IRequestHandler<CreateWorkspaceMemberRequest, Result>
 {
     /// <summary>
     /// Handles the request to create a new workspace member.
@@ -28,7 +30,7 @@ public class CreateWorkspaceMemberHandler(IContext context, ICurrentSession sess
     /// <param name="request">The request to create a new workspace member.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The result of the operation.</returns>
-    public async Task<Result<WorkspaceMemberResponse>> Handle(CreateWorkspaceMemberRequest request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(CreateWorkspaceMemberRequest request, CancellationToken cancellationToken)
     {
         var workspace = await context.Workspaces.Include(x => x.WorkspaceMembers).FirstOrDefaultAsync(x => x.Id == request.WorkspaceId, cancellationToken);
 
@@ -38,44 +40,28 @@ public class CreateWorkspaceMemberHandler(IContext context, ICurrentSession sess
         if (!workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner))
             return Result.Conflict("You are not the owner of this workspace.");
 
-        var user = await context.Users.FirstOrDefaultAsync(x => x.Id == request.UserId, cancellationToken);
-        if (user == null)
-            return Result.Invalid(
-                new ValidationError
+        var workspaceMemberInvitations = new List<WorkspaceMemberInvitation>();
+
+        var currentTimeStamp = DateTime.UtcNow;
+        request.WorkspaceMemberInvitations.ForEach(invitation =>
+        {
+            workspaceMemberInvitations.Add(
+                new WorkspaceMemberInvitation
                 {
-                    Identifier = "UserId",
-                    ErrorMessage = "User not found.",
-                    ErrorCode = "USER_NOT_FOUND",
+                    Email = invitation.Email,
+                    WorkspaceId = request.WorkspaceId,
+                    Role = invitation.Role,
+                    CreatedBy = session.UserId,
+                    CreatedDate = currentTimeStamp,
                 }
             );
+        });
 
-        if (request.UserId == session.UserId)
-            return Result.Invalid(
-                new ValidationError
-                {
-                    Identifier = "UserId",
-                    ErrorMessage = "You cannot add yourself to the workspace.",
-                    ErrorCode = "USER_ALREADY_MEMBER",
-                }
-            );
-
-        if (workspace.WorkspaceMembers.Any(x => x.UserId == request.UserId))
-            return Result.Invalid(
-                new ValidationError
-                {
-                    Identifier = "UserId",
-                    ErrorMessage = "User already a member of the workspace.",
-                    ErrorCode = "USER_ALREADY_MEMBER",
-                }
-            );
-
-        var newMember = request.Adapt<WorkspaceMember>();
-        newMember.CreatedBy = session.UserId;
-        newMember.CreatedDate = DateTime.UtcNow;
-
-        context.WorkspaceMembers.Add(newMember);
+        await context.WorkspaceMemberInvitations.AddRangeAsync(workspaceMemberInvitations, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
 
-        return Result.Success(newMember.Adapt<WorkspaceMemberResponse>());
+        await emailSender.SendWorkspaceInvitationAsync(request.WorkspaceId, workspace.Name, workspaceMemberInvitations.Select(x => x.Email).ToList());
+
+        return Result.Success();
     }
 }

@@ -30,6 +30,7 @@ public static class PersistenceSetup
         services.AddScoped<ITokenService, TokenService>();
         services.AddTransient<IEmailService, AzureEmailService>();
         services.AddTransient<IEmailSender<ApplicationUser>, EmailSender>();
+        services.AddTransient<IEmailSender, EmailSender>();
 
         services.AddHostedService<ApplicationDbInitializer>();
         services.AddDbContextPool<ApplicationDbContext>(o =>

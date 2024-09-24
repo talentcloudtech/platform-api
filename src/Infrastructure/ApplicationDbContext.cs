@@ -56,6 +56,11 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<WorkspaceMember> WorkspaceMembers { get; set; } = null!;
 
     /// <summary>
+    /// Gets or sets the DbSet of WorkspaceMemberInvitation entities.
+    /// </summary>
+    public DbSet<WorkspaceMemberInvitation> WorkspaceMemberInvitations { get; set; } = null!;
+
+    /// <summary>
     /// Gets or sets the DbSet of Contract entities.
     /// </summary>
     public DbSet<Contract> Contracts { get; set; } = null!;
