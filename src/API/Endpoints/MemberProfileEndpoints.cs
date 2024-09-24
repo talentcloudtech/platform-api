@@ -14,6 +14,7 @@ using Platform.Application.Features.Languages.CreateLanguage;
 using Platform.Application.Features.Languages.DeleteLanguage;
 using Platform.Application.Features.Languages.UpdateLanguage;
 using Platform.Application.Features.MemberProfiles.GetMemberProfileById;
+using Platform.Application.Features.MemberProfiles.SearchMemberProfiles;
 using Platform.Application.Features.MemberProfiles.UpdateAvatar;
 using Platform.Application.Features.MemberProfiles.UpdateMemberProfile;
 using Platform.Application.Features.MemberSkills.CreateMemberSkill;
@@ -40,16 +41,16 @@ public static class MemberProfileEndpoints
     {
         var group = builder.MapGroup("api/memberProfiles").WithTags("MemberProfile").RequireAuthorization();
 
-        //group
-        //    .MapGet(
-        //        "/",
-        //        async (IMediator mediator, [AsParameters] SearchMemberProfilesRequest request) =>
-        //        {
-        //            var result = await mediator.Send(request);
-        //            return result;
-        //        }
-        //    )
-        //    .WithSummary("Searches for member profiles.");
+        group
+            .MapGet(
+                "/search",
+                async (IMediator mediator, [AsParameters] SearchMemberProfilesRequest request) =>
+                {
+                    var result = await mediator.Send(request);
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Searches for member profiles.");
 
         group
             .MapGet(
