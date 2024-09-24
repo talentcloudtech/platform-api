@@ -1,4 +1,5 @@
 using FluentValidation;
+using Platform.Application.Common;
 
 namespace Platform.Application.Features.WorkspaceMembers.CreateWorkspaceMember;
 
@@ -13,7 +14,7 @@ public class CreateWorkspaceMemberValidator : AbstractValidator<CreateWorkspaceM
     public CreateWorkspaceMemberValidator()
     {
         RuleFor(x => x.WorkspaceId).NotEmpty();
-        RuleFor(x => x.UserId).NotEmpty();
+        RuleFor(x => x.Emails).NotEmpty().ForEach(email => email.EmailAddress().MaximumLength(StringSizes.Email));
         RuleFor(x => x.Role).IsInEnum();
     }
 }

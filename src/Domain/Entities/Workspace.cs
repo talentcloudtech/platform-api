@@ -51,6 +51,11 @@ public class Workspace : AuditableEntity<WorkspaceId>
     public ICollection<WorkspaceMember> WorkspaceMembers { get; set; } = new List<WorkspaceMember>();
 
     /// <summary>
+    /// Gets or sets the invitations to join the workspace.
+    /// </summary>
+    public ICollection<WorkspaceMemberInvitation> WorkspaceMemberInvitations { get; set; } = new List<WorkspaceMemberInvitation>();
+
+    /// <summary>
     /// Gets or sets the collection of projects.
     /// </summary>
     public ICollection<Project> Projects { get; set; } = new List<Project>();

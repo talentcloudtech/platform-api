@@ -11,7 +11,12 @@ public enum WorkspaceRole
     WorkspaceOwner = 1,
 
     /// <summary>
+    /// Represents the manager of the workspace.
+    /// </summary>
+    WorkspaceManager = 2,
+
+    /// <summary>
     /// Represents a member of the workspace.
     /// </summary>
-    WorkspaceMember = 2,
+    WorkspaceMember = 3,
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Ardalis.Result;
 using MediatR;
@@ -9,7 +10,7 @@ namespace Platform.Application.Features.WorkspaceMembers.CreateWorkspaceMember;
 /// <summary>
 /// Represents a request to create a workspace member.
 /// </summary>
-public record CreateWorkspaceMemberRequest : IRequest<Result<WorkspaceMemberResponse>>
+public record CreateWorkspaceMemberRequest : IRequest<Result>
 {
     /// <summary>
     /// Gets or sets the workspace ID.
@@ -18,9 +19,9 @@ public record CreateWorkspaceMemberRequest : IRequest<Result<WorkspaceMemberResp
     public WorkspaceId WorkspaceId { get; init; }
 
     /// <summary>
-    /// Gets or sets the user ID.
+    /// Gets or sets the emails.
     /// </summary>
-    public UserId UserId { get; init; }
+    public required List<string> Emails { get; init; }
 
     /// <summary>
     /// Gets or sets the role.

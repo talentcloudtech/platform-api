@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Mime;
@@ -45,6 +46,20 @@ public class AzureEmailService : IEmailService
     {
         var emailMessage = CreateEmailMessage(mailRequest);
         await _emailClient.SendAsync(Azure.WaitUntil.Started, emailMessage);
+    }
+
+    /// <summary>
+    /// Sends multiple emails asynchronously using SMTP.
+    /// </summary>
+    /// <param name="mailRequests">The mail requests containing the email details.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    public async Task SendEmailAsync(List<MailRequest> mailRequests)
+    {
+        var emailMessages = mailRequests.Select(CreateEmailMessage).ToArray();
+        foreach (var emailMessage in emailMessages)
+        {
+            await _emailClient.SendAsync(Azure.WaitUntil.Started, emailMessage);
+        }
     }
 
     /// <summary>

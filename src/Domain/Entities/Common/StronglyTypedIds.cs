@@ -95,6 +95,23 @@ public partial struct WorkspaceMemberId : IStringId
 }
 
 /// <summary>
+/// Represents a strongly typed identifier for a workspace member invitation.
+/// </summary>
+[StronglyTypedId]
+public partial struct WorkspaceMemberInvitationId : IStringId
+{
+    /// <summary>
+    /// Implicitly converts a id to a WorkspaceMemberInvitationId.
+    /// </summary>
+    /// <param name="id">The id value.</param>
+    /// <returns>A new instance of WorkspaceMemberInvitationId.</returns>
+    public static implicit operator WorkspaceMemberInvitationId(string id)
+    {
+        return new WorkspaceMemberInvitationId(id);
+    }
+}
+
+/// <summary>
 /// Represents a strongly typed identifier for a contract.
 /// </summary>
 [StronglyTypedId]
