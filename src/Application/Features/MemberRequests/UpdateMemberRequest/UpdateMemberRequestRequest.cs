@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using Ardalis.Result;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Platform.Domain.Entities.Common;
 using Platform.Domain.Entities.Enums;
 
@@ -28,7 +31,7 @@ public record UpdateMemberRequestRequest : IRequest<Result<MemberRequestResponse
     /// <summary>
     /// Gets or sets the title of the member request.
     /// </summary>
-    public string Title { get; init; } = null!;
+    public string? Title { get; init; }
 
     /// <summary>
     /// Gets or sets the description of the member request.
@@ -38,35 +41,40 @@ public record UpdateMemberRequestRequest : IRequest<Result<MemberRequestResponse
     /// <summary>
     /// Gets or sets the start date of the member request.
     /// </summary>
-    public DateTime StartDate { get; init; }
+    public DateTime? StartDate { get; init; }
 
     /// <summary>
     /// Gets or sets the end date of the member request.
     /// </summary>
-    public DateTime EndDate { get; init; }
+    public DateTime? EndDate { get; init; }
 
     /// <summary>
     /// Gets or sets the expected budget for the member request.
     /// </summary>
-    public decimal ExpectedBudget { get; init; }
+    public decimal? ExpectedBudget { get; init; }
 
     /// <summary>
     /// Gets or sets the number of minutes per day expected for the task.
     /// </summary>
-    public int MinutesPerDay { get; init; }
+    public int? MinutesPerDay { get; init; }
 
     /// <summary>
     /// Gets or sets the timezone relevant to the request.
     /// </summary>
-    public string Timezone { get; init; } = null!;
+    public string? Timezone { get; init; }
 
     /// <summary>
     /// Gets or sets the list of skills required for the request.
     /// </summary>
-    public List<string> RequiredSkills { get; init; } = new();
+    public List<string>? RequiredSkills { get; init; }
 
     /// <summary>
     /// Gets the current status of the member request.
     /// </summary>
-    public MemberRequestStatus Status { get; init; }
+    public MemberRequestStatus? Status { get; init; }
+
+    /// <summary>
+    /// Gets or sets the fields to update.
+    /// </summary>
+    public required string[] FieldsToUpdate { get; set; }
 }

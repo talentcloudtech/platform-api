@@ -29,7 +29,12 @@
         "Zabcdefghijkmnopqrstuvwxyz",
         "zoneinfo",
         "aspnet",
-        "memberrequests"
+        "memberrequests",
+        "startdate",
+        "enddate",
+        "expectedbudget",
+        "minutesperday",
+        "requiredskills"
     ],
     "ignorePaths": [
         "**/node_modules/**",

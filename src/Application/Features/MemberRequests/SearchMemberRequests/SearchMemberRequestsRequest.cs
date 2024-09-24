@@ -1,8 +1,6 @@
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Ardalis.Result;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Platform.Application.Common.Responses;
 using Platform.Domain.Entities.Common;
 using Platform.Domain.Entities.Enums;
@@ -29,5 +27,5 @@ public record SearchMemberRequestsRequest(string? Title = null, MemberRequestSta
     /// <summary>
     /// Gets or sets the list of statuses to filter member requests by.
     /// </summary>
-    public MemberRequestStatus[] Statuses { get; init; } = Statuses ?? new[] { MemberRequestStatus.Draft, MemberRequestStatus.Active };
+    public MemberRequestStatus[] Statuses { get; init; } = Statuses ?? new[] { MemberRequestStatus.Draft };
 }
