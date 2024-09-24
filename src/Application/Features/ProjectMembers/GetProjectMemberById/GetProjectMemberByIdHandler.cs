@@ -30,18 +30,18 @@ public class GetProjectMemberByIdHandler(IContext context, ICurrentSession sessi
     public async Task<Result<ProjectMemberResponse>> Handle(GetProjectMemberByIdRequest request, CancellationToken cancellationToken)
     {
         var project = await context
-            .Projects.Include(x => x.Workspace.Members)
-            .Include(x => x.Members)
+            .Projects.Include(x => x.Workspace.WorkspaceMembers)
+            .Include(x => x.ProjectMembers)
             .ThenInclude(x => x.User.MemberProfile)
             .FirstOrDefaultAsync(x => x.Id == request.ProjectId && x.WorkspaceId == request.WorkspaceId, cancellationToken);
 
         if (project == null)
             return Result.NotFound("Project not found.");
 
-        if (!project.Workspace.Members.Any(x => x.UserId == session.UserId) && !project.Members.Any(x => x.UserId == session.UserId))
+        if (!project.Workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId) && !project.ProjectMembers.Any(x => x.UserId == session.UserId))
             return Result.Forbidden("You are not a member of this project.");
 
-        var member = project.Members.FirstOrDefault(x => x.UserId == request.UserId);
+        var member = project.ProjectMembers.FirstOrDefault(x => x.UserId == request.UserId);
         if (member == null)
             return Result.NotFound("Project member not found.");
 

@@ -101,6 +101,11 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<MessageAttachment> MessageAttachments { get; set; } = null!;
 
     /// <summary>
+    /// Gets or sets the DbSet of MemberRequest entities.
+    /// </summary>
+    public DbSet<MemberRequest> MemberRequests { get; set; } = null!;
+
+    /// <summary>
     /// Configures the model for the database context.
     /// </summary>
     /// <param name="builder">The builder to use for configuration.</param>

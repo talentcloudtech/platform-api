@@ -30,14 +30,16 @@ public class UpdateContractHandler(IContext context, ICurrentSession session) : 
     /// <returns>The result of the update operation.</returns>
     public async Task<Result<ContractResponse>> Handle(UpdateContractRequest request, CancellationToken cancellationToken)
     {
-        var originalContract = await context.Contracts.Include(x => x.Workspace.Members).FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+        var originalContract = await context
+            .Contracts.Include(x => x.Workspace.WorkspaceMembers)
+            .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
         if (originalContract == null)
             return Result.NotFound("Contract not found.");
 
-        if (!originalContract.Workspace.Members.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner))
+        if (!originalContract.Workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner))
             return Result.Forbidden("You don't have permission to update this contract.");
 
-        if (!originalContract.Workspace.Members.Any(x => x.UserId == request.UserId))
+        if (!originalContract.Workspace.WorkspaceMembers.Any(x => x.UserId == request.UserId))
             return Result.Invalid(
                 new ValidationError
                 {

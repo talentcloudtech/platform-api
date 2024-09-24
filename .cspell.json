@@ -28,7 +28,8 @@
         "Swashbuckle",
         "Zabcdefghijkmnopqrstuvwxyz",
         "zoneinfo",
-        "aspnet"
+        "aspnet",
+        "memberrequests"
     ],
     "ignorePaths": [
         "**/node_modules/**",

@@ -29,8 +29,8 @@ public class UpdateTaskHandler(IContext context, ICurrentSession session) : IReq
     public async Task<Result<TaskResponse>> Handle(UpdateTaskRequest request, CancellationToken cancellationToken)
     {
         var task = await context
-            .ProjectTasks.Include(x => x.Project.Members)
-            .Include(x => x.Project.Workspace.Members)
+            .ProjectTasks.Include(x => x.Project.ProjectMembers)
+            .Include(x => x.Project.Workspace.WorkspaceMembers)
             .FirstOrDefaultAsync(
                 x => x.Id == request.Id && x.ProjectId == request.ProjectId && x.Project.WorkspaceId == request.WorkspaceId,
                 cancellationToken
@@ -40,8 +40,8 @@ public class UpdateTaskHandler(IContext context, ICurrentSession session) : IReq
             return Result.NotFound("Task not found.");
 
         if (
-            !task.Project.Workspace.Members.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner)
-            && !task.Project.Members.Any(x =>
+            !task.Project.Workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner)
+            && !task.Project.ProjectMembers.Any(x =>
                 x.UserId == session.UserId && (x.Role == ProjectRole.ProjectOwner || x.Role == ProjectRole.ProjectAdmin || x.Role == ProjectRole.ProjectManager)
             )
         )

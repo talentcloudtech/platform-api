@@ -8,8 +8,6 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
 using Platform.Domain.Auth.Interfaces;
-using Platform.Domain.Entities;
-using Platform.Domain.Entities.Common;
 using Platform.Domain.Entities.Enums;
 
 namespace Platform.Application.Features.Projects.UpdateProject;
@@ -31,15 +29,15 @@ public class UpdateProjectHandler(IContext context, ICurrentSession session) : I
     public async Task<Result<ProjectResponse>> Handle(UpdateProjectRequest request, CancellationToken cancellationToken)
     {
         var originalProject = await context
-            .Projects.Include(x => x.Workspace.Members)
-            .Include(x => x.Members)
+            .Projects.Include(x => x.Workspace.WorkspaceMembers)
+            .Include(x => x.ProjectMembers)
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
         if (originalProject == null)
             return Result.NotFound("Project not found.");
 
         if (
-            !originalProject.Workspace.Members.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner)
-            && !originalProject.Members.Any(x =>
+            !originalProject.Workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner)
+            && !originalProject.ProjectMembers.Any(x =>
                 x.UserId == session.UserId && (x.Role == ProjectRole.ProjectOwner || x.Role == ProjectRole.ProjectAdmin || x.Role == ProjectRole.ProjectManager)
             )
         )
