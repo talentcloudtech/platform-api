@@ -28,21 +28,21 @@ public class DeleteProjectHandler(IContext context, ICurrentSession session) : I
     public async Task<Result> Handle(DeleteProjectRequest request, CancellationToken cancellationToken)
     {
         var project = await context
-            .Projects.Include(x => x.Workspace.Members)
-            .Include(x => x.Members)
+            .Projects.Include(x => x.Workspace.WorkspaceMembers)
+            .Include(x => x.ProjectMembers)
             .FirstOrDefaultAsync(x => x.WorkspaceId == request.WorkspaceId && x.Id == request.Id, cancellationToken);
         if (project is null)
             return Result.NotFound("Project not found.");
 
         if (
-            !project.Workspace.Members.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner)
-            && !project.Members.Any(x =>
+            !project.Workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner)
+            && !project.ProjectMembers.Any(x =>
                 x.UserId == session.UserId && (x.Role == ProjectRole.ProjectOwner || x.Role == ProjectRole.ProjectAdmin || x.Role == ProjectRole.ProjectManager)
             )
         )
             return Result.Forbidden("You don't have permission to delete this project.");
 
-        context.ProjectMembers.RemoveRange(project.Members);
+        context.ProjectMembers.RemoveRange(project.ProjectMembers);
         context.Projects.Remove(project);
 
         await context.SaveChangesAsync(cancellationToken);

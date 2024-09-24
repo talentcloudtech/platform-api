@@ -27,13 +27,13 @@ public class DeleteContractHandler(IContext context, ICurrentSession session) : 
     public async Task<Result> Handle(DeleteContractRequest request, CancellationToken cancellationToken)
     {
         var contract = await context
-            .Contracts.Include(x => x.Workspace.Members)
+            .Contracts.Include(x => x.Workspace.WorkspaceMembers)
             .FirstOrDefaultAsync(x => x.Id == request.Id && x.WorkspaceId == request.WorkspaceId, cancellationToken);
 
         if (contract == null)
             return Result.NotFound("Contract not found.");
 
-        if (!contract.Workspace.Members.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner))
+        if (!contract.Workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner))
             return Result.Forbidden("You don't have permission to delete this contract.");
 
         context.Contracts.Remove(contract);

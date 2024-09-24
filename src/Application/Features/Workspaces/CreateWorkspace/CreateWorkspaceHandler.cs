@@ -33,7 +33,7 @@ public class CreateWorkspaceHandler(IContext context, ICurrentSession session) :
         var newWorkspace = request.Adapt<Workspace>();
         newWorkspace.CreatedBy = session.UserId;
         newWorkspace.CreatedDate = currentTimeStamp;
-        newWorkspace.Members =
+        newWorkspace.WorkspaceMembers =
         [
             new WorkspaceMember
             {

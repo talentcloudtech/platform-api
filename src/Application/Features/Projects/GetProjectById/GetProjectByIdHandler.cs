@@ -27,8 +27,8 @@ public class GetProjectByIdHandler(IContext context) : IRequestHandler<GetProjec
     public async Task<Result<ProjectResponse>> Handle(GetProjectByIdRequest request, CancellationToken cancellationToken)
     {
         var project = await context
-            .Projects.Include(x => x.Workspace.Members)
-            .Include(x => x.Members)
+            .Projects.Include(x => x.Workspace.WorkspaceMembers)
+            .Include(x => x.ProjectMembers)
             .FirstOrDefaultAsync(x => x.WorkspaceId == request.WorkspaceId && x.Id == request.Id, cancellationToken: cancellationToken);
 
         if (project is null)

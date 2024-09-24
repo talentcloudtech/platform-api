@@ -365,3 +365,20 @@ public partial struct MessageRecipientId : IStringId
         return new MessageRecipientId(id);
     }
 }
+
+/// <summary>
+/// Represents a strongly typed identifier for a member request.
+/// </summary>
+[StronglyTypedId]
+public partial struct MemberRequestId : IStringId
+{
+    /// <summary>
+    /// Implicitly converts a id to a MemberRequestId.
+    /// </summary>
+    /// <param name="id">The id value.</param>
+    /// <returns>A new instance of MemberRequestId.</returns>
+    public static implicit operator MemberRequestId(string id)
+    {
+        return new MemberRequestId(id);
+    }
+}

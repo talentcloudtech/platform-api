@@ -58,7 +58,7 @@ public class Project : AuditableEntity<ProjectId>
     /// <summary>
     /// Gets or sets the collection of project members.
     /// </summary>
-    public ICollection<ProjectMember> Members { get; set; } = new List<ProjectMember>();
+    public ICollection<ProjectMember> ProjectMembers { get; set; } = new List<ProjectMember>();
 
     /// <summary>
     /// Gets or sets the collection of tasks associated with this project.

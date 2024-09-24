@@ -27,22 +27,22 @@ public class DeleteProjectMemberHandler(IContext context, ICurrentSession sessio
     public async Task<Result> Handle(DeleteProjectMemberRequest request, CancellationToken cancellationToken)
     {
         var project = await context
-            .Projects.Include(x => x.Members)
-            .Include(x => x.Workspace.Members)
+            .Projects.Include(x => x.ProjectMembers)
+            .Include(x => x.Workspace.WorkspaceMembers)
             .FirstOrDefaultAsync(x => x.Id == request.ProjectId && x.WorkspaceId == request.WorkspaceId, cancellationToken);
 
         if (project == null)
             return Result.NotFound("Project not found.");
 
         if (
-            !project.Workspace.Members.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner)
-            && !project.Members.Any(x =>
+            !project.Workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner)
+            && !project.ProjectMembers.Any(x =>
                 x.UserId == session.UserId && (x.Role == ProjectRole.ProjectOwner || x.Role == ProjectRole.ProjectAdmin || x.Role == ProjectRole.ProjectManager)
             )
         )
             return Result.Forbidden("You don't have permission to remove members from this project.");
 
-        var member = project.Members.FirstOrDefault(x => x.UserId == request.UserId);
+        var member = project.ProjectMembers.FirstOrDefault(x => x.UserId == request.UserId);
         if (member == null)
             return Result.Invalid(
                 new ValidationError

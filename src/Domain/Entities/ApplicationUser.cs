@@ -23,42 +23,47 @@ public class ApplicationUser : IdentityUser<UserId>
     /// <summary>
     /// Gets or sets the refresh tokens associated with the user.
     /// </summary>
-    public List<RefreshToken>? RefreshTokens { get; set; }
+    public List<RefreshToken> RefreshTokens { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the workspaces associated with the user.
     /// </summary>
-    public List<Workspace>? Workspaces { get; set; }
+    public List<Workspace> Workspaces { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the workspace members associated with the user.
     /// </summary>
-    public List<WorkspaceMember>? WorkspaceMembers { get; set; }
+    public List<WorkspaceMember> WorkspaceMembers { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the projects associated with the user.
     /// </summary>
-    public List<Project>? Projects { get; set; }
+    public List<Project> Projects { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the project members associated with the user.
     /// </summary>
-    public List<ProjectMember>? ProjectMembers { get; set; }
+    public List<ProjectMember> ProjectMembers { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the tasks associated with the user.
     /// </summary>
-    public List<ProjectTask>? Tasks { get; set; }
+    public List<ProjectTask> Tasks { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the tasks associated with the user.
     /// </summary>
-    public List<ProjectTaskAssignment>? TaskAssignments { get; set; }
+    public List<ProjectTaskAssignment> TaskAssignments { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the contracts associated with the user.
     /// </summary>
-    public List<Contract>? Contracts { get; set; }
+    public List<Contract> Contracts { get; set; } = [];
+
+    /// <summary>
+    /// Gets or sets the collection of member requests.
+    /// </summary>
+    public List<MemberRequest> MemberRequests { get; set; } = [];
 }
 
 /// <summary>
