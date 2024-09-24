@@ -30,12 +30,14 @@ public class UpdateWorkspaceHandler(IContext context, ICurrentSession session) :
     {
         var currentTimeStamp = DateTime.UtcNow;
 
-        var existingWorkspace = await context.Workspaces.Include(x => x.Members).FirstOrDefaultAsync(predicate: x => x.Id == request.Id, cancellationToken);
+        var existingWorkspace = await context
+            .Workspaces.Include(x => x.WorkspaceMembers)
+            .FirstOrDefaultAsync(predicate: x => x.Id == request.Id, cancellationToken);
 
         if (existingWorkspace == null)
             return Result.NotFound("Workspace not found.");
 
-        if (!existingWorkspace.Members.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner))
+        if (!existingWorkspace.WorkspaceMembers.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner))
         {
             return Result.Forbidden("You are not allowed to update this workspace.");
         }
@@ -44,6 +46,7 @@ public class UpdateWorkspaceHandler(IContext context, ICurrentSession session) :
         existingWorkspace.ContactEmail = request.ContactEmail;
         existingWorkspace.Address = request.Address;
         existingWorkspace.Logo = request.Logo;
+        existingWorkspace.Urls = request.Urls;
         existingWorkspace.UpdatedBy = session.UserId;
         existingWorkspace.UpdatedDate = currentTimeStamp;
 

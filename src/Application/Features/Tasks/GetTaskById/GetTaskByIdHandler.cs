@@ -28,8 +28,8 @@ public class GetTaskByIdHandler(IContext context, ICurrentSession session) : IRe
     public async Task<Result<TaskResponse>> Handle(GetTaskByIdRequest request, CancellationToken cancellationToken)
     {
         var task = await context
-            .ProjectTasks.Include(x => x.Project.Members)
-            .Include(x => x.Project.Workspace.Members)
+            .ProjectTasks.Include(x => x.Project.ProjectMembers)
+            .Include(x => x.Project.Workspace.WorkspaceMembers)
             .FirstOrDefaultAsync(
                 x => x.Id == request.Id && x.ProjectId == request.ProjectId && x.Project.WorkspaceId == request.WorkspaceId,
                 cancellationToken
@@ -38,7 +38,7 @@ public class GetTaskByIdHandler(IContext context, ICurrentSession session) : IRe
         if (task == null)
             return Result.NotFound("Task not found.");
 
-        if (!task.Project.Members.Any(x => x.UserId == session.UserId) && !task.Project.Workspace.Members.Any(x => x.UserId == session.UserId))
+        if (!task.Project.ProjectMembers.Any(x => x.UserId == session.UserId) && !task.Project.Workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId))
             return Result.Forbidden("You don't have permission to view this task.");
 
         return Result.Success(task.Adapt<TaskResponse>());

@@ -29,12 +29,12 @@ public class UpdateWorkspaceMemberHandler(IContext context, ICurrentSession sess
     /// <returns>The updated workspace member.</returns>
     public async Task<Result<WorkspaceMemberResponse>> Handle(UpdateWorkspaceMemberRequest request, CancellationToken cancellationToken)
     {
-        var workspace = await context.Workspaces.Include(x => x.Members).FirstOrDefaultAsync(x => x.Id == request.WorkspaceId, cancellationToken);
+        var workspace = await context.Workspaces.Include(x => x.WorkspaceMembers).FirstOrDefaultAsync(x => x.Id == request.WorkspaceId, cancellationToken);
 
         if (workspace == null)
             return Result.NotFound("Workspace not found.");
 
-        var member = workspace.Members.FirstOrDefault(x => x.UserId == request.UserId);
+        var member = workspace.WorkspaceMembers.FirstOrDefault(x => x.UserId == request.UserId);
         if (member == null)
             return Result.Invalid(
                 new ValidationError
@@ -45,7 +45,7 @@ public class UpdateWorkspaceMemberHandler(IContext context, ICurrentSession sess
                 }
             );
 
-        if (!workspace.Members.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner))
+        if (!workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner))
             return Result.Conflict("You are not the owner of this workspace.");
 
         var user = await context.Users.FirstOrDefaultAsync(x => x.Id == request.UserId, cancellationToken);

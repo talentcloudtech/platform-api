@@ -29,7 +29,9 @@ public class SearchUsersProjectHandler(IContext context, ICurrentSession session
     public async Task<Result<PaginatedList<ProjectResponse>>> Handle(SearchUsersProjectRequest request, CancellationToken cancellationToken)
     {
         var projects = context
-            .Projects.Where(x => x.Workspace.Members.Any(m => m.UserId == session.UserId))
+            .Projects.Where(x => x.Workspace.WorkspaceMembers.Any(m => m.UserId == session.UserId))
+            .WhereIf(request.WorkspaceIds.Any(), x => request.WorkspaceIds.Contains(x.WorkspaceId))
+            .WhereIf(request.ProjectIds.Any(), x => request.ProjectIds.Contains(x.Id))
             .WhereIf(!string.IsNullOrEmpty(request.Title), x => EF.Functions.Like(x.Title, $"%{request.Title}%"))
             .WhereIf(request.Statuses.Any(), x => request.Statuses.Contains(x.Status));
 

@@ -26,14 +26,14 @@ public class CreateContractHandler(IContext context, ICurrentSession session) : 
     /// <returns>The result of the contract creation.</returns>
     public async Task<Result<ContractResponse>> Handle(CreateContractRequest request, CancellationToken cancellationToken)
     {
-        var workspace = await context.Workspaces.Include(x => x.Members).FirstOrDefaultAsync(x => x.Id == request.WorkspaceId, cancellationToken);
+        var workspace = await context.Workspaces.Include(x => x.WorkspaceMembers).FirstOrDefaultAsync(x => x.Id == request.WorkspaceId, cancellationToken);
         if (workspace == null)
             return Result.NotFound("Workspace not found.");
 
-        if (!workspace.Members.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner))
+        if (!workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner))
             return Result.Forbidden("You are not a owner of this workspace. You can't create a contract.");
 
-        if (!workspace.Members.Any(x => x.UserId == request.UserId))
+        if (!workspace.WorkspaceMembers.Any(x => x.UserId == request.UserId))
             return Result.Invalid(
                 new ValidationError
                 {

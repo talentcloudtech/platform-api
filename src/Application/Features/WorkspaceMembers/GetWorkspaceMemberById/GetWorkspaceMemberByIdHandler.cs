@@ -29,16 +29,16 @@ public class GetWorkspaceMemberByIdHandler(IContext context, ICurrentSession ses
     public async Task<Result<WorkspaceMemberResponse>> Handle(GetWorkspaceMemberByIdRequest request, CancellationToken cancellationToken)
     {
         var workspace = await context
-            .Workspaces.Include(x => x.Members)
+            .Workspaces.Include(x => x.WorkspaceMembers)
             .ThenInclude(x => x.User.MemberProfile)
             .FirstOrDefaultAsync(x => x.Id == request.WorkspaceId, cancellationToken);
         if (workspace == null)
             return Result.NotFound("Workspace not found.");
 
-        if (!workspace.Members.Any(x => x.UserId == session.UserId))
+        if (!workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId))
             return Result.Forbidden("You are not a member of this workspace.");
 
-        var member = workspace.Members.FirstOrDefault(x => x.UserId == request.UserId);
+        var member = workspace.WorkspaceMembers.FirstOrDefault(x => x.UserId == request.UserId);
         if (member == null)
             return Result.NotFound("Workspace member not found.");
 

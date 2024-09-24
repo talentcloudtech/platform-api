@@ -27,16 +27,16 @@ public class CreateTaskHandler(IContext context, ICurrentSession session) : IReq
     public async Task<Result<TaskResponse>> Handle(CreateTaskRequest request, CancellationToken cancellationToken)
     {
         var project = await context
-            .Projects.Include(x => x.Members)
-            .Include(x => x.Workspace.Members)
+            .Projects.Include(x => x.ProjectMembers)
+            .Include(x => x.Workspace.WorkspaceMembers)
             .FirstOrDefaultAsync(x => x.Id == request.ProjectId && x.WorkspaceId == request.WorkspaceId, cancellationToken);
 
         if (project == null)
             return Result.NotFound("Project not found.");
 
         if (
-            !project.Workspace.Members.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner)
-            && !project.Members.Any(x =>
+            !project.Workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner)
+            && !project.ProjectMembers.Any(x =>
                 x.UserId == session.UserId && (x.Role == ProjectRole.ProjectOwner || x.Role == ProjectRole.ProjectAdmin || x.Role == ProjectRole.ProjectManager)
             )
         )

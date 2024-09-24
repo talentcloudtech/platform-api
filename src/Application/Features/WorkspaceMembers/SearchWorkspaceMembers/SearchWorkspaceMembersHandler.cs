@@ -28,15 +28,16 @@ public class SearchWorkspaceMembersHandler(IContext context, ICurrentSession ses
     /// <returns>The paginated list of workspace members.</returns>
     public async Task<Result<PaginatedList<WorkspaceMemberResponse>>> Handle(SearchWorkspaceMembersRequest request, CancellationToken cancellationToken)
     {
-        var workspace = await context.Workspaces.Include(x => x.Members).FirstOrDefaultAsync(x => x.Id == request.WorkspaceId, cancellationToken);
+        var workspace = await context.Workspaces.Include(x => x.WorkspaceMembers).FirstOrDefaultAsync(x => x.Id == request.WorkspaceId, cancellationToken);
         if (workspace == null)
             return Result.NotFound("Workspace not found.");
 
-        if (!workspace.Members.Any(x => x.UserId == session.UserId))
+        if (!workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId))
             return Result.Forbidden("You are not a member of this workspace.");
 
         var workspaceMembers = context
             .WorkspaceMembers.Include(x => x.User.MemberProfile)
+            .Where(x => x.WorkspaceId == request.WorkspaceId)
             .WhereIf(
                 !string.IsNullOrEmpty(request.UserName),
                 x =>
