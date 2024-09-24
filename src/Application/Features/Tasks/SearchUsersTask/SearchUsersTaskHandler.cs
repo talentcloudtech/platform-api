@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using Platform.Application.Common;
 using Platform.Application.Common.Responses;
 using Platform.Application.Extensions;
 using Platform.Domain.Auth.Interfaces;
+using Platform.Domain.Entities.Common;
 
 namespace Platform.Application.Features.Tasks.SearchTasks;
 
@@ -30,6 +32,8 @@ public class SearchUsersTaskHandler(IContext context, ICurrentSession session) :
     {
         var tasks = context
             .ProjectTasks.Where(x => x.Workspace.WorkspaceMembers.Any(m => m.UserId == session.UserId))
+            .WhereIf(request.WorkspaceIds.Any(), x => request.WorkspaceIds.Contains(x.WorkspaceId))
+            .WhereIf(request.ProjectIds.Any(), x => request.ProjectIds.Contains(x.ProjectId))
             .WhereIf(!string.IsNullOrEmpty(request.Title), x => EF.Functions.Like(x.Title, $"%{request.Title}%"))
             .WhereIf(request.Statuses.Any(), x => request.Statuses.Contains(x.Status))
             .WhereIf(request.Priorities.Any(), x => request.Priorities.Contains(x.Priority));
