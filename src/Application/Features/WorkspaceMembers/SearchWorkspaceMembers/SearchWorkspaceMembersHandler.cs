@@ -37,6 +37,7 @@ public class SearchWorkspaceMembersHandler(IContext context, ICurrentSession ses
 
         var workspaceMembers = context
             .WorkspaceMembers.Include(x => x.User.MemberProfile)
+            .Where(x => x.WorkspaceId == request.WorkspaceId)
             .WhereIf(
                 !string.IsNullOrEmpty(request.UserName),
                 x =>
