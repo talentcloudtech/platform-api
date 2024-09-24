@@ -46,6 +46,7 @@ public class UpdateWorkspaceHandler(IContext context, ICurrentSession session) :
         existingWorkspace.ContactEmail = request.ContactEmail;
         existingWorkspace.Address = request.Address;
         existingWorkspace.Logo = request.Logo;
+        existingWorkspace.Urls = request.Urls;
         existingWorkspace.UpdatedBy = session.UserId;
         existingWorkspace.UpdatedDate = currentTimeStamp;
 
