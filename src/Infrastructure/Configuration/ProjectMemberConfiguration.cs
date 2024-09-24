@@ -29,7 +29,7 @@ public class ProjectMemberConfiguration : IEntityTypeConfiguration<ProjectMember
         builder.Property(x => x.UpdatedBy).HasMaxLength(25).HasConversion<UserId.EfCoreValueConverter>();
         builder.Property(x => x.UpdatedDate).HasConversion<DateTime>();
 
-        builder.HasOne(pm => pm.Project).WithMany(p => p.Members).HasForeignKey(pm => pm.ProjectId).OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne(pm => pm.Project).WithMany(p => p.ProjectMembers).HasForeignKey(pm => pm.ProjectId).OnDelete(DeleteBehavior.Restrict);
         builder.HasOne(pm => pm.User).WithMany(u => u.ProjectMembers).HasForeignKey(pm => pm.UserId).OnDelete(DeleteBehavior.Restrict);
     }
 }

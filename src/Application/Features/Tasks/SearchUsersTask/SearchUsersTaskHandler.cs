@@ -29,7 +29,7 @@ public class SearchUsersTaskHandler(IContext context, ICurrentSession session) :
     public async Task<Result<PaginatedList<TaskResponse>>> Handle(SearchUsersTaskRequest request, CancellationToken cancellationToken)
     {
         var tasks = context
-            .ProjectTasks.Where(x => x.Workspace.Members.Any(m => m.UserId == session.UserId))
+            .ProjectTasks.Where(x => x.Workspace.WorkspaceMembers.Any(m => m.UserId == session.UserId))
             .WhereIf(!string.IsNullOrEmpty(request.Title), x => EF.Functions.Like(x.Title, $"%{request.Title}%"))
             .WhereIf(request.Statuses.Any(), x => request.Statuses.Contains(x.Status))
             .WhereIf(request.Priorities.Any(), x => request.Priorities.Contains(x.Priority));

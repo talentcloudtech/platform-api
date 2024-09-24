@@ -31,14 +31,14 @@ public class SearchProjectMembersHandler(IContext context, ICurrentSession sessi
     public async Task<Result<PaginatedList<ProjectMemberResponse>>> Handle(SearchProjectMembersRequest request, CancellationToken cancellationToken)
     {
         var project = await context
-            .Projects.Include(x => x.Members)
-            .Include(x => x.Workspace.Members)
+            .Projects.Include(x => x.ProjectMembers)
+            .Include(x => x.Workspace.WorkspaceMembers)
             .FirstOrDefaultAsync(x => x.Id == request.ProjectId && x.WorkspaceId == request.WorkspaceId, cancellationToken);
 
         if (project == null)
             return Result.NotFound("Project not found.");
 
-        if (!project.Members.Any(x => x.UserId == session.UserId) && !project.Workspace.Members.Any(x => x.UserId == session.UserId))
+        if (!project.ProjectMembers.Any(x => x.UserId == session.UserId) && !project.Workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId))
             return Result.Forbidden("You are not a member of this project.");
 
         var projectMembers = context

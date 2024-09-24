@@ -94,6 +94,11 @@ public interface IContext : IDataProtectionKeyContext, IAsyncDisposable, IDispos
     public DbSet<MessageAttachment> MessageAttachments { get; }
 
     /// <summary>
+    /// Gets or sets the DbSet of MemberRequest entities.
+    /// </summary>
+    public DbSet<MemberRequest> MemberRequests { get; }
+
+    /// <summary>
     /// Asynchronously saves all changes made in this context to the underlying database.
     /// </summary>
     /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>

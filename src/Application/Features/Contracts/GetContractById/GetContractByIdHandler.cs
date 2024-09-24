@@ -27,7 +27,7 @@ public class GetContractByIdHandler(IContext context) : IRequestHandler<GetContr
     public async Task<Result<ContractResponse>> Handle(GetContractByIdRequest request, CancellationToken cancellationToken)
     {
         var contract = await context
-            .Contracts.Include(x => x.Workspace.Members)
+            .Contracts.Include(x => x.Workspace.WorkspaceMembers)
             .FirstOrDefaultAsync(x => x.WorkspaceId == request.WorkspaceId && x.Id == request.Id, cancellationToken: cancellationToken);
 
         if (contract is null)

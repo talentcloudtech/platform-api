@@ -26,11 +26,11 @@ public class CreateProjectHandler(IContext context, ICurrentSession session) : I
     /// <returns>The result of the project creation.</returns>
     public async Task<Result<ProjectResponse>> Handle(CreateProjectRequest request, CancellationToken cancellationToken)
     {
-        var workspace = await context.Workspaces.Include(x => x.Members).FirstOrDefaultAsync(x => x.Id == request.WorkspaceId, cancellationToken);
+        var workspace = await context.Workspaces.Include(x => x.WorkspaceMembers).FirstOrDefaultAsync(x => x.Id == request.WorkspaceId, cancellationToken);
         if (workspace == null)
             return Result.NotFound("Workspace not found.");
 
-        if (!workspace.Members.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner))
+        if (!workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner))
             return Result.Forbidden("You are not a owner of this workspace. You can't create a project.");
 
         var currentTimestamp = DateTime.UtcNow;
@@ -39,7 +39,7 @@ public class CreateProjectHandler(IContext context, ICurrentSession session) : I
         newProject.Status = ProjectStatus.Draft;
         newProject.CreatedBy = session.UserId;
         newProject.CreatedDate = currentTimestamp;
-        newProject.Members.Add(
+        newProject.ProjectMembers.Add(
             new ProjectMember
             {
                 ProjectId = newProject.Id,

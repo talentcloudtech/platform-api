@@ -30,12 +30,12 @@ public class CreateWorkspaceMemberHandler(IContext context, ICurrentSession sess
     /// <returns>The result of the operation.</returns>
     public async Task<Result<WorkspaceMemberResponse>> Handle(CreateWorkspaceMemberRequest request, CancellationToken cancellationToken)
     {
-        var workspace = await context.Workspaces.Include(x => x.Members).FirstOrDefaultAsync(x => x.Id == request.WorkspaceId, cancellationToken);
+        var workspace = await context.Workspaces.Include(x => x.WorkspaceMembers).FirstOrDefaultAsync(x => x.Id == request.WorkspaceId, cancellationToken);
 
         if (workspace == null)
             return Result.NotFound("Workspace not found.");
 
-        if (!workspace.Members.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner))
+        if (!workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner))
             return Result.Conflict("You are not the owner of this workspace.");
 
         var user = await context.Users.FirstOrDefaultAsync(x => x.Id == request.UserId, cancellationToken);
@@ -59,7 +59,7 @@ public class CreateWorkspaceMemberHandler(IContext context, ICurrentSession sess
                 }
             );
 
-        if (workspace.Members.Any(x => x.UserId == request.UserId))
+        if (workspace.WorkspaceMembers.Any(x => x.UserId == request.UserId))
             return Result.Invalid(
                 new ValidationError
                 {
