@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Platform.Application.Extensions;
 using Platform.Application.Features.MemberRequests.CreateMemberRequest;
-using Platform.Application.Features.MemberRequests.DeleteMemberRequest;
 using Platform.Application.Features.MemberRequests.GetMemberRequestById;
 using Platform.Application.Features.MemberRequests.SearchMemberRequests;
 using Platform.Application.Features.MemberRequests.UpdateMemberRequest;
@@ -69,16 +68,5 @@ public static class MemberRequestEndpoints
                 }
             )
             .WithSummary("Updates a member request by its unique identifier.");
-
-        group
-            .MapDelete(
-                "{id}",
-                async (IMediator mediator, WorkspaceId workspaceId, MemberRequestId id) =>
-                {
-                    var result = await mediator.Send(new DeleteMemberRequestRequest(workspaceId, id));
-                    return result.ToPlatformApiResult();
-                }
-            )
-            .WithSummary("Deletes a member request by its unique identifier.");
     }
 }
