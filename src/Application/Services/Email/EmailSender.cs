@@ -80,25 +80,25 @@ public class EmailSender : IEmailSender<ApplicationUser>, IEmailSender
     /// <summary>
     /// Sends a password reset code to the specified email address.
     /// </summary>
-    /// <param name="workspaceId">The workspace ID.</param>
     /// <param name="workspaceName">The workspace name.</param>
-    /// <param name="emails">The email addresses to send the reset code to.</param>
+    /// <param name="invitations"> The invitations to send to the users. </param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public async Task SendWorkspaceInvitationAsync(WorkspaceId workspaceId, string workspaceName, List<string> emails)
+    public async Task SendWorkspaceInvitationAsync(string workspaceName, List<WorkspaceMemberInvitation> invitations)
     {
         var mailRequests = new List<MailRequest>();
-        foreach (var email in emails)
+        foreach (var invitation in invitations)
         {
-            var invitationLink = $"{EnvironmentVariables.FrontendUrl}/workspace/{workspaceId}/invitations/{email}";
+            var invitationLink =
+                $"{EnvironmentVariables.FrontendUrl}/workspace/{invitation.WorkspaceId}/invitation/{invitation.Id}/accept?code={invitation.Code}";
             var signupLink = $"{EnvironmentVariables.FrontendUrl}/signup";
             var body =
                 $@"
-                Dear User,
-                <br>
                 You've been invited to join {workspaceName} by the workspace admin. This workspace provides a platform for seamless collaboration and efficient teamwork.
                 <br>
-                If you already have an account with us, simply click the link below to accept the invitation and start working with the team:
-                <a href='{invitationLink}'>Accept Invitation</a>
+                If you already have an account with us, simply click the button below to accept the invitation and start working with the team:
+                <div style='text-align: center;'>
+                    <a href='{invitationLink}' style='background-color: green; color: white; padding: 10px 20px; text-decoration: none; display: inline-block;'>Accept Invitation</a>
+                </div>
                 <br>
                 If you don't have an account yet, don't worry! Click the link below to sign up and join the workspace:
                 <a href='{signupLink}'>Sign Up and Join Workspace</a>
@@ -107,7 +107,7 @@ public class EmailSender : IEmailSender<ApplicationUser>, IEmailSender
                 <br>
             ";
 
-            mailRequests.Add(new MailRequest(to: [email], subject: $"You've Been Invited to Join {workspaceName}!", body: body));
+            mailRequests.Add(new MailRequest(to: [invitation.Email], subject: $"You've Been Invited to Join {workspaceName}!", body: body));
         }
         await _emailService.SendEmailAsync(mailRequests);
     }

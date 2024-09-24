@@ -19,20 +19,9 @@ public record CreateWorkspaceMemberRequest : IRequest<Result>
     public WorkspaceId WorkspaceId { get; init; }
 
     /// <summary>
-    /// Gets or sets the workspace member invitations.
-    /// </summary>
-    public List<WorkspaceMemberInvitationRequest> WorkspaceMemberInvitations { get; init; } = [];
-}
-
-/// <summary>
-/// Represents a request to create a workspace member invitation.
-/// </summary>
-public record WorkspaceMemberInvitationRequest
-{
-    /// <summary>
     /// Gets or sets the emails.
     /// </summary>
-    public string Email { get; init; } = null!;
+    public required List<string> Emails { get; init; }
 
     /// <summary>
     /// Gets or sets the role.

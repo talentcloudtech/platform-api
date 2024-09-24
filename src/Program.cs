@@ -85,6 +85,7 @@ app.MapMemberProfileEndpoints();
 app.MapSkillsEndpoints();
 app.MapWorkspaceEndpoints();
 app.MapWorkspaceMemberEndpoints();
+app.MapWorkspaceMemberInvitationEndpoints();
 app.MapProjectEndpoints();
 app.MapProjectMemberEndpoints();
 app.MapProjectTaskEndpoints();

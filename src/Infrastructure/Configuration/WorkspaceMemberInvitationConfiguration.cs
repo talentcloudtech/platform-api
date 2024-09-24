@@ -20,13 +20,14 @@ public class WorkspaceMemberInvitationConfiguration : IEntityTypeConfiguration<W
     {
         builder.HasKey(x => x.Id);
 
-        builder.Property(x => x.Id).HasMaxLength(25).HasConversion<WorkspaceMemberInvitationId.EfCoreValueConverter>();
+        builder.Property(x => x.Id).HasMaxLength(StringSizes.Id).HasConversion<WorkspaceMemberInvitationId.EfCoreValueConverter>();
+        builder.Property(x => x.WorkspaceId).HasMaxLength(StringSizes.Id).HasConversion<WorkspaceId.EfCoreValueConverter>();
         builder.Property(x => x.Email).HasMaxLength(StringSizes.Email);
-        builder.Property(x => x.WorkspaceId).HasMaxLength(25).HasConversion<WorkspaceId.EfCoreValueConverter>();
+        builder.Property(x => x.Code).HasMaxLength(12);
         builder.Property(x => x.Role).HasConversion<string>();
-        builder.Property(x => x.CreatedBy).HasMaxLength(25).HasConversion<UserId.EfCoreValueConverter>();
+        builder.Property(x => x.CreatedBy).HasMaxLength(StringSizes.Id).HasConversion<UserId.EfCoreValueConverter>();
         builder.Property(x => x.CreatedDate).HasConversion<DateTime>();
-        builder.Property(x => x.UpdatedBy).HasMaxLength(25).HasConversion<UserId.EfCoreValueConverter>();
+        builder.Property(x => x.UpdatedBy).HasMaxLength(StringSizes.Id).HasConversion<UserId.EfCoreValueConverter>();
         builder.Property(x => x.UpdatedDate).HasConversion<DateTime>();
 
         builder.HasOne(wm => wm.Workspace).WithMany(w => w.WorkspaceMemberInvitations).HasForeignKey(wm => wm.WorkspaceId).OnDelete(DeleteBehavior.Restrict);

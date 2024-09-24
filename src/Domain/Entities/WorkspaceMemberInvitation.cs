@@ -29,6 +29,11 @@ public class WorkspaceMemberInvitation : AuditableEntity<WorkspaceMemberInvitati
     public required WorkspaceRole Role { get; set; }
 
     /// <summary>
+    /// Gets or sets the code of the workspace member invitation.
+    /// </summary>
+    public required string Code { get; set; }
+
+    /// <summary>
     /// Gets or sets the workspace associated with this workspace member invitation.
     /// </summary>
     public Workspace Workspace { get; set; } = null!;

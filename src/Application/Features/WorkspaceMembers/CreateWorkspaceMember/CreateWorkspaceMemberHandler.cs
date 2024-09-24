@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
 using Platform.Domain.Auth.Interfaces;
 using Platform.Domain.Entities;
+using Platform.Domain.Entities.Common;
 using Platform.Domain.Entities.Enums;
 using Platform.Domain.Interfaces;
 
@@ -40,17 +41,25 @@ public class CreateWorkspaceMemberHandler(IContext context, ICurrentSession sess
         if (!workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner))
             return Result.Conflict("You are not the owner of this workspace.");
 
+        var currentTimeStamp = DateTime.UtcNow;
         var workspaceMemberInvitations = new List<WorkspaceMemberInvitation>();
 
-        var currentTimeStamp = DateTime.UtcNow;
-        request.WorkspaceMemberInvitations.ForEach(invitation =>
+        var existingEmails = await context
+            .WorkspaceMemberInvitations.Where(x => x.WorkspaceId == request.WorkspaceId && request.Emails.Contains(x.Email))
+            .Select(x => x.Email)
+            .ToListAsync(cancellationToken);
+
+        var newEmails = request.Emails.Except(existingEmails).ToList();
+
+        newEmails.ForEach(email =>
         {
             workspaceMemberInvitations.Add(
                 new WorkspaceMemberInvitation
                 {
-                    Email = invitation.Email,
+                    Email = email,
                     WorkspaceId = request.WorkspaceId,
-                    Role = invitation.Role,
+                    Role = request.Role,
+                    Code = CustomNewId.GenerateShortId(),
                     CreatedBy = session.UserId,
                     CreatedDate = currentTimeStamp,
                 }
@@ -60,7 +69,7 @@ public class CreateWorkspaceMemberHandler(IContext context, ICurrentSession sess
         await context.WorkspaceMemberInvitations.AddRangeAsync(workspaceMemberInvitations, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
 
-        await emailSender.SendWorkspaceInvitationAsync(request.WorkspaceId, workspace.Name, workspaceMemberInvitations.Select(x => x.Email).ToList());
+        await emailSender.SendWorkspaceInvitationAsync(workspace.Name, workspaceMemberInvitations);
 
         return Result.Success();
     }

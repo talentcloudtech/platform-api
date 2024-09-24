@@ -981,6 +981,11 @@ namespace Platform.Migrations
                         .HasMaxLength(25)
                         .HasColumnType("character varying(25)");
 
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(12)
+                        .HasColumnType("character varying(12)");
+
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasMaxLength(25)
