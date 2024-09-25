@@ -26,9 +26,4 @@ public record SkillResponse
     /// Gets or sets the path.
     /// </summary>
     public string? Path { get; set; }
-
-    /// <summary>
-    /// Gets or sets the keywords.
-    /// </summary>
-    public string[]? Keywords { get; set; }
 }

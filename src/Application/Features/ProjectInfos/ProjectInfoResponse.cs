@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Platform.Application.Features.Skills;
+using Platform.Domain.Entities.Common;
 
 /// <summary>
 /// Represents a response for an experience.
@@ -28,5 +30,5 @@ public class ProjectInfoResponse
     /// <summary>
     /// Gets or sets a list of technologies used in the project.
     /// </summary>
-    public List<string>? Technologies { get; set; }
+    public List<ShortSkillResponse>? Technologies { get; set; }
 }

@@ -21,7 +21,7 @@ public record UpdateProjectInfoRequest : IRequest<Result<ProjectInfoResponse>>
     /// Gets or sets the ID of the project to update.
     /// </summary>
     [JsonIgnore]
-    public ProjectInfoId ProjectInfoId { get; init; } = null!;
+    public ProjectInfoId ProjectInfoId { get; init; }
 
     /// <summary>
     /// Gets or sets the title of the project.
@@ -41,5 +41,5 @@ public record UpdateProjectInfoRequest : IRequest<Result<ProjectInfoResponse>>
     /// <summary>
     /// Gets or sets a list of technologies used in the project.
     /// </summary>
-    public List<string>? Technologies { get; set; }
+    public ShortSkillResponse[]? Technologies { get; set; }
 }

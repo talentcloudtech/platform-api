@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using Platform.Domain.Entities.Common;
 
 namespace Platform.Domain.Entities;
 
@@ -30,5 +32,6 @@ public class ProjectInfo
     /// <summary>
     /// Gets or sets a list of technologies used in the project.
     /// </summary>
-    public List<string>? Technologies { get; set; }
+    [NotMapped]
+    public ShortSkillResponse[]? Technologies { get; set; }
 }
