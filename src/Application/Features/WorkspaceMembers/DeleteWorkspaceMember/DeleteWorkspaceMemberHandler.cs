@@ -29,18 +29,24 @@ public class DeleteWorkspaceMemberHandler(IContext context, ICurrentSession sess
         if (workspace == null)
             return Result.NotFound("Workspace not found.");
 
-        if (!workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner))
-            return Result.Forbidden("You are not a owner of this workspace.");
+        var currentWorkspaceMember = workspace.WorkspaceMembers.FirstOrDefault(x => x.UserId == session.UserId);
+        if (
+            currentWorkspaceMember == null
+            || (currentWorkspaceMember.Role != WorkspaceRole.WorkspaceOwner && currentWorkspaceMember.Role != WorkspaceRole.WorkspaceManager)
+        )
+            return Result.Forbidden("You are not authorized to remove members from this workspace.");
 
-        var member = workspace.WorkspaceMembers.FirstOrDefault(x => x.UserId == request.UserId);
-        if (member == null)
+        var deleteRequestWorkspaceMember = workspace.WorkspaceMembers.FirstOrDefault(x => x.UserId == request.UserId);
+        if (deleteRequestWorkspaceMember == null)
             return Result.NotFound("Workspace member not found.");
 
         if (request.UserId == session.UserId)
             return Result.Forbidden("You cannot remove yourself from the workspace.");
 
-        context.WorkspaceMembers.Remove(member);
+        if (currentWorkspaceMember.Role == WorkspaceRole.WorkspaceManager && deleteRequestWorkspaceMember.Role == WorkspaceRole.WorkspaceOwner)
+            return Result.Forbidden("You are not authorized to remove workspace owner.");
 
+        context.WorkspaceMembers.Remove(deleteRequestWorkspaceMember);
         await context.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

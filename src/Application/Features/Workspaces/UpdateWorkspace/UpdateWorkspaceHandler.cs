@@ -37,9 +37,13 @@ public class UpdateWorkspaceHandler(IContext context, ICurrentSession session) :
         if (existingWorkspace == null)
             return Result.NotFound("Workspace not found.");
 
-        if (!existingWorkspace.WorkspaceMembers.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner))
+        if (
+            !existingWorkspace.WorkspaceMembers.Any(x =>
+                x.UserId == session.UserId && (x.Role == WorkspaceRole.WorkspaceOwner || x.Role == WorkspaceRole.WorkspaceManager)
+            )
+        )
         {
-            return Result.Forbidden("You are not allowed to update this workspace.");
+            return Result.Forbidden("You are not authorized to update this workspace.");
         }
 
         existingWorkspace.Name = request.Name;

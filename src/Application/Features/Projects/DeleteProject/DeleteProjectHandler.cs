@@ -35,12 +35,11 @@ public class DeleteProjectHandler(IContext context, ICurrentSession session) : I
             return Result.NotFound("Project not found.");
 
         if (
-            !project.Workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner)
-            && !project.ProjectMembers.Any(x =>
-                x.UserId == session.UserId && (x.Role == ProjectRole.ProjectOwner || x.Role == ProjectRole.ProjectAdmin || x.Role == ProjectRole.ProjectManager)
-            )
+            !project.Workspace.WorkspaceMembers.Any(x =>
+                x.UserId == session.UserId && (x.Role == WorkspaceRole.WorkspaceOwner || x.Role == WorkspaceRole.WorkspaceManager)
+            ) && !project.ProjectMembers.Any(x => x.UserId == session.UserId && (x.Role == ProjectRole.ProjectOwner || x.Role == ProjectRole.ProjectAdmin))
         )
-            return Result.Forbidden("You don't have permission to delete this project.");
+            return Result.Forbidden("You are not authorized to delete this project.");
 
         context.ProjectMembers.RemoveRange(project.ProjectMembers);
         context.Projects.Remove(project);

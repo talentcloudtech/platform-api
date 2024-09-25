@@ -36,12 +36,14 @@ public class UpdateProjectHandler(IContext context, ICurrentSession session) : I
             return Result.NotFound("Project not found.");
 
         if (
-            !originalProject.Workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner)
+            !originalProject.Workspace.WorkspaceMembers.Any(x =>
+                x.UserId == session.UserId && (x.Role == WorkspaceRole.WorkspaceOwner || x.Role == WorkspaceRole.WorkspaceManager)
+            )
             && !originalProject.ProjectMembers.Any(x =>
                 x.UserId == session.UserId && (x.Role == ProjectRole.ProjectOwner || x.Role == ProjectRole.ProjectAdmin || x.Role == ProjectRole.ProjectManager)
             )
         )
-            return Result.Forbidden("You don't have permission to update this project.");
+            return Result.Forbidden("You are not authorized to update this project.");
 
         originalProject.Title = request.Title;
         originalProject.Description = request.Description;

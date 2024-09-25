@@ -40,28 +40,14 @@ public class DeleteProjectMemberHandler(IContext context, ICurrentSession sessio
                 x.UserId == session.UserId && (x.Role == ProjectRole.ProjectOwner || x.Role == ProjectRole.ProjectAdmin || x.Role == ProjectRole.ProjectManager)
             )
         )
-            return Result.Forbidden("You don't have permission to remove members from this project.");
+            return Result.Forbidden("You are not authorized to remove members from this project.");
 
         var member = project.ProjectMembers.FirstOrDefault(x => x.UserId == request.UserId);
         if (member == null)
-            return Result.Invalid(
-                new ValidationError
-                {
-                    Identifier = nameof(request.UserId),
-                    ErrorMessage = "Project member not found.",
-                    ErrorCode = "PROJECT_MEMBER_NOT_FOUND",
-                }
-            );
+            return Result.NotFound("Project member not found.");
 
         if (request.UserId == session.UserId)
-            return Result.Invalid(
-                new ValidationError
-                {
-                    Identifier = nameof(request.UserId),
-                    ErrorMessage = "You cannot remove yourself from the project.",
-                    ErrorCode = "SELF_REMOVE",
-                }
-            );
+            return Result.NotFound("You cannot remove yourself from the project.");
 
         context.ProjectMembers.Remove(member);
         await context.SaveChangesAsync(cancellationToken);

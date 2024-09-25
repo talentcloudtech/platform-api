@@ -1,0 +1,37 @@
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Ardalis.Result;
+using Mapster;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Platform.Application.Common;
+using Platform.Application.Common.Responses;
+using Platform.Application.Extensions;
+using Platform.Domain.Auth.Interfaces;
+
+namespace Platform.Application.Features.Workspaces.SearchUsersWorkspace;
+
+/// <summary>
+/// Handles the request to search for workspaces with optional filtering and pagination.
+/// </summary>
+/// <param name="context">The context to access the database.</param>
+/// <param name="session">The current session.</param>
+public class SearchUsersWorkspaceHandler(IContext context, ICurrentSession session)
+    : IRequestHandler<SearchUsersWorkspaceRequest, Result<PaginatedList<WorkspaceResponse>>>
+{
+    /// <summary>
+    /// Handles the request to search for workspaces based on the provided filtering and pagination options.
+    /// </summary>
+    /// <param name="request">The search criteria for filtering and paginating workspaces.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
+    /// <returns>A paginated list of <see cref="WorkspaceResponse"/> matching the search criteria.</returns>
+    public async Task<Result<PaginatedList<WorkspaceResponse>>> Handle(SearchUsersWorkspaceRequest request, CancellationToken cancellationToken)
+    {
+        var workspaces = context
+            .Workspaces.Where(x => x.WorkspaceMembers.Any(m => m.UserId == session.UserId))
+            .WhereIf(!string.IsNullOrEmpty(request.Name), x => EF.Functions.Like(x.Name.ToLower().Trim(), $"%{request.Name!.ToLower().Trim()}%"));
+
+        return await workspaces.ProjectToType<WorkspaceResponse>().OrderBy(x => x.Name).ToPaginatedListAsync(request.CurrentPage, request.PageSize);
+    }
+}

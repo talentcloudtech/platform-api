@@ -38,8 +38,12 @@ public class CreateWorkspaceMemberHandler(IContext context, ICurrentSession sess
         if (workspace == null)
             return Result.NotFound("Workspace not found.");
 
-        if (!workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner))
-            return Result.Conflict("You are not the owner of this workspace.");
+        if (
+            !workspace.WorkspaceMembers.Any(x =>
+                x.UserId == session.UserId && (x.Role == WorkspaceRole.WorkspaceOwner || x.Role == WorkspaceRole.WorkspaceManager)
+            )
+        )
+            return Result.Conflict("You are not authorized to add members to this workspace.");
 
         var currentTimeStamp = DateTime.UtcNow;
         var workspaceMemberInvitations = new List<WorkspaceMemberInvitation>();

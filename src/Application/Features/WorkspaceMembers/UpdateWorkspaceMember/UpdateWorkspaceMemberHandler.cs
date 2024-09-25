@@ -34,30 +34,17 @@ public class UpdateWorkspaceMemberHandler(IContext context, ICurrentSession sess
         if (workspace == null)
             return Result.NotFound("Workspace not found.");
 
-        var member = workspace.WorkspaceMembers.FirstOrDefault(x => x.UserId == request.UserId);
-        if (member == null)
-            return Result.Invalid(
-                new ValidationError
-                {
-                    Identifier = "UserId",
-                    ErrorMessage = "Workspace member not found.",
-                    ErrorCode = "WORKSPACE_MEMBER_NOT_FOUND",
-                }
-            );
+        var updateRequestWorkspaceMember = workspace.WorkspaceMembers.FirstOrDefault(x => x.UserId == request.UserId);
+        if (updateRequestWorkspaceMember == null)
+            return Result.NotFound("Workspace member not found.");
 
-        if (!workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner))
-            return Result.Conflict("You are not the owner of this workspace.");
+        var currentWorkspaceMember = workspace.WorkspaceMembers.FirstOrDefault(x => x.UserId == session.UserId);
+        if (currentWorkspaceMember == null || currentWorkspaceMember.Role != WorkspaceRole.WorkspaceOwner)
+            return Result.Forbidden("You are not authorized to update this workspace member.");
 
         var user = await context.Users.FirstOrDefaultAsync(x => x.Id == request.UserId, cancellationToken);
         if (user == null)
-            return Result.Invalid(
-                new ValidationError
-                {
-                    Identifier = "UserId",
-                    ErrorMessage = "User not found.",
-                    ErrorCode = "USER_NOT_FOUND",
-                }
-            );
+            return Result.NotFound("User not found.");
 
         if (request.UserId == session.UserId)
             return Result.Invalid(
@@ -69,13 +56,32 @@ public class UpdateWorkspaceMemberHandler(IContext context, ICurrentSession sess
                 }
             );
 
-        member.Role = request.Role;
+        if (currentWorkspaceMember.Role == WorkspaceRole.WorkspaceManager && request.Role == WorkspaceRole.WorkspaceOwner)
+            return Result.Invalid(
+                new ValidationError
+                {
+                    Identifier = "Role",
+                    ErrorMessage = "You are not authorized to change the role to workspace owner.",
+                    ErrorCode = "UNAUTHORIZED_ROLE_CHANGE",
+                }
+            );
 
-        member.UpdatedBy = session.UserId;
-        member.UpdatedDate = DateTime.UtcNow;
+        if (currentWorkspaceMember.Role == WorkspaceRole.WorkspaceManager && updateRequestWorkspaceMember.Role == WorkspaceRole.WorkspaceOwner)
+            return Result.Invalid(
+                new ValidationError
+                {
+                    Identifier = "Role",
+                    ErrorMessage = "You are not authorized to change the role of workspace owners.",
+                    ErrorCode = "UNAUTHORIZED_ROLE_CHANGE",
+                }
+            );
+
+        updateRequestWorkspaceMember.Role = request.Role;
+        updateRequestWorkspaceMember.UpdatedBy = session.UserId;
+        updateRequestWorkspaceMember.UpdatedDate = DateTime.UtcNow;
 
         await context.SaveChangesAsync(cancellationToken);
 
-        return Result.Success(member.Adapt<WorkspaceMemberResponse>());
+        return Result.Success(updateRequestWorkspaceMember.Adapt<WorkspaceMemberResponse>());
     }
 }

@@ -38,12 +38,14 @@ public class CreateProjectMemberHandler(IContext context, ICurrentSession sessio
             return Result.NotFound("Project not found.");
 
         if (
-            !project.Workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner)
+            !project.Workspace.WorkspaceMembers.Any(x =>
+                x.UserId == session.UserId && (x.Role == WorkspaceRole.WorkspaceOwner || x.Role == WorkspaceRole.WorkspaceManager)
+            )
             && !project.ProjectMembers.Any(x =>
                 x.UserId == session.UserId && (x.Role == ProjectRole.ProjectOwner || x.Role == ProjectRole.ProjectAdmin || x.Role == ProjectRole.ProjectManager)
             )
         )
-            return Result.Forbidden("You don't have permission to add members to this project.");
+            return Result.Forbidden("You are not authorized to add members to this project.");
 
         var user = await context.Users.FirstOrDefaultAsync(x => x.Id == request.UserId, cancellationToken);
         if (user == null)
