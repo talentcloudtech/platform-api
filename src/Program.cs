@@ -61,22 +61,19 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(builder => builder.
 
 var app = builder.Build();
 
-app.UseRouting();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    // app.UseSwaggerSetup();
-}
-app.UseSwaggerSetup();
-
+// Order is critical here!
 app.UseForwardedHeaders(new ForwardedHeadersOptions { ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto });
+
+// Ensure CORS is applied before routing, authentication, and authorization
+app.UseCors();
+
+// Apply routing middleware after CORS
+app.UseRouting();
 
 app.UseHsts();
 app.UseResponseCompression();
 app.UseHttpsRedirection();
 
-app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -94,8 +91,13 @@ app.MapProjectTaskEndpoints();
 app.MapContractEndpoints();
 app.MapMemberRequestEndpoints();
 
-app.MapGet("/", () => Results.Redirect("/swagger"));
-
 app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwaggerSetup();
+    app.MapGet("/", () => Results.Redirect("/swagger"));
+}
 
 await app.RunAsync();
