@@ -59,7 +59,6 @@ public class CreateWorkspaceMemberHandler(IContext context, ICurrentSession sess
                     Email = email,
                     WorkspaceId = request.WorkspaceId,
                     Role = request.Role,
-                    Code = CustomNewId.GenerateShortId(),
                     CreatedBy = session.UserId,
                     CreatedDate = currentTimeStamp,
                 }

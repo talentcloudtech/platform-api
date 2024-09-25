@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Platform.Application.Extensions;
-using Platform.Application.Features.WorkspaceMemberInvitations.AcceptInvitation;
 using Platform.Application.Features.WorkspaceMemberInvitations.SearchWorkspaceMemberInvitations;
 using Platform.Application.Features.WorkspaceMemberInvitations.UpdateWorkspaceMemberInvitation;
 using Platform.Domain.Auth.Interfaces;
@@ -34,18 +33,6 @@ public static class WorkspaceMemberInvitationEndpoints
                 }
             )
             .WithSummary("Searches for workspace member invitations.");
-
-        group
-            .MapGet(
-                "{invitationId}/accept",
-                async (IMediator mediator, WorkspaceId workspaceId, WorkspaceMemberInvitationId invitationId, [AsParameters] AcceptInvitationRequest request) =>
-                {
-                    var result = await mediator.Send(request with { WorkspaceId = workspaceId, WorkspaceMemberInvitationId = invitationId });
-                    return result.ToPlatformApiResult();
-                }
-            )
-            .WithSummary("Accepts a workspace member invitation.")
-            .AllowAnonymous();
 
         group
             .MapPatch(

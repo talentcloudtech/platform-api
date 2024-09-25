@@ -23,7 +23,6 @@ public class WorkspaceMemberInvitationConfiguration : IEntityTypeConfiguration<W
         builder.Property(x => x.Id).HasMaxLength(StringSizes.Id).HasConversion<WorkspaceMemberInvitationId.EfCoreValueConverter>();
         builder.Property(x => x.WorkspaceId).HasMaxLength(StringSizes.Id).HasConversion<WorkspaceId.EfCoreValueConverter>();
         builder.Property(x => x.Email).HasMaxLength(StringSizes.Email);
-        builder.Property(x => x.Code).HasMaxLength(12);
         builder.Property(x => x.Role).HasConversion<string>();
         builder.Property(x => x.CreatedBy).HasMaxLength(StringSizes.Id).HasConversion<UserId.EfCoreValueConverter>();
         builder.Property(x => x.CreatedDate).HasConversion<DateTime>();
