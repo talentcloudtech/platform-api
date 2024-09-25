@@ -30,7 +30,11 @@ public class CreateLanguageHandler(IContext context) : IRequestHandler<CreateLan
 
         if (memberProfile == null)
         {
-            return Result.NotFound("Member profile not found.");
+            // return Result.NotFound("Member profile not found.");
+            memberProfile = new MemberProfile();
+            memberProfile.Id = request.MemberProfileId;
+            context.MemberProfiles.Add(memberProfile);
+            await context.SaveChangesAsync(cancellationToken);
         }
 
         var existLanguage = memberProfile.Languages?.FirstOrDefault(x => x.Name?.ToLower().Trim() == request.Name?.ToLower().Trim());

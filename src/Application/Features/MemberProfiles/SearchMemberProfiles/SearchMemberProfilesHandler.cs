@@ -24,18 +24,22 @@ public class SearchMemberProfilesHandler(IContext context) : IRequestHandler<Sea
     /// <returns>A paginated list of <see cref="MemberProfileResponse"/> matching the search criteria.</returns>
     public async Task<Result<PaginatedList<SearchMemberProfileResponse>>> Handle(SearchMemberProfilesRequest request, CancellationToken cancellationToken)
     {
-        var memberProfiles = context
+        if (string.IsNullOrEmpty(request.Name))
+        {
+            return Result.Success(new PaginatedList<SearchMemberProfileResponse>());
+        }
+
+        var memberProfilesQuery = context
             .MemberProfiles.Include(x => x.User)
             .WhereIf(
                 !string.IsNullOrEmpty(request.Name),
                 x =>
-                    x.FullName.ToLower().Trim() == request.Name.ToLower().Trim()
-                    || x.UserName.ToLower().Trim() == request.Name.ToLower().Trim()
-                    || x.User.Email.ToLower().Trim() == request.Name.ToLower().Trim()
+                    !string.IsNullOrEmpty(x.UserName) && x.UserName.ToLower().Trim() == request.Name.ToLower().Trim()
+                    || !string.IsNullOrEmpty(x.User!.Email) && x.User.Email.ToLower().Trim() == request.Name.ToLower().Trim()
             )
             .AsNoTracking();
 
-        var memberProfilesResponse = await memberProfiles.ToPaginatedListAsync(request.CurrentPage, request.PageSize);
+        var memberProfilesResponse = await memberProfilesQuery.ToPaginatedListAsync(request.CurrentPage, request.PageSize);
 
         var paginatedResponse = new PaginatedList<SearchMemberProfileResponse>
         {
@@ -48,7 +52,7 @@ public class SearchMemberProfilesHandler(IContext context) : IRequestHandler<Sea
                 {
                     var nameParts = x.FullName?.Split(' ');
                     var memberResponse = x.Adapt<SearchMemberProfileResponse>();
-                    memberResponse.Email = x.User.Email;
+                    memberResponse.Email = x.User!.Email;
                     return memberResponse;
                 })
                 .ToList(),

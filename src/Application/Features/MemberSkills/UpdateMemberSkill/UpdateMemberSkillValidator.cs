@@ -12,7 +12,7 @@ public class UpdateMemberSkillValidator : AbstractValidator<UpdateMemberSkillReq
     /// </summary>
     public UpdateMemberSkillValidator()
     {
-        RuleFor(x => x.SkillId).NotEmpty().WithMessage("Skill ID is required.");
-        RuleFor(x => x.MonthsOfExperience).NotEmpty().WithMessage("Months of experience is required.");
+        RuleFor(x => x.SkillId).NotNull().NotEmpty().WithMessage("Skill ID is required.");
+        RuleFor(x => x.MonthsOfExperience).NotEmpty().GreaterThan(0).WithMessage("Months of experience is required.");
     }
 }

@@ -1,5 +1,7 @@
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -56,6 +58,11 @@ if (builder.Environment.EnvironmentName != "Testing")
 }
 
 builder.Services.AddCors(options => options.AddDefaultPolicy(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
+
+// builder.Services.Configure<JsonOptions>(options =>
+// {
+//     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+// });
 
 var app = builder.Build();
 

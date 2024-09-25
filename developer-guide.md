@@ -138,3 +138,10 @@ To build and run the project using Docker, follow these steps:
 ## Conclusion
 
 Following these guidelines will help ensure that the Platform API remains maintainable, scalable, and secure. Adhering to best practices and coding standards will facilitate collaboration and improve the overall quality of the project.
+
+
+## Creating Class or Record guidelines
+1. For Request Class or Record
+ - string required should be like `public string Name { get; set; } = null!;`
+
+2. Enum should not have value set to 0 while creating enum

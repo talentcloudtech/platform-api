@@ -8,20 +8,20 @@ public enum LanguageLevel
     /// <summary>
     /// Beginner level of language proficiency.
     /// </summary>
-    Beginner = 0,
+    Beginner = 1,
 
     /// <summary>
     /// Intermediate level of language proficiency.
     /// </summary>
-    Intermediate = 1,
+    Intermediate = 2,
 
     /// <summary>
     /// Advanced level of language proficiency.
     /// </summary>
-    Advanced = 2,
+    Advanced = 3,
 
     /// <summary>
     /// Native or bilingual level of language proficiency.
     /// </summary>
-    Native = 3,
+    Native = 4,
 }

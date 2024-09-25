@@ -34,7 +34,7 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Project>
         builder.Property(x => x.UpdatedBy).HasMaxLength(25).HasConversion<UserId.EfCoreValueConverter>();
         builder.Property(x => x.UpdatedDate).HasConversion<DateTime>();
 
-        builder.HasOne(p => p.Workspace).WithMany(w => w.Projects).HasForeignKey(p => p.WorkspaceId).OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(p => p.Workspace).WithMany(w => w.Projects).HasForeignKey(p => p.WorkspaceId).OnDelete(DeleteBehavior.Restrict);
         builder.HasOne(p => p.User).WithMany(u => u.Projects).HasForeignKey(p => p.CreatedBy).OnDelete(DeleteBehavior.Restrict);
     }
 }

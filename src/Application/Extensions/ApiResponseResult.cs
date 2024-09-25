@@ -28,13 +28,7 @@ public static partial class ApiResponseResultExtensions
             Ardalis.Result.ResultStatus.Ok => TypedResults.Ok(new ApiResponse<T> { Success = true, Data = (T)result.GetValue() }),
             Ardalis.Result.ResultStatus.Created => TypedResults.Ok(new ApiResponse<T> { Success = true }),
             Ardalis.Result.ResultStatus.NoContent => TypedResults.Ok(new ApiResponse<T> { Success = true }),
-            Ardalis.Result.ResultStatus.NotFound => TypedResults.Json(
-                new ApiResponse<T>
-                {
-                    Success = false,
-                    Errors = new Dictionary<string, string[]> { { "message", new[] { "Resource not found." } } },
-                }
-            ),
+            Ardalis.Result.ResultStatus.NotFound => ToHttpResults<T>(result, StatusCodes.Status404NotFound, "Resource not found."),
             Ardalis.Result.ResultStatus.Unauthorized => ToHttpResults<T>(result, StatusCodes.Status401Unauthorized, "Unauthorized."),
             Ardalis.Result.ResultStatus.Forbidden => ToHttpResults<T>(result, StatusCodes.Status403Forbidden, "Forbidden."),
             Ardalis.Result.ResultStatus.Invalid => BadRequest<T>(result),
@@ -56,13 +50,7 @@ public static partial class ApiResponseResultExtensions
             Ardalis.Result.ResultStatus.Ok => TypedResults.Ok(new ApiResponse<object> { Success = true, Data = result.GetValue() }),
             Ardalis.Result.ResultStatus.Created => TypedResults.Ok(new ApiResponse<object> { Success = true, Data = result.GetValue() }),
             Ardalis.Result.ResultStatus.NoContent => TypedResults.Ok(new ApiResponse<object> { Success = true, Data = result.GetValue() }),
-            Ardalis.Result.ResultStatus.NotFound => TypedResults.Json(
-                new ApiResponse<object>
-                {
-                    Success = false,
-                    Errors = new Dictionary<string, string[]> { { "message", new[] { "Resource not found." } } },
-                }
-            ),
+            Ardalis.Result.ResultStatus.NotFound => ToHttpResults<object>(result, StatusCodes.Status404NotFound, "Resource not found."),
             Ardalis.Result.ResultStatus.Unauthorized => ToHttpResults<object>(result, StatusCodes.Status401Unauthorized, "Unauthorized."),
             Ardalis.Result.ResultStatus.Forbidden => ToHttpResults<object>(result, StatusCodes.Status403Forbidden, "Forbidden."),
             Ardalis.Result.ResultStatus.Invalid => BadRequest<object>(result),

@@ -9,8 +9,7 @@
     <RootNamespace>Platform</RootNamespace>
     <GarbageCollectionAdaptationMode>1</GarbageCollectionAdaptationMode>
     <Features>InterceptorsPreview</Features>
-    <!-- This is needed to avoid conflicts with the generated request delegates -->
-    <!-- <EnableRequestDelegateGenerator>true</EnableRequestDelegateGenerator> -->
+    <EnableRequestDelegateGenerator>false</EnableRequestDelegateGenerator>
   </PropertyGroup>
 
   <PropertyGroup>

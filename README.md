@@ -63,3 +63,10 @@ docker build -t platform-api:latest .
    ```bash
    dotnet ef database update
    ```
+
+## Known Issues
+if during debug, port 5555 is used, the application will not start.
+```bash
+# kill the port
+sudo lsof -t -i tcp:5555 | xargs kill -9
+```

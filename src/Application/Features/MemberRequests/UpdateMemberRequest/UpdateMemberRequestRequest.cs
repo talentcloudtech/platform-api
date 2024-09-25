@@ -66,7 +66,7 @@ public record UpdateMemberRequestRequest : IRequest<Result<MemberRequestResponse
     /// <summary>
     /// Gets or sets the list of skills required for the request.
     /// </summary>
-    public List<string>? RequiredSkills { get; init; }
+    public string[] RequiredSkills { get; init; } = [];
 
     /// <summary>
     /// Gets the current status of the member request.

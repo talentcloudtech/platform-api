@@ -45,7 +45,7 @@ public class UpdateMemberSkillHandler(IContext context) : IRequestHandler<Update
             return Result.Conflict("Duplicate skill found");
         }
 
-        memberSkill.SkillId = request.SkillId.ToString();
+        memberSkill.SkillId = request.SkillId;
         memberSkill.Name = skill.Name;
         memberSkill.MonthsOfExperience = request.MonthsOfExperience;
 

@@ -31,7 +31,11 @@ public class CreateMemberSkillHandler(IContext context) : IRequestHandler<Create
 
         if (memberProfile == null)
         {
-            return Result.NotFound("Member profile not found.");
+            // return Result.NotFound("Member profile not found.");
+            memberProfile = new MemberProfile();
+            memberProfile.Id = request.MemberProfileId;
+            context.MemberProfiles.Add(memberProfile);
+            await context.SaveChangesAsync(cancellationToken);
         }
 
         var skill = await context.Skills.FirstOrDefaultAsync(sk => sk.Id == request.SkillId, cancellationToken);
@@ -57,6 +61,7 @@ public class CreateMemberSkillHandler(IContext context) : IRequestHandler<Create
             memberProfile.Skills = new List<MemberSkill>();
 
         memberProfile.Skills?.Add(memberSkill);
+
         await context.SaveChangesAsync(cancellationToken);
 
         return Result.Success(memberSkill.Adapt<MemberSkillResponse>());

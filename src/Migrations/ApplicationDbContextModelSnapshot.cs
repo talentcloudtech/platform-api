@@ -373,9 +373,9 @@ namespace Platform.Migrations
                     b.Property<int>("MinutesPerDay")
                         .HasColumnType("integer");
 
-                    b.Property<string>("RequiredSkills")
+                    b.Property<string[]>("RequiredSkills")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text[]");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("timestamp with time zone");
@@ -920,9 +920,8 @@ namespace Platform.Migrations
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Urls")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<string[]>("Urls")
+                        .HasColumnType("text[]");
 
                     b.HasKey("Id");
 
@@ -1396,7 +1395,7 @@ namespace Platform.Migrations
                     b.HasOne("Platform.Domain.Entities.Workspace", "Workspace")
                         .WithMany("Projects")
                         .HasForeignKey("WorkspaceId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -1434,7 +1433,7 @@ namespace Platform.Migrations
                     b.HasOne("Platform.Domain.Entities.Project", "Project")
                         .WithMany("ProjectTasks")
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Platform.Domain.Entities.Workspace", "Workspace")
@@ -1502,7 +1501,7 @@ namespace Platform.Migrations
                     b.HasOne("Platform.Domain.Entities.Workspace", "Workspace")
                         .WithMany("WorkspaceMembers")
                         .HasForeignKey("WorkspaceId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");

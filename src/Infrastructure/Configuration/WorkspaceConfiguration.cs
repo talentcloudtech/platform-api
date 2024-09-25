@@ -26,7 +26,7 @@ public class WorkspaceConfiguration : IEntityTypeConfiguration<Workspace>
         builder.Property(x => x.ContactEmail).HasMaxLength(StringSizes.Email);
         builder.Property(x => x.Address).HasMaxLength(StringSizes.ShortAddress);
         builder.Property(x => x.Logo).HasMaxLength(StringSizes.Url);
-        builder.Property(x => x.Urls).HasConversion(v => string.Join(',', v), v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList());
+        builder.Property(x => x.Urls).HasColumnType("text[]").IsRequired(false);
 
         builder.Property(x => x.CreatedBy).HasMaxLength(25).HasConversion<UserId.EfCoreValueConverter>();
         builder.Property(x => x.CreatedDate).HasConversion<DateTime>();

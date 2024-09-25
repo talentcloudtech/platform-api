@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using Ardalis.Result;
 using MediatR;
 using Platform.Domain.Entities.Common;
@@ -14,13 +15,13 @@ public record UpdateMemberSkillRequest : IRequest<Result<MemberSkillResponse>>
     /// Gets or sets the unique identifier of the member profile.
     /// </summary>
     [JsonIgnore]
-    public UserId MemberProfileId { get; init; }
+    public UserId MemberProfileId { get; set; }
 
     /// <summary>
     /// Gets or sets the unique identifier of the language entry.
     /// </summary>
     [JsonIgnore]
-    public MemberSkillId MemberSkillId { get; set; } = null!;
+    public MemberSkillId MemberSkillId { get; set; }
 
     /// <summary>
     /// Gets or sets the skill identifier.

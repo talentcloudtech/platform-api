@@ -30,7 +30,10 @@ public class CreateEducationHandler(IContext context) : IRequestHandler<CreateEd
 
         if (memberProfile == null)
         {
-            return Result.NotFound("Member profile not found.");
+            memberProfile = new MemberProfile();
+            memberProfile.Id = request.MemberProfileId;
+            context.MemberProfiles.Add(memberProfile);
+            await context.SaveChangesAsync(cancellationToken);
         }
 
         var existEducation = memberProfile.Educations?.FirstOrDefault(predicate: x =>

@@ -19,6 +19,6 @@ public class UpdateLanguageValidator : AbstractValidator<UpdateLanguageRequest>
             .MaximumLength(100)
             .WithMessage("Language name must not exceed 100 characters.");
 
-        RuleFor(x => x.ProficiencyLevel).IsInEnum().WithMessage("Invalid proficiency level.");
+        RuleFor(x => x.ProficiencyLevel).IsInEnum();
     }
 }

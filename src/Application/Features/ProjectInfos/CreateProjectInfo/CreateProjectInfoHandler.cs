@@ -30,7 +30,11 @@ public class CreateProjectInfoHandler(IContext context) : IRequestHandler<Create
 
         if (memberProfile == null)
         {
-            return Result.NotFound("Member profile not found.");
+            // return Result.NotFound("Member profile not found.");
+            memberProfile = new MemberProfile();
+            memberProfile.Id = request.MemberProfileId;
+            context.MemberProfiles.Add(memberProfile);
+            await context.SaveChangesAsync(cancellationToken);
         }
 
         var project = new ProjectInfo

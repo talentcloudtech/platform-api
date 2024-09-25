@@ -75,28 +75,30 @@ public class UpdateMemberRequestHandler(IContext context, ICurrentSession sessio
         {
             ["title"] = (mr, req) =>
             {
-                mr.Title = req.Title;
+                mr.Title = req.Title ?? "";
             },
             ["description"] = (mr, req) => mr.Description = req.Description,
             ["startdate"] = (mr, req) =>
             {
-                mr.StartDate = req.StartDate.Value;
+                if (req.StartDate.HasValue)
+                    mr.StartDate = req.StartDate.Value;
             },
             ["enddate"] = (mr, req) =>
             {
-                mr.EndDate = req.EndDate.Value;
+                if (req.EndDate.HasValue)
+                    mr.EndDate = req.EndDate.Value;
             },
             ["expectedbudget"] = (mr, req) =>
             {
-                mr.ExpectedBudget = req.ExpectedBudget.Value;
+                mr.ExpectedBudget = req.ExpectedBudget ?? 0;
             },
             ["minutesperday"] = (mr, req) =>
             {
-                mr.MinutesPerDay = req.MinutesPerDay.Value;
+                mr.MinutesPerDay = req.MinutesPerDay ?? 0;
             },
             ["timezone"] = (mr, req) =>
             {
-                mr.Timezone = req.Timezone;
+                mr.Timezone = req.Timezone ?? "";
             },
             ["requiredskills"] = (mr, req) =>
             {
