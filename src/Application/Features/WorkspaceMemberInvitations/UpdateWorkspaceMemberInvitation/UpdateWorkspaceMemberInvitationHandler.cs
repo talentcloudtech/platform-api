@@ -25,7 +25,7 @@ public class UpdateWorkspaceMemberInvitationHandler(IContext context) : IRequest
     public async Task<Result<string>> Handle(UpdateWorkspaceMemberInvitationRequest request, CancellationToken cancellationToken)
     {
         var workspaceMemberInvitation = await context.WorkspaceMemberInvitations.FirstOrDefaultAsync(
-            x => x.Id == request.WorkspaceMemberInvitationId && x.WorkspaceId == request.WorkspaceId,
+            x => x.Id == request.WorkspaceMemberInvitationId,
             cancellationToken
         );
         if (workspaceMemberInvitation == null)
@@ -39,7 +39,7 @@ public class UpdateWorkspaceMemberInvitationHandler(IContext context) : IRequest
             return Result.NotFound("User not found.");
 
         var workspaceMember = await context.WorkspaceMembers.FirstOrDefaultAsync(
-            x => x.WorkspaceId == request.WorkspaceId && x.UserId == user.Id,
+            x => x.WorkspaceId == workspaceMemberInvitation.WorkspaceId && x.UserId == user.Id,
             cancellationToken
         );
         if (workspaceMember != null)
@@ -49,7 +49,7 @@ public class UpdateWorkspaceMemberInvitationHandler(IContext context) : IRequest
         {
             var newWorkspaceMember = new WorkspaceMember
             {
-                WorkspaceId = request.WorkspaceId,
+                WorkspaceId = workspaceMemberInvitation.WorkspaceId,
                 UserId = user.Id,
                 Role = workspaceMemberInvitation.Role,
                 CreatedBy = user.Id,

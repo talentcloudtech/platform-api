@@ -22,7 +22,7 @@ public record WorkspaceResponse
     /// <summary>
     /// Gets or sets the contact email for the workspace.
     /// </summary>
-    public string ContactEmail { get; set; } = null!;
+    public string? ContactEmail { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets the URLs associated with the workspace.

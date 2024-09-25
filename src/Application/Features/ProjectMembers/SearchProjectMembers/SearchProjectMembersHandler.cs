@@ -69,7 +69,6 @@ public class SearchProjectMembersHandler(IContext context, ICurrentSession sessi
                     {
                         UserId = x.UserId,
                         UserName = x.User.UserName,
-                        Email = x.User.Email,
                         FirstName = nameParts?.Length > 0 ? nameParts[0] : null,
                         LastName = nameParts?.Length > 1 ? nameParts[1] : null,
                         ProfilePictureUrl = x.User.MemberProfile?.ProfilePictureUrl,

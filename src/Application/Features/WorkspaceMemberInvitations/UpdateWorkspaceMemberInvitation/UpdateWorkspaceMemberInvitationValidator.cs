@@ -12,9 +12,7 @@ public class UpdateWorkspaceMemberInvitationValidator : AbstractValidator<Update
     /// </summary>
     public UpdateWorkspaceMemberInvitationValidator()
     {
-        RuleFor(x => x.WorkspaceId).NotEmpty();
         RuleFor(x => x.WorkspaceMemberInvitationId).NotEmpty();
-        RuleFor(x => x.Code).NotEmpty();
         RuleFor(x => x.Accept).NotNull();
     }
 }

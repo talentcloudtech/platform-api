@@ -18,11 +18,6 @@ public class CommonUserResponse
     public string? UserName { get; set; }
 
     /// <summary>
-    /// Get or set the email.
-    /// </summary>
-    public string? Email { get; set; }
-
-    /// <summary>
     /// Get or set the first name.
     /// </summary>
     public string? FirstName { get; set; }

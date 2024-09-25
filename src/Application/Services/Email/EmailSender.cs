@@ -88,7 +88,7 @@ public class EmailSender : IEmailSender<ApplicationUser>, IEmailSender
         var mailRequests = new List<MailRequest>();
         foreach (var invitation in invitations)
         {
-            var invitationLink = $"{EnvironmentVariables.FrontendUrl}/workspaces/{invitation.WorkspaceId}/invitations/{invitation.Id}";
+            var invitationLink = $"{EnvironmentVariables.FrontendUrl}/workspaces/invitations/{invitation.Id}";
             var signupLink = $"{EnvironmentVariables.FrontendUrl}/signup";
             var body =
                 $@"

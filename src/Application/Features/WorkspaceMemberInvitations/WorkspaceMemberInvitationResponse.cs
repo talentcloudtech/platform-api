@@ -1,6 +1,5 @@
 using Platform.Application.Common.Responses;
 using Platform.Application.Features.Workspaces;
-using Platform.Domain.Entities;
 using Platform.Domain.Entities.Common;
 using Platform.Domain.Entities.Enums;
 
@@ -35,4 +34,9 @@ public class WorkspaceMemberInvitationResponse
     /// Gets or sets the workspace associated with this workspace member invitation.
     /// </summary>
     public WorkspaceResponse Workspace { get; set; } = null!;
+
+    /// <summary>
+    /// Gets or sets the user who invited the member to the workspace.
+    /// </summary>
+    public CommonUserResponse InvitedBy { get; set; } = null!;
 }

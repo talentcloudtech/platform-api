@@ -11,21 +11,10 @@ namespace Platform.Application.Features.WorkspaceMemberInvitations.UpdateWorkspa
 public record UpdateWorkspaceMemberInvitationRequest : IRequest<Result<string>>
 {
     /// <summary>
-    /// The workspace ID.
-    /// </summary>
-    [JsonIgnore]
-    public WorkspaceId WorkspaceId { get; init; }
-
-    /// <summary>
     /// The workspace member invitation ID.
     /// </summary>
     [JsonIgnore]
     public WorkspaceMemberInvitationId WorkspaceMemberInvitationId { get; init; }
-
-    /// <summary>
-    /// The code.
-    /// </summary>
-    public required string Code { get; init; }
 
     /// <summary>
     /// Whether to accept the invitation.

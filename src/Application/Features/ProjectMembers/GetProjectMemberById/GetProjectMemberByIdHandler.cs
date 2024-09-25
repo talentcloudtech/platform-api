@@ -51,7 +51,6 @@ public class GetProjectMemberByIdHandler(IContext context, ICurrentSession sessi
         {
             UserId = member.UserId,
             UserName = member.User?.UserName,
-            Email = member.User?.Email,
             FirstName = nameParts?.Length > 0 ? nameParts[0] : null,
             LastName = nameParts?.Length > 1 ? nameParts[1] : null,
             ProfilePictureUrl = member.User?.MemberProfile?.ProfilePictureUrl,

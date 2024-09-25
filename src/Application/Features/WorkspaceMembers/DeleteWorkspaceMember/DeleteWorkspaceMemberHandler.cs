@@ -34,24 +34,10 @@ public class DeleteWorkspaceMemberHandler(IContext context, ICurrentSession sess
 
         var member = workspace.WorkspaceMembers.FirstOrDefault(x => x.UserId == request.UserId);
         if (member == null)
-            return Result.Invalid(
-                new ValidationError
-                {
-                    Identifier = "UserId",
-                    ErrorMessage = "Workspace member not found.",
-                    ErrorCode = "WORKSPACE_MEMBER_NOT_FOUND",
-                }
-            );
+            return Result.NotFound("Workspace member not found.");
 
         if (request.UserId == session.UserId)
-            return Result.Invalid(
-                new ValidationError
-                {
-                    Identifier = "UserId",
-                    ErrorMessage = "You cannot remove yourself from the workspace.",
-                    ErrorCode = "SELF_REMOVE",
-                }
-            );
+            return Result.Forbidden("You cannot remove yourself from the workspace.");
 
         context.WorkspaceMembers.Remove(member);
 
