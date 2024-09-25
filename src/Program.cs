@@ -59,22 +59,17 @@ if (builder.Environment.EnvironmentName != "Testing")
 
 builder.Services.AddCors(options => options.AddDefaultPolicy(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
-// builder.Services.Configure<JsonOptions>(options =>
-// {
-//     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
-// });
-
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-// if (app.Environment.IsDevelopment())
-// {
-//     app.UseDeveloperExceptionPage();
-// }
 
 app.UseRouting();
 
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    // app.UseSwaggerSetup();
+}
 app.UseSwaggerSetup();
+
 app.UseForwardedHeaders(new ForwardedHeadersOptions { ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto });
 
 app.UseHsts();

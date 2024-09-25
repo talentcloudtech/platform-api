@@ -65,10 +65,10 @@ public class LoginHandler(
         {
             if (result.IsLockedOut)
             {
-                return Result.Invalid(new ValidationError("User is locked out."));
+                return Result.Invalid(new ValidationError { Identifier = "root", ErrorMessage = "User is locked out." });
             }
 
-            return Result.Invalid(new ValidationError("Invalid credentials."));
+            return Result.Invalid(new ValidationError { Identifier = "root", ErrorMessage = "Invalid credentials." });
         }
 
         var accessToken = await tokenService.CreateAccessTokenAsync(user);
