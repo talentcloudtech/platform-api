@@ -24,7 +24,7 @@ public record CreateWorkspaceRequest : IRequest<Result<WorkspaceResponse>>
     /// <summary>
     /// Gets or sets the URLs associated with the workspace.
     /// </summary>
-    public List<string> Urls { get; set; } = [];
+    public string[] Urls { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the address for the workspace.
