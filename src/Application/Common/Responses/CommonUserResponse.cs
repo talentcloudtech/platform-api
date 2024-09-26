@@ -36,6 +36,21 @@ public class CommonUserResponse
     /// <summary>
     /// Initializes a new instance of the <see cref="CommonUserResponse"/> class.
     /// </summary>
+    public CommonUserResponse() { }
+
+    /// <inheritdoc />
+    public CommonUserResponse(UserId userId, string? userName, string? firstName, string? lastName, string? profilePictureUrl)
+    {
+        UserId = userId;
+        UserName = userName;
+        FirstName = firstName;
+        LastName = lastName;
+        ProfilePictureUrl = profilePictureUrl;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CommonUserResponse"/> class.
+    /// </summary>
     /// <param name="user">The user.</param>
     /// <param name="memberProfile">The member profile.</param>
     public CommonUserResponse(ApplicationUser user, MemberProfile? memberProfile)

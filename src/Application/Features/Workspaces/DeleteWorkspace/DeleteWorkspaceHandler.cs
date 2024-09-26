@@ -29,6 +29,7 @@ public class DeleteWorkspaceHandler(IContext context, ICurrentSession session) :
         var workspace = await context
             .Workspaces.Include(x => x.WorkspaceMembers)
             .Include(x => x.Projects)
+            .ThenInclude(x => x.ProjectMembers)
             .FirstOrDefaultAsync(predicate: w => w.Id == request.WorkspaceId, cancellationToken);
 
         if (workspace == null)
@@ -41,6 +42,7 @@ public class DeleteWorkspaceHandler(IContext context, ICurrentSession session) :
         }
 
         context.WorkspaceMembers.RemoveRange(workspace.WorkspaceMembers);
+        context.ProjectMembers.RemoveRange(workspace.Projects.SelectMany(p => p.ProjectMembers));
         context.Projects.RemoveRange(workspace.Projects);
         context.Workspaces.Remove(workspace);
         await context.SaveChangesAsync(cancellationToken);

@@ -69,7 +69,7 @@ public static partial class ApiResponseResultExtensions
         {
             groupedErrors = result
                 .ValidationErrors.GroupBy(e => e.Identifier)
-                .ToDictionary(g => StringUtility.ToCamelCase(g.Key), g => g.Select(e => e.ErrorMessage).ToArray());
+                .ToDictionary(g => StringUtility.ToCamelCase(g.Key ?? "message"), g => g.Select(e => e.ErrorMessage).ToArray());
         }
         else
         {

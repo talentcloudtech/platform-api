@@ -8,6 +8,7 @@ using Platform.Application.Features.Workspaces.DeleteWorkspace;
 using Platform.Application.Features.Workspaces.GetWorkspaceById;
 using Platform.Application.Features.Workspaces.SearchWorkspaces;
 using Platform.Application.Features.Workspaces.UpdateWorkspace;
+using Platform.Application.Features.Workspaces.UploadWorkspaceAvatar;
 using Platform.Domain.Auth.Interfaces;
 using Platform.Domain.Entities.Common;
 
@@ -81,5 +82,24 @@ public static class WorkspaceEndpoints
                 }
             )
             .WithSummary("Deletes a workspace by its unique identifier.");
+
+        group
+            .MapPost(
+                "/{workSpaceId}/logo",
+                async (IMediator mediator, ICurrentSession currentSession, WorkspaceId workspaceId, IFormFile file) =>
+                {
+                    var result = await mediator.Send(
+                        new UploadWorkspaceAvatarRequest
+                        {
+                            CurrentUserId = currentSession.UserId,
+                            WorkspaceId = workspaceId,
+                            File = file,
+                        }
+                    );
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Update workspace logo.")
+            .DisableAntiforgery();
     }
 }
