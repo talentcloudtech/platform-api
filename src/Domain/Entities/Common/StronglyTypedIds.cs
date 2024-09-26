@@ -399,3 +399,20 @@ public partial struct MemberRequestId : IStringId
         return new MemberRequestId(id);
     }
 }
+
+/// <summary>
+/// Represents a strongly typed identifier for a gig invitation.
+/// </summary>
+[StronglyTypedId]
+public partial struct GigApplicantInvitationId : IStringId
+{
+    /// <summary>
+    /// Implicitly converts a id to a GigApplicantInvitationId.
+    /// </summary>
+    /// <param name="id">The id value.</param>
+    /// <returns>A new instance of GigApplicantInvitationId.</returns>
+    public static implicit operator GigApplicantInvitationId(string id)
+    {
+        return new GigApplicantInvitationId(id);
+    }
+}

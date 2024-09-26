@@ -74,4 +74,9 @@ public class MemberRequest : AuditableEntity<MemberRequestId>
     /// Gets or sets the application associated with this request.
     /// </summary>
     public ApplicationUser User { get; set; } = null!;
+
+    /// <summary>
+    /// Gets or sets the list of invitations for this member request.
+    /// </summary>
+    public List<GigApplicantInvitation> Invitations { get; set; } = [];
 }

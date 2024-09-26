@@ -69,6 +69,11 @@ public class ApplicationUser : IdentityUser<UserId>
     /// Gets or sets the collection of member requests.
     /// </summary>
     public List<MemberRequest> MemberRequests { get; set; } = [];
+
+    /// <summary>
+    /// Gets or sets the list of gig applicant invitations.
+    /// </summary>
+    public List<GigApplicantInvitation> GigApplicantInvitations { get; set; } = [];
 }
 
 /// <summary>

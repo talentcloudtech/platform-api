@@ -111,6 +111,11 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<MemberRequest> MemberRequests { get; set; } = null!;
 
     /// <summary>
+    /// Gets or sets the DbSet of GigApplicantInvitation entities.
+    /// </summary>
+    public DbSet<GigApplicantInvitation> GigApplicantInvitations { get; set; } = null!;
+
+    /// <summary>
     /// Configures the model for the database context.
     /// </summary>
     /// <param name="builder">The builder to use for configuration.</param>
