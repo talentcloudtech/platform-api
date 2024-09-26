@@ -93,11 +93,7 @@ app.MapMemberRequestEndpoints();
 
 app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwaggerSetup();
-    app.MapGet("/", () => Results.Redirect("/swagger"));
-}
+app.UseSwaggerSetup();
+app.MapGet("/", () => Results.Redirect("/swagger"));
 
 await app.RunAsync();
