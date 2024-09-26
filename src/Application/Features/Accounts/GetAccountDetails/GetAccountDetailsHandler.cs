@@ -46,7 +46,7 @@ public class GetAccountDetailsHandler : IRequestHandler<GetAccountDetailsRequest
             Email = user.Email,
             UserName = user.UserName,
             EmailConfirmed = user.EmailConfirmed,
-            FirstName = nameParts?.Length > 0 ? nameParts[0] : null,
+            FirstName = nameParts?.Length > 0 ? nameParts[0] : user.UserName,
             LastName = nameParts?.Length > 1 ? nameParts[1] : null,
             ProfilePictureUrl = user.MemberProfile?.ProfilePictureUrl,
         };

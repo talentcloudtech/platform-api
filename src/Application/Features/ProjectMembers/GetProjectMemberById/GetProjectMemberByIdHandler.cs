@@ -46,16 +46,7 @@ public class GetProjectMemberByIdHandler(IContext context, ICurrentSession sessi
             return Result.NotFound("Project member not found.");
 
         var response = member.Adapt<ProjectMemberResponse>();
-        var nameParts = member.User?.MemberProfile?.FullName?.Split(' ');
-        response.User = new CommonUserResponse
-        {
-            UserId = member.UserId,
-            UserName = member.User?.UserName,
-            FirstName = nameParts?.Length > 0 ? nameParts[0] : null,
-            LastName = nameParts?.Length > 1 ? nameParts[1] : null,
-            ProfilePictureUrl = member.User?.MemberProfile?.ProfilePictureUrl,
-        };
-
+        response.User = new CommonUserResponse(member.User, member.User.MemberProfile);
         return Result.Success(response);
     }
 }

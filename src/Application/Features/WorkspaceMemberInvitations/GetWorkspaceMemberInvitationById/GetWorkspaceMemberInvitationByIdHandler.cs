@@ -50,16 +50,7 @@ public class GetWorkspaceMemberInvitationByIdHandler(IContext context)
             CreatedBy = workspaceMemberInvitation.Workspace.CreatedBy,
         };
 
-        var nameParts = workspaceMemberInvitation.User?.MemberProfile?.FullName?.Split(' ');
-        response.InvitedBy = new CommonUserResponse
-        {
-            UserId = workspaceMemberInvitation.CreatedBy,
-            UserName = workspaceMemberInvitation.User?.UserName,
-            FirstName = nameParts?.Length > 0 ? nameParts[0] : null,
-            LastName = nameParts?.Length > 1 ? nameParts[1] : null,
-            ProfilePictureUrl = workspaceMemberInvitation.User?.MemberProfile?.ProfilePictureUrl,
-        };
-
+        response.InvitedBy = new CommonUserResponse(workspaceMemberInvitation.User, workspaceMemberInvitation.User.MemberProfile);
         return Result.Success(response);
     }
 }

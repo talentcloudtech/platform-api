@@ -63,16 +63,8 @@ public class SearchProjectMembersHandler(IContext context, ICurrentSession sessi
             Result = projectMembersResponse
                 .Result.Select(x =>
                 {
-                    var nameParts = x.User.MemberProfile?.FullName?.Split(' ');
                     var memberResponse = x.Adapt<ProjectMemberResponse>();
-                    memberResponse.User = new CommonUserResponse
-                    {
-                        UserId = x.UserId,
-                        UserName = x.User.UserName,
-                        FirstName = nameParts?.Length > 0 ? nameParts[0] : null,
-                        LastName = nameParts?.Length > 1 ? nameParts[1] : null,
-                        ProfilePictureUrl = x.User.MemberProfile?.ProfilePictureUrl,
-                    };
+                    memberResponse.User = new CommonUserResponse(x.User, x.User.MemberProfile);
                     return memberResponse;
                 })
                 .ToList(),

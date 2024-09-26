@@ -16,6 +16,7 @@ using Platform.Application.Features.Accounts.RefreshToken;
 using Platform.Application.Features.Accounts.RegisterAccount;
 using Platform.Application.Features.Accounts.ResendEmailConfirmation;
 using Platform.Application.Features.Accounts.ResetPassword;
+using Platform.Application.Features.Accounts.UpdateUserFullName;
 using Platform.Application.Features.Accounts.UpdateUserName;
 using Platform.Domain.Auth.Interfaces;
 
@@ -166,6 +167,18 @@ public static class AccountEndpoints
             .MapPut(
                 "/username",
                 async (IMediator mediator, ICurrentSession currentUser, UpdateUsernameRequest request) =>
+                {
+                    var result = await mediator.Send(request with { UserId = currentUser.UserId });
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Update username.")
+            .RequireAuthorization();
+
+        group
+            .MapPut(
+                "/display-name",
+                async (IMediator mediator, ICurrentSession currentUser, UpdateUserFullNameRequest request) =>
                 {
                     var result = await mediator.Send(request with { UserId = currentUser.UserId });
                     return result.ToPlatformApiResult();
