@@ -10,7 +10,7 @@ public record ShortSkillResponse
     /// <summary>
     /// Gets or sets the unique identifier of the skill.
     /// </summary>
-    public SkillId Id { get; set; }
+    public string Id { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets the name.

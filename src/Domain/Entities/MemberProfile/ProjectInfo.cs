@@ -32,6 +32,5 @@ public class ProjectInfo
     /// <summary>
     /// Gets or sets a list of technologies used in the project.
     /// </summary>
-    [NotMapped]
-    public ShortSkillResponse[]? Technologies { get; set; }
+    public List<ShortSkillResponse> Technologies { get; set; } = new();
 }

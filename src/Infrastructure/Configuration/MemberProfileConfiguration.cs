@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Platform.Application.Common;
 using Platform.Domain.Entities;
 using Platform.Domain.Entities.Common;
+using Platform.Infrastructure.Converters;
 
 namespace Platform.Infrastructure.Configuration;
 
@@ -73,6 +74,7 @@ public class MemberProfileConfiguration : IEntityTypeConfiguration<MemberProfile
             x =>
             {
                 x.ToJson();
+                x.Property(p => p.Technologies).HasConversion(new ShortSkillResponseListConverter());
             }
         );
 

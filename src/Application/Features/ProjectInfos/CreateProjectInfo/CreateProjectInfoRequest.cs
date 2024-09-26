@@ -35,5 +35,5 @@ public record CreateProjectInfoRequest : IRequest<Result<ProjectInfoResponse>>
     /// <summary>
     /// Gets or sets a list of technologies used in the project.
     /// </summary>
-    public ShortSkillResponse[]? Technologies { get; set; }
+    public List<ShortSkillResponse> Technologies { get; set; } = new();
 }
