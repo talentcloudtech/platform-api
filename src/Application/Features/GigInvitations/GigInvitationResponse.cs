@@ -28,7 +28,12 @@ public record GigInvitationResponse
     /// <summary>
     /// Gets or sets the user who is invited to the gig.
     /// </summary>
-    public CommonUserResponse InvitedUser { get; init; } = null!;
+    public CommonUserResponse InvitedUser { get; set; } = null!;
+
+    /// <summary>
+    /// Gets or sets the user who invited the applicant.
+    /// </summary>
+    public CommonUserResponse InvitedBy { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets the date when the project member was created.
@@ -49,9 +54,4 @@ public record GigInvitationResponse
     /// Gets or sets the identifier of the user who last updated this project member.
     /// </summary>
     public UserId? UpdatedBy { get; init; }
-
-    /// <summary>
-    /// Gets or sets the user who invited the applicant.
-    /// </summary>
-    public CommonUserResponse InvitedBy { get; set; } = null!;
 }

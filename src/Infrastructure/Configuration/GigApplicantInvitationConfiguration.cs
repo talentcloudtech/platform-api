@@ -61,7 +61,7 @@ public class GigApplicantInvitationConfiguration : IEntityTypeConfiguration<GigA
 
 
         builder.HasOne(gai => gai.CreatedByUser)
-            .WithMany()
+            .WithMany(u=>u.CreatedGigApplicantInvitations)
             .HasForeignKey(gai => gai.CreatedBy)
             .OnDelete(DeleteBehavior.Restrict);
     }
