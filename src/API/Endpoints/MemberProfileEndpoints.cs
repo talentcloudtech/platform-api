@@ -14,6 +14,7 @@ using Platform.Application.Features.Languages.CreateLanguage;
 using Platform.Application.Features.Languages.DeleteLanguage;
 using Platform.Application.Features.Languages.UpdateLanguage;
 using Platform.Application.Features.MemberProfiles.GetMemberProfileById;
+using Platform.Application.Features.MemberProfiles.GetPublicProfileById;
 using Platform.Application.Features.MemberProfiles.SearchMemberProfiles;
 using Platform.Application.Features.MemberProfiles.UpdateAvatar;
 using Platform.Application.Features.MemberProfiles.UpdateMemberProfile;
@@ -62,6 +63,17 @@ public static class MemberProfileEndpoints
                 }
             )
             .WithSummary("Retrieves a member profile by its unique identifier.");
+
+        group
+            .MapGet(
+                "{id}",
+                async (IMediator mediator, UserId id) =>
+                {
+                    var result = await mediator.Send(new GetPublicProfileByIdRequest(id));
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Retrieves a public member profile by its unique identifier.");
 
         group
             .MapPut(
