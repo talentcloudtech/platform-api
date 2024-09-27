@@ -1,5 +1,6 @@
 using System;
 using Platform.Application.Common.Responses;
+using Platform.Application.Features.GigOpportunities;
 using Platform.Domain.Entities.Common;
 using Platform.Domain.Entities.Enums;
 
@@ -24,6 +25,11 @@ public record GigInvitationResponse
     /// Gets or sets the status of the gig invitation.
     /// </summary>
     public GigApplicantInvitationStatus Status { get; init; }
+
+    /// <summary>
+    /// Gets or sets the gig opportunity.
+    /// </summary>
+    public GigOpportunityResponse GigOpportunity { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets the user who is invited to the gig.

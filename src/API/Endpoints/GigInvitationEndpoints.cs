@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Routing;
 using Platform.Application.Extensions;
 using Platform.Application.Features.GigInvitations.GetGigInvitationById;
 using Platform.Application.Features.GigInvitations.GetUserGigInvitation;
+using Platform.Application.Features.GigInvitations.UpdateGigInvitationStatus;
 using Platform.Domain.Auth.Interfaces;
 using Platform.Domain.Entities.Common;
 
@@ -21,24 +22,39 @@ public static class GigInvitationEndpoints
     /// <param name="builder">The endpoint route builder.</param>
     public static void MapGigInvitationEndpoints(this IEndpointRouteBuilder builder)
     {
-        var group = builder.MapGroup("api/gig-opportunities/{memberRequestId}/invitations").WithTags("GigInvitation").RequireAuthorization();
+        var group = builder.MapGroup("api/gig-opportunities/invitations").WithTags("GigInvitation").RequireAuthorization();
 
-        group.MapGet(
-            "/",
-            async (IMediator mediator, ICurrentSession currentUser, MemberRequestId memberRequestId, [AsParameters] GetUserGigInvitationRequest request) =>
-            {
-                var result = await mediator.Send(request with { MemberRequestId = memberRequestId, UserId = currentUser.UserId });
-                return result.ToPlatformApiResult();
-            }
-        );
+        group
+            .MapGet(
+                "/",
+                async (IMediator mediator, [AsParameters] GetUserGigInvitationRequest request) =>
+                {
+                    var result = await mediator.Send(request);
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Get user gig invitations");
 
-        group.MapGet(
-            "/{id}",
-            async (IMediator mediator, MemberRequestId memberRequestId, GigApplicantInvitationId id) =>
-            {
-                var result = await mediator.Send(new GetGigInvitationByIdRequest(memberRequestId, id));
-                return result.ToPlatformApiResult();
-            }
-        );
+        group
+            .MapGet(
+                "/{gigInvitationId}",
+                async (IMediator mediator, GigApplicantInvitationId gigInvitationId) =>
+                {
+                    var result = await mediator.Send(new GetGigInvitationByIdRequest(gigInvitationId));
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Get a gig invitation by id");
+
+        group
+            .MapPatch(
+                "/{gigInvitationId}",
+                async (IMediator mediator, GigApplicantInvitationId gigInvitationId, UpdateGigInvitationStatusRequest request) =>
+                {
+                    var result = await mediator.Send(request with { GigInvitationId = gigInvitationId });
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Update a gig invitation status");
     }
 }

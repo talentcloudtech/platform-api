@@ -6,6 +6,8 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
 using Platform.Application.Common.Responses;
+using Platform.Application.Features.GigOpportunities;
+using Platform.Domain.Auth.Interfaces;
 
 namespace Platform.Application.Features.GigInvitations.GetGigInvitationById;
 
@@ -13,7 +15,9 @@ namespace Platform.Application.Features.GigInvitations.GetGigInvitationById;
 /// Handler for getting a gig invitation by its unique identifier.
 /// </summary>
 /// <param name="context">The context.</param>
-public class GetGigInvitationByIdHandler(IContext context) : IRequestHandler<GetGigInvitationByIdRequest, Result<GigInvitationResponse>>
+/// <param name="session">The current session.</param>
+public class GetGigInvitationByIdHandler(IContext context, ICurrentSession session)
+    : IRequestHandler<GetGigInvitationByIdRequest, Result<GigInvitationResponse>>
 {
     /// <summary>
     /// Handles the request to get a gig invitation by its unique identifier.
@@ -27,12 +31,13 @@ public class GetGigInvitationByIdHandler(IContext context) : IRequestHandler<Get
             .GigApplicantInvitations.Include(i => i.MemberRequest)
             .Include(i => i.InvitedUser!.MemberProfile)
             .Include(i => i.CreatedByUser!.MemberProfile)
-            .FirstOrDefaultAsync(i => i.Id == request.Id && i.MemberRequestId == request.MemberRequestId, cancellationToken);
+            .FirstOrDefaultAsync(i => i.Id == request.Id && i.InvitedUserId == session.UserId, cancellationToken);
 
         if (gigInvitation == null)
             return Result.NotFound("Gig invitation not found.");
 
         var response = gigInvitation.Adapt<GigInvitationResponse>();
+        response.GigOpportunity = gigInvitation.MemberRequest.Adapt<GigOpportunityResponse>();
         response.InvitedUser = new CommonUserResponse(gigInvitation.InvitedUser!, gigInvitation.InvitedUser!.MemberProfile);
         response.InvitedBy = new CommonUserResponse(gigInvitation.CreatedByUser!, gigInvitation.CreatedByUser!.MemberProfile);
 

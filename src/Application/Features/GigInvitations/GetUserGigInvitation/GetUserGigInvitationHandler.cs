@@ -2,20 +2,22 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.Result;
+using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
 using Platform.Application.Common.Responses;
+using Platform.Application.Features.GigOpportunities;
+using Platform.Domain.Auth.Interfaces;
 
 namespace Platform.Application.Features.GigInvitations.GetUserGigInvitation;
 
 /// <summary>
 /// Handler for getting a paginated list of gig invitations for a user.
 /// </summary>
-public class GetUserGigInvitationHandler(IContext context) : IRequestHandler<GetUserGigInvitationRequest, Result<PaginatedList<GigInvitationResponse>>>
+public class GetUserGigInvitationHandler(IContext context, ICurrentSession session)
+    : IRequestHandler<GetUserGigInvitationRequest, Result<PaginatedList<GigInvitationResponse>>>
 {
-    private readonly IContext _context = context;
-
     /// <summary>
     /// Handles the request to get a paginated list of gig invitations for a user.
     /// </summary>
@@ -24,11 +26,11 @@ public class GetUserGigInvitationHandler(IContext context) : IRequestHandler<Get
     /// <returns>A Result containing a paginated list of GigInvitationResponse objects.</returns>
     public async Task<Result<PaginatedList<GigInvitationResponse>>> Handle(GetUserGigInvitationRequest request, CancellationToken cancellationToken)
     {
-        var query = _context
+        var query = context
             .GigApplicantInvitations.Include(i => i.MemberRequest)
             .Include(i => i.InvitedUser!.MemberProfile)
             .Include(i => i.CreatedByUser!.MemberProfile)
-            .Where(i => i.InvitedUserId == request.UserId && i.MemberRequestId == request.MemberRequestId);
+            .Where(i => i.InvitedUserId == session.UserId);
 
         // Apply status filter
         if (request.Statuses.Any())
@@ -59,6 +61,7 @@ public class GetUserGigInvitationHandler(IContext context) : IRequestHandler<Get
                 CreatedDate = i.CreatedDate,
                 UpdatedDate = i.UpdatedDate,
                 MemberRequestId = i.MemberRequestId,
+                GigOpportunity = i.MemberRequest.Adapt<GigOpportunityResponse>(),
                 InvitedUser = new CommonUserResponse(i.InvitedUser!, i.InvitedUser!.MemberProfile),
                 InvitedBy = new CommonUserResponse(i.CreatedByUser!, i.CreatedByUser!.MemberProfile),
                 CreatedBy = i.CreatedBy,
