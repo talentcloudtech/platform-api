@@ -41,7 +41,7 @@ public class SearchTasksHandler(IContext context, ICurrentSession session) : IRe
 
         var tasks = context
             .ProjectTasks.Where(x => x.ProjectId == request.ProjectId)
-            .WhereIf(!string.IsNullOrEmpty(request.Title), x => EF.Functions.Like(x.Title, $"%{request.Title}%"))
+            .WhereIf(!string.IsNullOrEmpty(request.Title), x => EF.Functions.Like(x.Title.ToLower().Trim(), $"%{request.Title!.ToLower().Trim()}%"))
             .WhereIf(request.Statuses.Any(), x => request.Statuses.Contains(x.Status))
             .WhereIf(request.Priorities.Any(), x => request.Priorities.Contains(x.Priority));
 

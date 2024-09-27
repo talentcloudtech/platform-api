@@ -37,7 +37,7 @@ public class SearchProjectsHandler(IContext context, ICurrentSession session) : 
                     ) || x.ProjectMembers.Any(pm => pm.UserId == session.UserId)
                 )
             )
-            .WhereIf(!string.IsNullOrEmpty(request.Title), x => EF.Functions.Like(x.Title, $"%{request.Title}%"))
+            .WhereIf(!string.IsNullOrEmpty(request.Title), x => EF.Functions.Like(x.Title.ToLower().Trim(), $"%{request.Title!.ToLower().Trim()}%"))
             .WhereIf(request.Statuses.Any(), x => request.Statuses.Contains(x.Status));
 
         return await projects.ProjectToType<ProjectResponse>().OrderBy(x => x.Title).ToPaginatedListAsync(request.CurrentPage, request.PageSize);

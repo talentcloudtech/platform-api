@@ -31,7 +31,7 @@ public class SearchWorkspacesHandler(IContext context, ICurrentSession session)
     {
         var workspaces = context
             .Workspaces.Where(x => x.WorkspaceMembers.Any(m => m.UserId == session.UserId))
-            .WhereIf(!string.IsNullOrEmpty(request.Name), x => EF.Functions.Like(x.Name.ToLower().Trim(), $"%{request.Name}%"))
+            .WhereIf(!string.IsNullOrEmpty(request.Name), x => EF.Functions.Like(x.Name.ToLower().Trim(), $"%{request.Name!.ToLower().Trim()}%"))
             .AsNoTracking();
 
         return await workspaces.ProjectToType<WorkspaceResponse>().OrderBy(x => x.Name).ToPaginatedListAsync(request.CurrentPage, request.PageSize);

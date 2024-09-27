@@ -24,7 +24,9 @@ public class SearchSkillsHandler(IContext context) : IRequestHandler<SearchSkill
     /// <returns>A paginated list of <see cref="SkillResponse"/> matching the search criteria.</returns>
     public async Task<Result<PaginatedList<SkillResponse>>> Handle(SearchSkillsRequest request, CancellationToken cancellationToken)
     {
-        var skills = context.Skills.WhereIf(!string.IsNullOrEmpty(request.Name), x => EF.Functions.Like(x.Name, $"%{request.Name}%")).AsNoTracking();
+        var skills = context
+            .Skills.WhereIf(!string.IsNullOrEmpty(request.Name), x => EF.Functions.Like(x.Name.ToLower().Trim(), $"%{request.Name!.ToLower().Trim()}%"))
+            .AsNoTracking();
 
         var result = await skills.ProjectToType<SkillResponse>().OrderBy(x => x.Name).ToPaginatedListAsync(request.CurrentPage, request.PageSize);
 
