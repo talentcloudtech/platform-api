@@ -90,6 +90,7 @@ app.MapProjectMemberEndpoints();
 app.MapProjectTaskEndpoints();
 app.MapContractEndpoints();
 app.MapMemberRequestEndpoints();
+app.MapGigInvitationEndpoints();
 
 app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
