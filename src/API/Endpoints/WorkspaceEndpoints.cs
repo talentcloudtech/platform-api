@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Routing;
 using Platform.Application.Extensions;
 using Platform.Application.Features.Workspaces.CreateWorkspace;
 using Platform.Application.Features.Workspaces.DeleteWorkspace;
+using Platform.Application.Features.Workspaces.GetUserWorkspaceRole;
 using Platform.Application.Features.Workspaces.GetWorkspaceById;
 using Platform.Application.Features.Workspaces.SearchWorkspaces;
 using Platform.Application.Features.Workspaces.UpdateWorkspace;
@@ -41,7 +42,7 @@ public static class WorkspaceEndpoints
         group
             .MapGet(
                 "{workSpaceId}",
-                async (IMediator mediator, ICurrentSession currentSession, string workspaceId) =>
+                async (IMediator mediator, WorkspaceId workspaceId) =>
                 {
                     var result = await mediator.Send(new GetWorkspaceByIdRequest(workspaceId));
                     return result.ToPlatformApiResult();
@@ -52,7 +53,7 @@ public static class WorkspaceEndpoints
         group
             .MapPost(
                 "/",
-                async (IMediator mediator, ICurrentSession currentSession, CreateWorkspaceRequest request) =>
+                async (IMediator mediator, CreateWorkspaceRequest request) =>
                 {
                     var result = await mediator.Send(request);
 
@@ -64,7 +65,7 @@ public static class WorkspaceEndpoints
         group
             .MapPatch(
                 "{workSpaceId}",
-                async (IMediator mediator, ICurrentSession currentSession, WorkspaceId workspaceId, UpdateWorkspaceRequest request) =>
+                async (IMediator mediator, WorkspaceId workspaceId, UpdateWorkspaceRequest request) =>
                 {
                     var result = await mediator.Send(request with { Id = workspaceId });
                     return result.ToPlatformApiResult();
@@ -75,7 +76,7 @@ public static class WorkspaceEndpoints
         group
             .MapDelete(
                 "{workSpaceId}",
-                async (IMediator mediator, ICurrentSession currentSession, WorkspaceId workspaceId) =>
+                async (IMediator mediator, WorkspaceId workspaceId) =>
                 {
                     var result = await mediator.Send(new DeleteWorkspaceRequest(workspaceId));
                     return result.ToPlatformApiResult();
@@ -101,5 +102,16 @@ public static class WorkspaceEndpoints
             )
             .WithSummary("Update workspace logo.")
             .DisableAntiforgery();
+
+        group
+            .MapGet(
+                "{workSpaceId}/role",
+                async (IMediator mediator, WorkspaceId workspaceId) =>
+                {
+                    var result = await mediator.Send(new GetUserWorkspaceRoleRequest(workspaceId));
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Get the role of the current user in the workspace.");
     }
 }

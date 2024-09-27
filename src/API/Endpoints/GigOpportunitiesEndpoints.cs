@@ -18,7 +18,7 @@ public static class GigOpportunityEndpoints
 {
     /// <summary>
     /// Maps the gig opportunity endpoints.
-    /// <summary>
+    /// </summary>
     /// <param name="builder">The endpoint route builder.</param>
     public static void MapGigOpportunityEndpoints(this IEndpointRouteBuilder builder)
     {

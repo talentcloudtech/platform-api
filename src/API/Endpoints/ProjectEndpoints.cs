@@ -8,6 +8,7 @@ using Platform.Application.Features.Projects;
 using Platform.Application.Features.Projects.CreateProject;
 using Platform.Application.Features.Projects.DeleteProject;
 using Platform.Application.Features.Projects.GetProjectById;
+using Platform.Application.Features.Projects.GetUserProjectRole;
 using Platform.Application.Features.Projects.SearchProjects;
 using Platform.Application.Features.Projects.UpdateProject;
 using Platform.Domain.Entities.Common;
@@ -93,5 +94,16 @@ public static class ProjectEndpoints
                 }
             )
             .WithSummary("Deletes a project by its unique identifier.");
+
+        group
+            .MapGet(
+                "{id}/role",
+                async (IMediator mediator, ProjectId projectId) =>
+                {
+                    var result = await mediator.Send(new GetUserProjectRoleRequest(projectId));
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Get the role of the current user in the project.");
     }
 }
