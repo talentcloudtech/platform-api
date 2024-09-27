@@ -8,7 +8,7 @@ namespace Platform.Application.Features.WorkspaceMemberInvitations.UpdateWorkspa
 /// <summary>
 /// Request to update a workspace member invitation.
 /// </summary>
-public record UpdateWorkspaceMemberInvitationRequest : IRequest<Result<string>>
+public record UpdateWorkspaceMemberInvitationRequest : IRequest<Result>
 {
     /// <summary>
     /// The workspace member invitation ID.

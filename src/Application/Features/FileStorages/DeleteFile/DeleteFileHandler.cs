@@ -50,6 +50,6 @@ public class DeleteFileHandler : IRequestHandler<DeleteFileRequest, Result<strin
         var blobClient = blobContainerClient.GetBlobClient(blobName);
 
         await blobClient.DeleteIfExistsAsync(cancellationToken: cancellationToken);
-        return Result.Success("File deleted successfully.");
+        return Result.Success();
     }
 }

@@ -34,12 +34,7 @@ public class CreateTaskHandler(IContext context, ICurrentSession session) : IReq
         if (project == null)
             return Result.NotFound("Project not found.");
 
-        if (
-            !project.Workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner)
-            && !project.ProjectMembers.Any(x =>
-                x.UserId == session.UserId && (x.Role == ProjectRole.ProjectOwner || x.Role == ProjectRole.ProjectAdmin || x.Role == ProjectRole.ProjectManager)
-            )
-        )
+        if (!project.Workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId) && !project.ProjectMembers.Any(x => x.UserId == session.UserId))
             return Result.Forbidden("You don't have permission to create tasks in this project.");
 
         var newTask = request.Adapt<ProjectTask>();

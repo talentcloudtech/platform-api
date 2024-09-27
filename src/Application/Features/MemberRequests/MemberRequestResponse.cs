@@ -1,5 +1,6 @@
 using System;
-using System.Collections.Generic;
+using Platform.Application.Common.Responses;
+using Platform.Application.Features.Workspaces;
 using Platform.Domain.Entities.Common;
 using Platform.Domain.Entities.Enums;
 
@@ -19,6 +20,11 @@ public record MemberRequestResponse
     /// Gets or sets the workspace identifier.
     /// </summary>
     public WorkspaceId WorkspaceId { get; init; }
+
+    /// <summary>
+    /// Gets or sets the workspace.
+    /// </summary>
+    public WorkspaceResponse? Workspace { get; set; }
 
     /// <summary>
     /// Gets or sets the title of the member request.
@@ -66,12 +72,12 @@ public record MemberRequestResponse
     public MemberRequestStatus Status { get; init; }
 
     /// <summary>
-    /// Gets the identifier of the user who created this member request.
-    /// </summary>
-    public UserId CreatedBy { get; init; }
-
-    /// <summary>
     /// Gets the date when the member request was last updated.
     /// </summary>
     public DateTime? CreatedDate { get; init; }
+
+    /// <summary>
+    /// Gets the user who created this member request.
+    /// </summary>
+    public CommonUserResponse? CreatedByUser { get; set; }
 }

@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Platform.Application.Extensions;
-using Platform.Application.Features.GigInvitations.CreateGigInvitation;
 using Platform.Application.Features.GigInvitations.GetGigInvitationById;
 using Platform.Application.Features.GigInvitations.GetUserGigInvitation;
 using Platform.Domain.Auth.Interfaces;
@@ -23,17 +22,6 @@ public static class GigInvitationEndpoints
     public static void MapGigInvitationEndpoints(this IEndpointRouteBuilder builder)
     {
         var group = builder.MapGroup("api/gig-opportunities/{memberRequestId}/invitations").WithTags("GigInvitation").RequireAuthorization();
-
-        group
-            .MapPost(
-                "/",
-                async (IMediator mediator, ICurrentSession currentUser, MemberRequestId memberRequestId, CreateGigInvitationRequest request) =>
-                {
-                    var result = await mediator.Send(request with { MemberRequestId = memberRequestId, CurrentUserId = currentUser.UserId });
-                    return result.ToPlatformApiResult();
-                }
-            )
-            .WithSummary("Create a gig invitation");
 
         group.MapGet(
             "/",

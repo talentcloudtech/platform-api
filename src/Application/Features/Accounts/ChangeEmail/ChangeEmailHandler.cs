@@ -61,6 +61,6 @@ public class ChangeEmailHandler(UserManager<ApplicationUser> userManager) : IReq
             return Result.Error(result.Errors.FirstOrDefault()?.Description ?? "Failed to change email");
         }
 
-        return Result.Success("Email changed successfully.");
+        return Result.Success();
     }
 }

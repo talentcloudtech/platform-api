@@ -4,19 +4,13 @@ using Ardalis.Result;
 using MediatR;
 using Platform.Domain.Entities.Common;
 
-namespace Platform.Application.Features.GigInvitations.CreateGigInvitation;
+namespace Platform.Application.Features.GigOpportunities.CreateGigInvitation;
 
 /// <summary>
 /// Represents the request model for creating a gig invitation.
 /// </summary>
 public record CreateGigInvitationRequest : IRequest<Result>
 {
-    /// <summary>
-    /// Gets or sets the current user identifier associated with this gig invitation.
-    /// </summary>
-    [JsonIgnore]
-    public UserId CurrentUserId { get; set; }
-
     /// <summary>
     /// Gets or sets the member request identifier associated with this gig invitation.
     /// </summary>

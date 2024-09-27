@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.Result;
@@ -5,6 +6,8 @@ using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
+using Platform.Domain.Auth.Interfaces;
+using Platform.Domain.Entities.Enums;
 
 namespace Platform.Application.Features.Projects.GetProjectById;
 
@@ -12,8 +15,9 @@ namespace Platform.Application.Features.Projects.GetProjectById;
 /// Handles the request to retrieve a project by its unique identifier.
 /// </summary>
 /// <param name="context">The database context used to access projects.</param>
+/// <param name="session">The current session.</param>
 /// <returns>A <see cref="Result{T}"/> containing a <see cref="ProjectResponse"/> if the project is found, or a not found result if the project does not exist.</returns>
-public class GetProjectByIdHandler(IContext context) : IRequestHandler<GetProjectByIdRequest, Result<ProjectResponse>>
+public class GetProjectByIdHandler(IContext context, ICurrentSession session) : IRequestHandler<GetProjectByIdRequest, Result<ProjectResponse>>
 {
     /// <summary>
     /// Handles the retrieval of a project by its ID.
@@ -29,7 +33,17 @@ public class GetProjectByIdHandler(IContext context) : IRequestHandler<GetProjec
         var project = await context
             .Projects.Include(x => x.Workspace.WorkspaceMembers)
             .Include(x => x.ProjectMembers)
-            .FirstOrDefaultAsync(x => x.WorkspaceId == request.WorkspaceId && x.Id == request.Id, cancellationToken: cancellationToken);
+            .FirstOrDefaultAsync(
+                x =>
+                    x.WorkspaceId == request.WorkspaceId
+                    && x.Id == request.Id
+                    && (
+                        x.Workspace.WorkspaceMembers.Any(wm =>
+                            wm.UserId == session.UserId && (wm.Role == WorkspaceRole.WorkspaceOwner || wm.Role == WorkspaceRole.WorkspaceManager)
+                        ) || x.ProjectMembers.Any(pm => pm.UserId == session.UserId)
+                    ),
+                cancellationToken: cancellationToken
+            );
 
         if (project is null)
             return Result.NotFound("Project not found.");

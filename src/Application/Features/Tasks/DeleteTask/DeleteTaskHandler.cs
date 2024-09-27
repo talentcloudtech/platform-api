@@ -37,12 +37,7 @@ public class DeleteTaskHandler(IContext context, ICurrentSession session) : IReq
         if (task == null)
             return Result.NotFound("Task not found.");
 
-        if (
-            !task.Project.Workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner)
-            && !task.Project.ProjectMembers.Any(x =>
-                x.UserId == session.UserId && (x.Role == ProjectRole.ProjectOwner || x.Role == ProjectRole.ProjectAdmin || x.Role == ProjectRole.ProjectManager)
-            )
-        )
+        if (!task.Project.Workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId) && !task.Project.ProjectMembers.Any(x => x.UserId == session.UserId))
             return Result.Forbidden("You don't have permission to delete this task.");
 
         context.ProjectTasks.Remove(task);

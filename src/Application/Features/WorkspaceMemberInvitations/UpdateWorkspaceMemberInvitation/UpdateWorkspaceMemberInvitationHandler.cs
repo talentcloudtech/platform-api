@@ -14,7 +14,7 @@ namespace Platform.Application.Features.WorkspaceMemberInvitations.UpdateWorkspa
 /// </summary>
 /// <param name="context">The context.</param>
 /// <returns>The result.</returns>
-public class UpdateWorkspaceMemberInvitationHandler(IContext context) : IRequestHandler<UpdateWorkspaceMemberInvitationRequest, Result<string>>
+public class UpdateWorkspaceMemberInvitationHandler(IContext context) : IRequestHandler<UpdateWorkspaceMemberInvitationRequest, Result>
 {
     /// <summary>
     /// Handles the request to update a workspace member invitation.
@@ -22,7 +22,7 @@ public class UpdateWorkspaceMemberInvitationHandler(IContext context) : IRequest
     /// <param name="request">The request.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The result.</returns>
-    public async Task<Result<string>> Handle(UpdateWorkspaceMemberInvitationRequest request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(UpdateWorkspaceMemberInvitationRequest request, CancellationToken cancellationToken)
     {
         var workspaceMemberInvitation = await context.WorkspaceMemberInvitations.FirstOrDefaultAsync(
             x => x.Id == request.WorkspaceMemberInvitationId,
@@ -60,9 +60,6 @@ public class UpdateWorkspaceMemberInvitationHandler(IContext context) : IRequest
         context.WorkspaceMemberInvitations.Remove(workspaceMemberInvitation);
         await context.SaveChangesAsync(cancellationToken);
 
-        if (request.Accept)
-            return Result.Success("Workspace member invitation accepted successfully.");
-        else
-            return Result.Success("Workspace member invitation rejected successfully.");
+        return Result.Success();
     }
 }
