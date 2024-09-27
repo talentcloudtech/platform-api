@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.Result;
@@ -5,6 +6,7 @@ using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
+using Platform.Domain.Auth.Interfaces;
 
 namespace Platform.Application.Features.Workspaces.GetWorkspaceById;
 
@@ -12,11 +14,12 @@ namespace Platform.Application.Features.Workspaces.GetWorkspaceById;
 /// Handles the request to retrieve a workspace by its unique identifier.
 /// </summary>
 /// <param name="context">The database context.</param>
+/// <param name="session">The current session.</param>
 /// <returns>
 /// A <see cref="Result{T}"/> containing a <see cref="WorkspaceResponse"/> if the workspace is found,
 /// or a not found result if the workspace does not exist.
 /// </returns>
-public class GetWorkspaceByIdHandler(IContext context) : IRequestHandler<GetWorkspaceByIdRequest, Result<WorkspaceResponse>>
+public class GetWorkspaceByIdHandler(IContext context, ICurrentSession session) : IRequestHandler<GetWorkspaceByIdRequest, Result<WorkspaceResponse>>
 {
     /// <summary>
     /// Handles the retrieval of a workspace by its ID.
@@ -30,10 +33,12 @@ public class GetWorkspaceByIdHandler(IContext context) : IRequestHandler<GetWork
 
     public async Task<Result<WorkspaceResponse>> Handle(GetWorkspaceByIdRequest request, CancellationToken cancellationToken)
     {
-        var workspace = await context.Workspaces.FirstOrDefaultAsync(x => x.Id == request.WorkspaceId, cancellationToken: cancellationToken);
+        var workspace = await context
+            .Workspaces.Where(x => x.WorkspaceMembers.Any(m => m.UserId == session.UserId))
+            .FirstOrDefaultAsync(x => x.Id == request.WorkspaceId, cancellationToken: cancellationToken);
 
         if (workspace is null)
-            return new WorkspaceResponse();
+            return Result.NotFound();
 
         return workspace.Adapt<WorkspaceResponse>();
     }
