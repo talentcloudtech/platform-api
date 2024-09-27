@@ -68,5 +68,5 @@ public enum GigApplicantInvitationStatus
     /// <summary>
     /// The applicant has declined the offer.
     /// </summary>
-    OfferDeclined = 13
+    OfferDeclined = 13,
 }

@@ -33,7 +33,7 @@ public record GetUserGigInvitationRequest(
     /// </summary>
     [JsonIgnore]
     public MemberRequestId MemberRequestId { get; set; }
-    
+
     /// <summary>
     /// The unique identifier of the user requesting their gig invitations.
     /// This property is ignored during JSON serialization/deserialization.

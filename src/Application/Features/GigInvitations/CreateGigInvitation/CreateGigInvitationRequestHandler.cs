@@ -31,8 +31,8 @@ public class CreateGigInvitationRequestHandler(IContext context, ICurrentSession
     /// <returns>The result of the operation.</returns>
     public async Task<Result> Handle(CreateGigInvitationRequest request, CancellationToken cancellationToken)
     {
-        var memberRequest = await context.MemberRequests
-            .Include(x => x.Invitations)
+        var memberRequest = await context
+            .MemberRequests.Include(x => x.Invitations)
             .FirstOrDefaultAsync(x => x.Id == request.MemberRequestId, cancellationToken);
 
         if (memberRequest == null)
@@ -46,14 +46,16 @@ public class CreateGigInvitationRequestHandler(IContext context, ICurrentSession
 
         var currentTime = DateTime.UtcNow;
         // create gig invitations
-        var gigInvitations = usersToInvite.Select(userId => new GigApplicantInvitation
-        {
-            InvitedUserId = userId,
-            MemberRequestId = request.MemberRequestId,
-            Status = GigApplicantInvitationStatus.Pending,
-            CreatedBy = session.UserId,
-            CreatedDate = currentTime
-        }).ToList();
+        var gigInvitations = usersToInvite
+            .Select(userId => new GigApplicantInvitation
+            {
+                InvitedUserId = userId,
+                MemberRequestId = request.MemberRequestId,
+                Status = GigApplicantInvitationStatus.Pending,
+                CreatedBy = session.UserId,
+                CreatedDate = currentTime,
+            })
+            .ToList();
 
         // add gig invitations to the member request
         context.GigApplicantInvitations.AddRange(gigInvitations);

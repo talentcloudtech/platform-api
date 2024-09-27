@@ -1,11 +1,11 @@
+using System;
 using Platform.Application.Common.Responses;
 using Platform.Domain.Entities.Common;
 using Platform.Domain.Entities.Enums;
-using System;
 
 namespace Platform.Application.Features.GigInvitations;
 
-/// <summary>   
+/// <summary>
 /// Represents the response model for a gig invitation.
 /// </summary>
 public record GigInvitationResponse

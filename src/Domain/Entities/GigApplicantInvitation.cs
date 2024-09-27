@@ -43,4 +43,3 @@ public class GigApplicantInvitation : AuditableEntity<GigApplicantInvitationId>
     /// </summary>
     public ApplicationUser? CreatedByUser { get; set; }
 }
-
