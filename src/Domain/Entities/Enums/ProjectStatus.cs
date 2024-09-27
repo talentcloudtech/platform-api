@@ -8,20 +8,25 @@ public enum ProjectStatus
     /// <summary>
     /// Represents a new project.
     /// </summary>
-    Draft = 0,
+    Draft = 1,
 
     /// <summary>
-    /// Represents a project in progress.
+    /// Represents a project that has been started.
     /// </summary>
-    InProgress = 1,
+    Started = 2,
 
     /// <summary>
     /// Represents a completed project.
     /// </summary>
-    Completed = 2,
+    Completed = 3,
 
     /// <summary>
     /// Represents a canceled project.
     /// </summary>
-    Canceled = 3,
+    Canceled = 4,
+
+    /// <summary>
+    /// Represents a project on hold.
+    /// </summary>
+    OnHold = 5,
 }

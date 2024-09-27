@@ -38,5 +38,5 @@ public record SearchUsersProjectRequest(
     /// <summary>
     /// Gets or sets the list of statuses to filter projects by.
     /// </summary>
-    public ProjectStatus[] Statuses { get; init; } = Statuses ?? new[] { ProjectStatus.Draft, ProjectStatus.InProgress };
+    public ProjectStatus[] Statuses { get; init; } = Statuses ?? new[] { ProjectStatus.Draft };
 }
