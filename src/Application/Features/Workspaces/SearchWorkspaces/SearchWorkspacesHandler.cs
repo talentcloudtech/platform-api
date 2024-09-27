@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
 using Platform.Application.Common.Responses;
 using Platform.Application.Extensions;
+using Platform.Domain.Auth.Interfaces;
 
 namespace Platform.Application.Features.Workspaces.SearchWorkspaces;
 
@@ -15,8 +16,10 @@ namespace Platform.Application.Features.Workspaces.SearchWorkspaces;
 /// Handles the request to search for workspaces with optional filtering and pagination.
 /// </summary>
 /// <param name="context">The database context.</param>
+/// <param name="session">The current session.</param>
 /// <returns>A paginated list of workspaces.</returns>
-public class SearchWorkspacesHandler(IContext context) : IRequestHandler<SearchWorkspacesRequest, Result<PaginatedList<WorkspaceResponse>>>
+public class SearchWorkspacesHandler(IContext context, ICurrentSession session)
+    : IRequestHandler<SearchWorkspacesRequest, Result<PaginatedList<WorkspaceResponse>>>
 {
     /// <summary>
     /// Handles the request to search for workspaces based on the provided filtering and pagination options.
@@ -27,7 +30,8 @@ public class SearchWorkspacesHandler(IContext context) : IRequestHandler<SearchW
     public async Task<Result<PaginatedList<WorkspaceResponse>>> Handle(SearchWorkspacesRequest request, CancellationToken cancellationToken)
     {
         var workspaces = context
-            .Workspaces.WhereIf(!string.IsNullOrEmpty(request.Name), x => EF.Functions.Like(x.Name.ToLower().Trim(), $"%{request.Name}%"))
+            .Workspaces.Where(x => x.WorkspaceMembers.Any(m => m.UserId == session.UserId))
+            .WhereIf(!string.IsNullOrEmpty(request.Name), x => EF.Functions.Like(x.Name.ToLower().Trim(), $"%{request.Name}%"))
             .AsNoTracking();
 
         return await workspaces.ProjectToType<WorkspaceResponse>().OrderBy(x => x.Name).ToPaginatedListAsync(request.CurrentPage, request.PageSize);
