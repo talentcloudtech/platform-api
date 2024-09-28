@@ -25,7 +25,14 @@ public class MemberRequestConfiguration : IEntityTypeConfiguration<MemberRequest
         builder.Property(x => x.WorkspaceId).HasMaxLength(StringSizes.Id).HasConversion<WorkspaceId.EfCoreValueConverter>();
         builder.Property(x => x.Title).HasMaxLength(StringSizes.Title);
         builder.Property(x => x.Description).HasMaxLength(StringSizes.Max);
-        builder.Property(x => x.RequiredSkills).HasColumnType("text[]");
+        builder.OwnsMany(
+            x => x.RequiredSkills,
+            x =>
+            {
+                x.ToJson();
+                x.Property(s => s.SkillId).HasConversion(v => v.Value, v => new SkillId(v));
+            }
+        );
         builder.Property(x => x.StartDate).HasConversion<DateTime>();
         builder.Property(x => x.EndDate).HasConversion<DateTime>();
         builder.Property(x => x.ExpectedBudget).HasColumnType("decimal(10, 2)");

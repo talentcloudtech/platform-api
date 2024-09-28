@@ -41,9 +41,9 @@ public class SearchGigOpportunitiesHandler(IContext context, ICurrentSession ses
         if (request.MemberRequestIds != null && request.MemberRequestIds.Any())
             query = query.Where(i => request.MemberRequestIds.Contains(i.Id));
 
-        // Apply status filter
-        if (request.Skills != null && request.Skills.Any())
-            query = query.Where(i => request.Skills.Any(skill => i.RequiredSkills.Contains(skill)));
+        // Apply skill ids filter
+        if (request.SkillIds != null && request.SkillIds.Any())
+            query = query.Where(i => i.RequiredSkills.Any(x => request.SkillIds.Contains(x.SkillId)));
 
         // Apply search filter
         if (!string.IsNullOrWhiteSpace(request.Search))

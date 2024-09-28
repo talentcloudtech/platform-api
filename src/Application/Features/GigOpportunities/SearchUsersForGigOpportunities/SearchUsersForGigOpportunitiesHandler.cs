@@ -38,6 +38,9 @@ public class SearchUsersForGigOpportunitiesHandler(IContext context, ICurrentSes
             return Result.Forbidden("You are not authorized to access this resource.");
 
         var memberRequest = await context.MemberRequests.FirstOrDefaultAsync(x => x.Id == request.MemberRequestId, cancellationToken);
+        if (memberRequest == null)
+            return Result.NotFound("Member request not found.");
+
         // Get users with Admin and Customer roles
         var adminIds = await userManager.GetUsersInRoleAsync(UserRole.Admin.Name);
         var customerIds = await userManager.GetUsersInRoleAsync(UserRole.Customer.Name);
@@ -45,18 +48,9 @@ public class SearchUsersForGigOpportunitiesHandler(IContext context, ICurrentSes
         // Combine admin and customer IDs
         var excludedUserIds = adminIds.Select(u => u.Id).Concat(customerIds.Select(u => u.Id)).Distinct().ToList();
 
-        var query = context.MemberProfiles.Include(x => x.User).Where(x => !excludedUserIds.Contains(x.User!.Id));
+        var query = context.MemberProfiles.Include(x => x.User).Where(x => !excludedUserIds.Contains(x.User!.Id)).AsNoTracking();
 
-        var lowercaseSearch = request.Prompt?.ToLower().Trim();
-        query = query
-            .WhereIf(
-                !string.IsNullOrEmpty(lowercaseSearch),
-                x =>
-                    EF.Functions.Like(x.User!.UserName!.ToLower().Trim(), $"%{lowercaseSearch}%")
-                    || EF.Functions.Like(x.User!.MemberProfile!.FullName!.ToLower().Trim(), $"%{lowercaseSearch}%")
-                    || EF.Functions.Like(x.User!.Email!.ToLower().Trim(), $"%{lowercaseSearch}%")
-            )
-            .AsNoTracking();
+        query = query.Where(x => x.Skills.Any(y => memberRequest.RequiredSkills.Any(z => z.SkillId == y.SkillId)));
 
         var memberProfilesResponse = await query.ToPaginatedListAsync(1, 20);
 

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Ardalis.Result;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Platform.Domain.Entities;
 using Platform.Domain.Entities.Common;
 using Platform.Domain.Entities.Enums;
 
@@ -66,7 +67,7 @@ public record UpdateMemberRequestRequest : IRequest<Result<MemberRequestResponse
     /// <summary>
     /// Gets or sets the list of skills required for the request.
     /// </summary>
-    public string[] RequiredSkills { get; init; } = [];
+    public List<MemberRequestSkill>? RequiredSkills { get; init; }
 
     /// <summary>
     /// Gets the current status of the member request.

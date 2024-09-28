@@ -418,10 +418,6 @@ namespace Platform.Migrations
                     b.Property<int>("MinutesPerDay")
                         .HasColumnType("integer");
 
-                    b.Property<string[]>("RequiredSkills")
-                        .IsRequired()
-                        .HasColumnType("text[]");
-
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -1406,6 +1402,39 @@ namespace Platform.Migrations
                         .HasForeignKey("WorkspaceId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.OwnsMany("Platform.Domain.Entities.MemberRequestSkill", "RequiredSkills", b1 =>
+                        {
+                            b1.Property<string>("MemberRequestId")
+                                .HasColumnType("character varying(25)");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("Identifier")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<string>("Name")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<string>("SkillId")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.HasKey("MemberRequestId", "Id");
+
+                            b1.ToTable("MemberRequests");
+
+                            b1.ToJson("RequiredSkills");
+
+                            b1.WithOwner()
+                                .HasForeignKey("MemberRequestId");
+                        });
+
+                    b.Navigation("RequiredSkills");
 
                     b.Navigation("User");
 

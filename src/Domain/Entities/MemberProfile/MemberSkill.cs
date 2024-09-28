@@ -10,17 +10,17 @@ public class MemberSkill
     /// <summary>
     /// Gets or sets the unique identifier of the language entry.
     /// </summary>
-    public string Identifier { get; set; } = null!;
+    public required string Identifier { get; set; }
 
     /// <summary>
     /// Gets or sets the skill identifier.
     /// </summary>
-    public string SkillId { get; set; } = null!;
+    public required SkillId SkillId { get; set; }
 
     /// <summary>
     /// Gets or sets the name of the skill.
     /// </summary>
-    public string Name { get; set; } = null!;
+    public required string Name { get; set; }
 
     /// <summary>
     /// Gets or sets the number of months of experience in the skill.

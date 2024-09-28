@@ -33,7 +33,7 @@ public class MemberRequest : AuditableEntity<MemberRequestId>
     /// <summary>
     /// Gets or sets the list of skills required for the request.
     /// </summary>
-    public required string[] RequiredSkills { get; set; } = [];
+    public required List<MemberRequestSkill> RequiredSkills { get; set; }
 
     /// <summary>
     /// Gets or sets the date the request is scheduled to start.

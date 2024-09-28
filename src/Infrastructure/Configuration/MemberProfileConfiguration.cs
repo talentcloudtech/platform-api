@@ -43,6 +43,7 @@ public class MemberProfileConfiguration : IEntityTypeConfiguration<MemberProfile
             x =>
             {
                 x.ToJson();
+                x.Property(s => s.SkillId).HasConversion(v => v.Value, v => new SkillId(v));
             }
         );
         builder.OwnsMany(
