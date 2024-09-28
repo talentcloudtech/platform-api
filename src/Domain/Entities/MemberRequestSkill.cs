@@ -9,11 +9,6 @@ namespace Platform.Domain.Entities;
 public class MemberRequestSkill
 {
     /// <summary>
-    /// Gets or sets the identifier of the skill.
-    /// </summary>
-    public required string Identifier { get; set; }
-
-    /// <summary>
     /// Gets or sets the skill that the member request requires.
     /// </summary>
     public required SkillId SkillId { get; set; }

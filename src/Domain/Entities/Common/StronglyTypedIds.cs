@@ -333,6 +333,23 @@ public partial struct ProjectTaskAssignmentId : IStringId
 }
 
 /// <summary>
+/// Represents a strongly typed identifier for a task attachment.
+/// </summary>
+[StronglyTypedId]
+public partial struct ProjectTaskAttachmentId : IStringId
+{
+    /// <summary>
+    /// Implicitly converts a id to a TaskAttachmentId.
+    /// </summary>
+    /// <param name="id">The id value.</param>
+    /// <returns>A new instance of TaskAttachmentId.</returns>
+    public static implicit operator ProjectTaskAttachmentId(string id)
+    {
+        return new ProjectTaskAttachmentId(id);
+    }
+}
+
+/// <summary>
 /// Represents a strongly typed identifier for a project member.
 /// </summary>
 [StronglyTypedId]

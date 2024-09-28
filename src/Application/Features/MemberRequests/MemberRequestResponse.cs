@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using Platform.Application.Common.Responses;
 using Platform.Application.Features.Workspaces;
+using Platform.Domain.Entities;
 using Platform.Domain.Entities.Common;
 using Platform.Domain.Entities.Enums;
 
@@ -59,7 +61,7 @@ public record MemberRequestResponse
     /// <summary>
     /// Gets or sets the list of skills required for the request.
     /// </summary>
-    public string[] RequiredSkills { get; init; } = [];
+    public List<MemberRequestSkill> RequiredSkills { get; init; } = [];
 
     /// <summary>
     /// Gets the current status of the member request.

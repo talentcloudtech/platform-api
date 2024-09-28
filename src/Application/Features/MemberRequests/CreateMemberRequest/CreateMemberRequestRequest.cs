@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Ardalis.Result;
 using MediatR;
+using Platform.Domain.Entities;
 using Platform.Domain.Entities.Common;
 
 namespace Platform.Application.Features.MemberRequests.CreateMemberRequest;
@@ -56,5 +57,5 @@ public record CreateMemberRequestRequest : IRequest<Result<MemberRequestResponse
     /// <summary>
     /// Gets or sets the list of skills required for the request.
     /// </summary>
-    public string[] RequiredSkills { get; init; } = [];
+    public List<MemberRequestSkill> RequiredSkills { get; init; } = [];
 }

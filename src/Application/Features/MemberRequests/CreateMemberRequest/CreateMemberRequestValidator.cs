@@ -13,14 +13,14 @@ public class CreateMemberRequestValidator : AbstractValidator<CreateMemberReques
     /// </summary>
     public CreateMemberRequestValidator()
     {
-        RuleFor(x => x.WorkspaceId).NotEmpty();
-        RuleFor(x => x.Title).NotEmpty().MaximumLength(StringSizes.Title);
+        RuleFor(x => x.WorkspaceId).NotNull().NotEmpty();
+        RuleFor(x => x.Title).NotNull().NotEmpty().MaximumLength(StringSizes.Title);
         RuleFor(x => x.Description).MaximumLength(StringSizes.Max);
-        RuleFor(x => x.StartDate).NotEmpty();
-        RuleFor(x => x.EndDate).NotEmpty();
+        RuleFor(x => x.StartDate).NotNull().NotEmpty();
+        RuleFor(x => x.EndDate).NotNull().NotEmpty().LessThan(x => x.StartDate);
         RuleFor(x => x.ExpectedBudget).GreaterThanOrEqualTo(0);
         RuleFor(x => x.MinutesPerDay).GreaterThanOrEqualTo(0);
-        RuleFor(x => x.Timezone).NotEmpty().MaximumLength(StringSizes.Short);
-        RuleFor(x => x.RequiredSkills).NotEmpty();
+        RuleFor(x => x.Timezone).NotNull().NotEmpty().MaximumLength(StringSizes.Short);
+        RuleFor(x => x.RequiredSkills).NotNull().NotEmpty();
     }
 }

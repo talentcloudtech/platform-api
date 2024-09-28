@@ -2,6 +2,8 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Platform.API.Endpoints.TaskAssignees.CreateTaskAssignee;
+using Platform.API.Endpoints.TaskAssignees.UpdateTaskAssignee;
 using Platform.Application.Extensions;
 using Platform.Application.Features.Tasks.CreateTask;
 using Platform.Application.Features.Tasks.DeleteTask;
@@ -92,5 +94,42 @@ public static class TaskEndpoints
                 }
             )
             .WithSummary("Deletes a task.");
+
+        group
+            .MapPost(
+                "{taskId}/assign",
+                async (IMediator mediator, WorkspaceId workspaceId, ProjectId projectId, ProjectTaskId taskId, CreateTaskAssigneeRequest request) =>
+                {
+                    var result = await mediator.Send(request with { WorkspaceId = workspaceId, ProjectId = projectId, TaskId = taskId });
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Adds a task assignee.");
+
+        group
+            .MapPatch(
+                "{taskId}/assign/{assigneeId}",
+                async (
+                    IMediator mediator,
+                    WorkspaceId workspaceId,
+                    ProjectId projectId,
+                    ProjectTaskId taskId,
+                    ProjectTaskAssignmentId assigneeId,
+                    UpdateTaskAssigneeRequest request
+                ) =>
+                {
+                    var result = await mediator.Send(
+                        request with
+                        {
+                            WorkspaceId = workspaceId,
+                            ProjectId = projectId,
+                            TaskId = taskId,
+                            AssigneeId = assigneeId,
+                        }
+                    );
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Updates a task assignee.");
     }
 }
