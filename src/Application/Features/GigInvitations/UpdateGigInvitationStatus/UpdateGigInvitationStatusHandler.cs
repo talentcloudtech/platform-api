@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.Result;
@@ -37,6 +38,11 @@ public class UpdateGigInvitationStatusHandler(IContext context, ICurrentSession 
 
         if (gigInvitation == null)
             return Result.NotFound("Gig invitation not found.");
+
+        var statusTransitionResult = GigApplicantInvitationStatusValidator.ValidateStatusTransition(gigInvitation.Status, request.Status, false, false, true);
+
+        if (!statusTransitionResult.IsSuccess)
+            return Result.Invalid(new ValidationError(statusTransitionResult.Errors.FirstOrDefault()));
 
         gigInvitation.Status = request.Status;
         gigInvitation.UpdatedBy = session.UserId;

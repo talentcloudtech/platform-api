@@ -18,10 +18,8 @@ namespace Platform.Application.Features.GigOpportunities.CreateGigInvitation;
 /// </summary>
 /// <param name="context">The database context.</param>
 /// <param name="session">The current session information.</param>
-/// <param name="userManager">The user manager.</param>
 /// <returns>The result of the operation.</returns>
-public class CreateGigInvitationHandler(IContext context, ICurrentSession session, UserManager<ApplicationUser> userManager)
-    : IRequestHandler<CreateGigInvitationRequest, Result>
+public class CreateGigInvitationHandler(IContext context, ICurrentSession session) : IRequestHandler<CreateGigInvitationRequest, Result>
 {
     /// <summary>
     /// Handles the request to create new gig invitations.
@@ -31,13 +29,7 @@ public class CreateGigInvitationHandler(IContext context, ICurrentSession sessio
     /// <returns>The result of the operation.</returns>
     public async Task<Result> Handle(CreateGigInvitationRequest request, CancellationToken cancellationToken)
     {
-        var currentUser = await context.Users.FirstOrDefaultAsync(x => x.Id == session.UserId, cancellationToken);
-        if (currentUser == null)
-            return Result.Unauthorized("User not found.");
-
-        // check if the current user is an admin
-        var isAdmin = await userManager.IsInRoleAsync(currentUser, "Admin");
-        if (!isAdmin)
+        if (session.Role!.Name != UserRole.Admin.Name)
             return Result.Forbidden("You are not authorized to access this resource.");
 
         // get the member request
@@ -47,6 +39,9 @@ public class CreateGigInvitationHandler(IContext context, ICurrentSession sessio
 
         if (memberRequest == null)
             return Result.NotFound("This gig opportunity does not exist.");
+
+        if (memberRequest.Status != MemberRequestStatus.Published)
+            return Result.Forbidden("This gig opportunity is not published.");
 
         // filter already invited users
         var alreadyInvitedUserIds = memberRequest.Invitations.Select(x => x.InvitedUserId).ToList();

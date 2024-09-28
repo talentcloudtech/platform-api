@@ -1,5 +1,6 @@
 ﻿using System;
 using Platform.Domain.Entities.Common;
+using Platform.Domain.Entities.Enums;
 
 namespace Platform.Domain.Auth.Interfaces;
 
@@ -12,6 +13,11 @@ public interface ICurrentSession
     /// Gets the ID of the current user.
     /// </summary>
     public UserId UserId { get; }
+
+    /// <summary>
+    /// Gets the role of the current user.
+    /// </summary>
+    public UserRole? Role { get; }
 
     /// <summary>
     /// Gets the current date and time.

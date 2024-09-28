@@ -11,6 +11,7 @@ using Platform.Application.Common.Responses;
 using Platform.Application.Features.GigInvitations;
 using Platform.Domain.Auth.Interfaces;
 using Platform.Domain.Entities;
+using Platform.Domain.Entities.Enums;
 
 namespace Platform.Application.Features.GigOpportunities.GetGigOpportunityCandidates;
 
@@ -19,8 +20,7 @@ namespace Platform.Application.Features.GigOpportunities.GetGigOpportunityCandid
 /// </summary>
 /// <param name="context">The database context.</param>
 /// <param name="session">The current session.</param>
-/// <param name="userManager">The user manager.</param>
-public class GetGigOpportunityCandidatesHandler(IContext context, ICurrentSession session, UserManager<ApplicationUser> userManager)
+public class GetGigOpportunityCandidatesHandler(IContext context, ICurrentSession session)
     : IRequestHandler<GetGigOpportunityCandidatesRequest, Result<PaginatedList<GigInvitationResponse>>>
 {
     /// <summary>
@@ -31,13 +31,7 @@ public class GetGigOpportunityCandidatesHandler(IContext context, ICurrentSessio
     /// <returns>The result of the operation.</returns>
     public async Task<Result<PaginatedList<GigInvitationResponse>>> Handle(GetGigOpportunityCandidatesRequest request, CancellationToken cancellationToken)
     {
-        var currentUser = await context.Users.FirstOrDefaultAsync(x => x.Id == session.UserId, cancellationToken);
-        if (currentUser == null)
-            return Result.Unauthorized("User not found.");
-
-        // check if the current user is an admin
-        var isAdmin = await userManager.IsInRoleAsync(currentUser, "Admin");
-        if (!isAdmin)
+        if (session.Role!.Name != UserRole.Admin.Name)
             return Result.Forbidden("You are not authorized to access this resource.");
 
         IQueryable<GigApplicantInvitation> query = context.GigApplicantInvitations.Where(i => i.MemberRequestId == request.MemberRequestId);

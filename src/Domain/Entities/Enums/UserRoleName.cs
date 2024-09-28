@@ -1,3 +1,5 @@
+using System;
+
 namespace Platform.Domain.Entities.Enums;
 
 /// <summary>
@@ -37,5 +39,24 @@ public class UserRole
     public static UserRole Customer
     {
         get { return new UserRole("Customer"); }
+    }
+
+    /// <summary>
+    /// Converts a string to a UserRole.
+    /// </summary>
+    /// <param name="roleName">The name of the role to convert.</param>
+    /// <returns>The UserRole enum value.</returns>
+    public static UserRole? FromString(string roleName)
+    {
+        if (string.IsNullOrEmpty(roleName))
+            return null;
+
+        return roleName switch
+        {
+            "User" => User,
+            "Admin" => Admin,
+            "Customer" => Customer,
+            _ => null,
+        };
     }
 }

@@ -10,6 +10,7 @@ using Platform.Application.Common;
 using Platform.Application.Common.Responses;
 using Platform.Domain.Auth.Interfaces;
 using Platform.Domain.Entities;
+using Platform.Domain.Entities.Enums;
 
 namespace Platform.Application.Features.GigOpportunities.SearchGigOpportunities;
 
@@ -18,8 +19,7 @@ namespace Platform.Application.Features.GigOpportunities.SearchGigOpportunities;
 /// </summary>
 /// <param name="context">The database context</param>
 /// <param name="session">The current user session</param>
-/// <param name="userManager">The user manager</param>
-public class SearchGigOpportunitiesHandler(IContext context, ICurrentSession session, UserManager<ApplicationUser> userManager)
+public class SearchGigOpportunitiesHandler(IContext context, ICurrentSession session)
     : IRequestHandler<SearchGigOpportunitiesRequest, Result<PaginatedList<GigOpportunityResponse>>>
 {
     /// <summary>
@@ -30,12 +30,7 @@ public class SearchGigOpportunitiesHandler(IContext context, ICurrentSession ses
     /// <returns>The gig opportunities</returns>
     public async Task<Result<PaginatedList<GigOpportunityResponse>>> Handle(SearchGigOpportunitiesRequest request, CancellationToken cancellationToken)
     {
-        var currentUser = await context.Users.FirstOrDefaultAsync(x => x.Id == session.UserId, cancellationToken);
-        if (currentUser == null)
-            return Result.Unauthorized("User not found.");
-
-        var isAdmin = await userManager.IsInRoleAsync(currentUser, "Admin");
-        if (!isAdmin)
+        if (session.Role!.Name != UserRole.Admin.Name)
             return Result.Forbidden("You are not authorized to access this resource.");
 
         IQueryable<MemberRequest> query = context.MemberRequests.Include(i => i.Workspace).Include(i => i.User.MemberProfile);

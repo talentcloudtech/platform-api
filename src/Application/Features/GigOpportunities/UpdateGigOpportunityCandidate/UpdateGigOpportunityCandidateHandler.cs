@@ -20,8 +20,7 @@ namespace Platform.Application.Features.GigOpportunities.UpdateGigOpportunityCan
 /// </summary>
 /// <param name="context">The database context.</param>
 /// <param name="session">The current session.</param>
-/// <param name="userManager">The user manager.</param>
-public class UpdateGigOpportunityCandidateHandler(IContext context, ICurrentSession session, UserManager<ApplicationUser> userManager)
+public class UpdateGigOpportunityCandidateHandler(IContext context, ICurrentSession session)
     : IRequestHandler<UpdateGigOpportunityCandidateRequest, Result<GigInvitationResponse>>
 {
     /// <summary>
@@ -32,14 +31,9 @@ public class UpdateGigOpportunityCandidateHandler(IContext context, ICurrentSess
     /// <returns>The result of the operation.</returns>
     public async Task<Result<GigInvitationResponse>> Handle(UpdateGigOpportunityCandidateRequest request, CancellationToken cancellationToken)
     {
-        var currentUser = await context.Users.FirstOrDefaultAsync(x => x.Id == session.UserId, cancellationToken);
-        if (currentUser == null)
-            return Result.Unauthorized("User not found.");
-
-        // check if the current user is an admin
-        var isAdmin = await userManager.IsInRoleAsync(currentUser, "Admin");
-
-        var memberRequest = await context.MemberRequests.FirstOrDefaultAsync(x => x.Id == request.MemberRequestId, cancellationToken);
+        var memberRequest = await context
+            .MemberRequests.Include(x => x.Workspace.WorkspaceMembers)
+            .FirstOrDefaultAsync(x => x.Id == request.MemberRequestId, cancellationToken);
 
         if (memberRequest == null)
             return Result.NotFound("Member request not found.");
@@ -51,7 +45,19 @@ public class UpdateGigOpportunityCandidateHandler(IContext context, ICurrentSess
         if (gigInvitation == null)
             return Result.NotFound("Gig invitation not found.");
 
-        var statusTransitionResult = ValidateStatusTransition(gigInvitation.Status, request.Status);
+        var isAdmin = session.Role!.Name == UserRole.Admin.Name;
+        var isWorkspaceOwnerOrManager = memberRequest.Workspace.WorkspaceMembers.Any(x =>
+            x.UserId == session.UserId && (x.Role == WorkspaceRole.WorkspaceOwner || x.Role == WorkspaceRole.WorkspaceManager)
+        );
+        var isInvitedUser = session.UserId == gigInvitation.InvitedUserId;
+
+        var statusTransitionResult = GigApplicantInvitationStatusValidator.ValidateStatusTransition(
+            gigInvitation.Status,
+            request.Status,
+            isAdmin,
+            isWorkspaceOwnerOrManager,
+            isInvitedUser
+        );
         if (!statusTransitionResult.IsSuccess)
             return Result.Invalid(
                 new ValidationError
@@ -66,38 +72,5 @@ public class UpdateGigOpportunityCandidateHandler(IContext context, ICurrentSess
         await context.SaveChangesAsync(cancellationToken);
 
         return Result.Success(gigInvitation.Adapt<GigInvitationResponse>());
-    }
-
-    private Result ValidateStatusTransition(GigApplicantInvitationStatus currentStatus, GigApplicantInvitationStatus newStatus)
-    {
-        var validTransitions = GetValidTransitions(currentStatus);
-        if (!validTransitions.Contains(newStatus))
-        {
-            return Result.Error(
-                $"Invalid status transition from {currentStatus} to {newStatus}. " + $"Valid transitions are: {string.Join(", ", validTransitions)}"
-            );
-        }
-        return Result.Success();
-    }
-
-    private GigApplicantInvitationStatus[] GetValidTransitions(GigApplicantInvitationStatus currentStatus)
-    {
-        return currentStatus switch
-        {
-            GigApplicantInvitationStatus.Pending => new[] { GigApplicantInvitationStatus.Accepted, GigApplicantInvitationStatus.Declined },
-            GigApplicantInvitationStatus.Accepted => new[] { GigApplicantInvitationStatus.Shortlisted, GigApplicantInvitationStatus.Withdrawn },
-            GigApplicantInvitationStatus.Shortlisted => new[] { GigApplicantInvitationStatus.InterviewScheduled, GigApplicantInvitationStatus.NotSelected },
-            GigApplicantInvitationStatus.InterviewScheduled => new[] { GigApplicantInvitationStatus.InInterview },
-            GigApplicantInvitationStatus.InInterview => new[] { GigApplicantInvitationStatus.OfferExtended, GigApplicantInvitationStatus.Rejected },
-            GigApplicantInvitationStatus.OfferExtended => new[] { GigApplicantInvitationStatus.OfferAccepted, GigApplicantInvitationStatus.OfferDeclined },
-            GigApplicantInvitationStatus.OfferAccepted => new[] { GigApplicantInvitationStatus.Hired },
-            GigApplicantInvitationStatus.Declined => Array.Empty<GigApplicantInvitationStatus>(),
-            GigApplicantInvitationStatus.Withdrawn => Array.Empty<GigApplicantInvitationStatus>(),
-            GigApplicantInvitationStatus.NotSelected => Array.Empty<GigApplicantInvitationStatus>(),
-            GigApplicantInvitationStatus.Rejected => Array.Empty<GigApplicantInvitationStatus>(),
-            GigApplicantInvitationStatus.OfferDeclined => Array.Empty<GigApplicantInvitationStatus>(),
-            GigApplicantInvitationStatus.Hired => Array.Empty<GigApplicantInvitationStatus>(),
-            _ => Array.Empty<GigApplicantInvitationStatus>(),
-        };
     }
 }

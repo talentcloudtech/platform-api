@@ -7,6 +7,7 @@ using Platform.Application.Features.GigOpportunities.CreateGigInvitation;
 using Platform.Application.Features.GigOpportunities.GetGigOpportunityById;
 using Platform.Application.Features.GigOpportunities.GetGigOpportunityCandidates;
 using Platform.Application.Features.GigOpportunities.SearchGigOpportunities;
+using Platform.Application.Features.GigOpportunities.SearchUsersForGigOpportunities;
 using Platform.Application.Features.GigOpportunities.UpdateGigOpportunityCandidate;
 using Platform.Domain.Entities.Common;
 
@@ -57,6 +58,17 @@ public static class GigOpportunityEndpoints
                 }
             )
             .WithSummary("Create a gig invitation for a member request");
+
+        group
+            .MapGet(
+                "/{memberRequestId}/users",
+                async (IMediator mediator, MemberRequestId memberRequestId, [AsParameters] SearchUsersForGigOpportunitiesRequest request) =>
+                {
+                    var result = await mediator.Send(request with { MemberRequestId = memberRequestId });
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Search for users for a gig opportunity");
 
         group
             .MapGet(

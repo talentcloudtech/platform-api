@@ -10,6 +10,7 @@ using Platform.Application.Common.Responses;
 using Platform.Application.Features.Workspaces;
 using Platform.Domain.Auth.Interfaces;
 using Platform.Domain.Entities;
+using Platform.Domain.Entities.Enums;
 
 namespace Platform.Application.Features.GigOpportunities.GetGigOpportunityById;
 
@@ -18,8 +19,7 @@ namespace Platform.Application.Features.GigOpportunities.GetGigOpportunityById;
 /// </summary>
 /// <param name="context">The database context</param>
 /// <param name="session">The current session</param>
-/// <param name="userManager">The user manager</param>
-public class GetGigOpportunityByIdHandler(IContext context, ICurrentSession session, UserManager<ApplicationUser> userManager)
+public class GetGigOpportunityByIdHandler(IContext context, ICurrentSession session)
     : IRequestHandler<GetGigOpportunityByIdRequest, Result<GigOpportunityResponse>>
 {
     /// <summary>
@@ -30,12 +30,7 @@ public class GetGigOpportunityByIdHandler(IContext context, ICurrentSession sess
     /// <returns>The gig opportunity</returns>
     public async Task<Result<GigOpportunityResponse>> Handle(GetGigOpportunityByIdRequest request, CancellationToken cancellationToken)
     {
-        var currentUser = await context.Users.FirstOrDefaultAsync(x => x.Id == session.UserId, cancellationToken);
-        if (currentUser == null)
-            return Result.Unauthorized("User not found.");
-
-        var isAdmin = await userManager.IsInRoleAsync(currentUser, "Admin");
-        if (!isAdmin)
+        if (session.Role!.Name != UserRole.Admin.Name)
             return Result.Forbidden("You are not authorized to access this resource.");
 
         var memberRequest = await context

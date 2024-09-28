@@ -33,7 +33,8 @@ public class UpdateMemberRequestHandler(IContext context, ICurrentSession sessio
         if (memberRequest == null)
             return Result.NotFound("Member request not found.");
 
-        if (!memberRequest.Workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner))
+        var isAdmin = session.Role!.Name == UserRole.Admin.Name;
+        if (!isAdmin && !memberRequest.Workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner))
             return Result.Forbidden("You don't have permission to update this member request.");
 
         foreach (var field in request.FieldsToUpdate)

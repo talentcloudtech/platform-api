@@ -11,6 +11,7 @@ using Platform.Application.Common.Responses;
 using Platform.Application.Extensions;
 using Platform.Domain.Auth.Interfaces;
 using Platform.Domain.Entities;
+using Platform.Domain.Entities.Enums;
 
 namespace Platform.Application.Features.MemberProfiles.SearchUsers;
 
@@ -19,10 +20,8 @@ namespace Platform.Application.Features.MemberProfiles.SearchUsers;
 /// </summary>
 /// <param name="context">The database context.</param>
 /// <param name="session">The current session information.</param>
-/// <param name="userManager">The user manager.</param>
 /// <returns>The result of the operation.</returns>
-public class SearchUsersHandler(IContext context, ICurrentSession session, UserManager<ApplicationUser> userManager)
-    : IRequestHandler<SearchUsersRequest, Result<PaginatedList<CommonUserResponse>>>
+public class SearchUsersHandler(IContext context, ICurrentSession session) : IRequestHandler<SearchUsersRequest, Result<PaginatedList<CommonUserResponse>>>
 {
     /// <summary>
     /// Handles the request to search for member profiles based on the provided filtering and pagination options.
@@ -32,13 +31,7 @@ public class SearchUsersHandler(IContext context, ICurrentSession session, UserM
     /// <returns>A paginated list of <see cref="MemberProfileResponse"/> matching the search criteria.</returns>
     public async Task<Result<PaginatedList<CommonUserResponse>>> Handle(SearchUsersRequest request, CancellationToken cancellationToken)
     {
-        var currentUser = await context.Users.FirstOrDefaultAsync(x => x.Id == session.UserId, cancellationToken);
-        if (currentUser == null)
-            return Result.Unauthorized("User not found.");
-
-        // check if the current user is an admin
-        var isAdmin = await userManager.IsInRoleAsync(currentUser, "Admin");
-        if (!isAdmin)
+        if (session.Role!.Name != UserRole.Admin.Name)
             return Result.Forbidden("You are not authorized to access this resource.");
 
         var lowercaseSearch = request.Search?.ToLower().Trim();
