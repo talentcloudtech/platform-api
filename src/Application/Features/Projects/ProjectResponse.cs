@@ -1,4 +1,6 @@
 using System;
+using Platform.Application.Common.Responses;
+using Platform.Application.Features.Workspaces;
 using Platform.Domain.Entities.Common;
 using Platform.Domain.Entities.Enums;
 
@@ -63,4 +65,14 @@ public record ProjectResponse
     /// Gets or  the identifier of the user who last updated this project member.
     /// </summary>
     public UserId? UpdatedBy { get; init; }
+
+    /// <summary>
+    /// Gets or sets the workspace.
+    /// </summary>
+    public WorkspaceResponse? Workspace { get; set; }
+
+    /// <summary>
+    /// Gets or sets the created by user.
+    /// </summary>
+    public CommonUserResponse? CreatedByUser { get; set; }
 }

@@ -7,8 +7,11 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
 using Platform.Application.Common.Responses;
-using Platform.Application.Extensions;
+using Platform.Application.Features.Projects;
+using Platform.Application.Features.Workspaces;
 using Platform.Domain.Auth.Interfaces;
+using Platform.Domain.Entities;
+using Platform.Domain.Entities.Enums;
 
 namespace Platform.Application.Features.Tasks.SearchTasks;
 
@@ -28,23 +31,50 @@ public class SearchTasksHandler(IContext context, ICurrentSession session) : IRe
     /// <returns>The result of the operation.</returns>
     public async Task<Result<PaginatedList<TaskResponse>>> Handle(SearchTasksRequest request, CancellationToken cancellationToken)
     {
-        var project = await context
-            .Projects.Include(x => x.ProjectMembers)
-            .Include(x => x.Workspace.WorkspaceMembers)
-            .FirstOrDefaultAsync(x => x.Id == request.ProjectId && x.WorkspaceId == request.WorkspaceId, cancellationToken);
+        IQueryable<ProjectTask> query = context.ProjectTasks.Include(i => i.Workspace).Include(i => i.Project).Include(i => i.User.MemberProfile);
 
-        if (project == null)
-            return Result.NotFound("Project not found.");
+        query = query.Where(x => x.WorkspaceId == request.WorkspaceId && x.ProjectId == request.ProjectId);
 
-        if (!project.ProjectMembers.Any(x => x.UserId == session.UserId) && !project.Workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId))
-            return Result.Forbidden("You don't have permission to view tasks in this project.");
+        //Apply workspace and project filter
+        query = query.Where(x =>
+            x.Workspace.WorkspaceMembers.Any(m =>
+                m.UserId == session.UserId && (m.Role == WorkspaceRole.WorkspaceOwner || m.Role == WorkspaceRole.WorkspaceManager)
+            ) || x.Project.ProjectMembers.Any(m => m.UserId == session.UserId)
+        );
 
-        var tasks = context
-            .ProjectTasks.Where(x => x.ProjectId == request.ProjectId)
-            .WhereIf(!string.IsNullOrEmpty(request.Title), x => EF.Functions.Like(x.Title.ToLower().Trim(), $"%{request.Title!.ToLower().Trim()}%"))
-            .WhereIf(request.Statuses.Any(), x => request.Statuses.Contains(x.Status))
-            .WhereIf(request.Priorities.Any(), x => request.Priorities.Contains(x.Priority));
+        // Apply search filter
+        if (!string.IsNullOrEmpty(request.Search))
+            query = query.Where(x => EF.Functions.Like(x.Title.ToLower().Trim(), $"%{request.Search!.ToLower().Trim()}%"));
 
-        return await tasks.ProjectToType<TaskResponse>().OrderBy(x => x.Title).ToPaginatedListAsync(request.CurrentPage, request.PageSize);
+        // Apply status filter
+        if (request.Statuses!.Any())
+            query = query.Where(x => request.Statuses!.Contains(x.Status));
+
+        // Apply sorting
+        if (request.SortOrder.ToLower() == "asc")
+            query = query.OrderBy(i => EF.Property<object>(i, request.SortBy));
+        else
+            query = query.OrderByDescending(i => EF.Property<object>(i, request.SortBy));
+
+        var tasks = await query.ToPaginatedListAsync(request.CurrentPage, request.PageSize);
+
+        var paginatedResponse = new PaginatedList<TaskResponse>
+        {
+            CurrentPage = tasks.CurrentPage,
+            TotalPages = tasks.TotalPages,
+            TotalItems = tasks.TotalItems,
+            Result = tasks
+                .Result.Select(x =>
+                {
+                    var taskResponse = x.Adapt<TaskResponse>();
+                    taskResponse.CreatedByUser = new CommonUserResponse(x.User, x.User.MemberProfile);
+                    taskResponse.Workspace = x.Workspace.Adapt<WorkspaceResponse>();
+                    taskResponse.Project = x.Project.Adapt<ProjectResponse>();
+                    return taskResponse;
+                })
+                .ToList(),
+        };
+
+        return Result.Success(paginatedResponse);
     }
 }

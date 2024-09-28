@@ -9,6 +9,7 @@ using Platform.Application.Common;
 using Platform.Application.Common.Responses;
 using Platform.Application.Features.GigOpportunities;
 using Platform.Domain.Auth.Interfaces;
+using Platform.Domain.Entities;
 
 namespace Platform.Application.Features.GigInvitations.GetUserGigInvitation;
 
@@ -26,7 +27,7 @@ public class GetUserGigInvitationHandler(IContext context, ICurrentSession sessi
     /// <returns>A Result containing a paginated list of GigInvitationResponse objects.</returns>
     public async Task<Result<PaginatedList<GigInvitationResponse>>> Handle(GetUserGigInvitationRequest request, CancellationToken cancellationToken)
     {
-        var query = context
+        IQueryable<GigApplicantInvitation> query = context
             .GigApplicantInvitations.Include(i => i.MemberRequest)
             .Include(i => i.InvitedUser!.MemberProfile)
             .Include(i => i.CreatedByUser!.MemberProfile)

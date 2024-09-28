@@ -47,7 +47,6 @@ public class GetWorkspaceMemberInvitationByIdHandler(IContext context)
             Address = workspaceMemberInvitation.Workspace.Address,
             Logo = workspaceMemberInvitation.Workspace.Logo,
             CreatedDate = workspaceMemberInvitation.Workspace.CreatedDate,
-            CreatedBy = workspaceMemberInvitation.Workspace.CreatedBy,
         };
 
         response.InvitedBy = new CommonUserResponse(workspaceMemberInvitation.User, workspaceMemberInvitation.User.MemberProfile);

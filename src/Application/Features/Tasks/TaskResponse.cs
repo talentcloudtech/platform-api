@@ -1,5 +1,7 @@
 using System;
 using Platform.Application.Common.Responses;
+using Platform.Application.Features.Projects;
+using Platform.Application.Features.Workspaces;
 using Platform.Domain.Entities.Common;
 using Platform.Domain.Entities.Enums;
 
@@ -11,14 +13,14 @@ namespace Platform.Application.Features.Tasks;
 public class TaskResponse
 {
     /// <summary>
-    /// Gets or sets the workspace identifier associated with this task.
-    /// </summary>
-    public WorkspaceId WorkspaceId { get; init; }
-
-    /// <summary>
     /// Gets or sets the unique identifier for the project task.
     /// </summary>
     public ProjectTaskId Id { get; init; }
+
+    /// <summary>
+    /// Gets or sets the workspace identifier associated with this task.
+    /// </summary>
+    public WorkspaceId WorkspaceId { get; init; }
 
     /// <summary>
     /// Gets or sets the project identifier associated with this task.
@@ -84,4 +86,19 @@ public class TaskResponse
     /// Gets or sets the identifier of the user who last updated this task.
     /// </summary>
     public UserId? UpdatedBy { get; init; }
+
+    /// <summary>
+    /// Gets or sets the workspace associated with this task.
+    /// </summary>
+    public WorkspaceResponse? Workspace { get; set; }
+
+    /// <summary>
+    /// Gets or sets the project associated with this task.
+    /// </summary>
+    public ProjectResponse? Project { get; set; }
+
+    /// <summary>
+    /// Gets or sets the user who created this task.
+    /// </summary>
+    public CommonUserResponse? CreatedByUser { get; set; }
 }

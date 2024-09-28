@@ -7,8 +7,9 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
 using Platform.Application.Common.Responses;
-using Platform.Application.Extensions;
+using Platform.Application.Features.Workspaces;
 using Platform.Domain.Auth.Interfaces;
+using Platform.Domain.Entities;
 using Platform.Domain.Entities.Enums;
 
 namespace Platform.Application.Features.Projects.SearchProjects;
@@ -28,18 +29,50 @@ public class SearchProjectsHandler(IContext context, ICurrentSession session) : 
     /// <returns>A paginated list of <see cref="ProjectResponse"/> matching the search criteria.</returns>
     public async Task<Result<PaginatedList<ProjectResponse>>> Handle(SearchProjectsRequest request, CancellationToken cancellationToken)
     {
-        var projects = context
-            .Projects.Where(x =>
-                x.WorkspaceId == request.WorkspaceId
-                && (
-                    x.Workspace.WorkspaceMembers.Any(wm =>
-                        wm.UserId == session.UserId && (wm.Role == WorkspaceRole.WorkspaceOwner || wm.Role == WorkspaceRole.WorkspaceManager)
-                    ) || x.ProjectMembers.Any(pm => pm.UserId == session.UserId)
-                )
-            )
-            .WhereIf(!string.IsNullOrEmpty(request.Title), x => EF.Functions.Like(x.Title.ToLower().Trim(), $"%{request.Title!.ToLower().Trim()}%"))
-            .WhereIf(request.Statuses.Any(), x => request.Statuses.Contains(x.Status));
+        IQueryable<Project> query = context
+            .Projects.Include(i => i.Workspace)
+            .Include(i => i.User.MemberProfile)
+            .Where(x => x.WorkspaceId == request.WorkspaceId);
 
-        return await projects.ProjectToType<ProjectResponse>().OrderBy(x => x.Title).ToPaginatedListAsync(request.CurrentPage, request.PageSize);
+        //Apply workspace and project role filter
+        query = query.Where(x =>
+            x.Workspace.WorkspaceMembers.Any(m =>
+                m.UserId == session.UserId && (m.Role == WorkspaceRole.WorkspaceOwner || m.Role == WorkspaceRole.WorkspaceManager)
+            ) || x.ProjectMembers.Any(m => m.UserId == session.UserId)
+        );
+
+        // Apply search filter
+        if (!string.IsNullOrEmpty(request.Search))
+            query = query.Where(x => EF.Functions.Like(x.Title.ToLower().Trim(), $"%{request.Search!.ToLower().Trim()}%"));
+
+        // Apply status filter
+        if (request.Statuses!.Any())
+            query = query.Where(x => request.Statuses!.Contains(x.Status));
+
+        // Apply sorting
+        if (request.SortOrder.ToLower() == "asc")
+            query = query.OrderBy(i => EF.Property<object>(i, request.SortBy));
+        else
+            query = query.OrderByDescending(i => EF.Property<object>(i, request.SortBy));
+
+        var projects = await query.ToPaginatedListAsync(request.CurrentPage, request.PageSize);
+
+        var paginatedResponse = new PaginatedList<ProjectResponse>
+        {
+            CurrentPage = projects.CurrentPage,
+            TotalPages = projects.TotalPages,
+            TotalItems = projects.TotalItems,
+            Result = projects
+                .Result.Select(x =>
+                {
+                    var projectResponse = x.Adapt<ProjectResponse>();
+                    projectResponse.CreatedByUser = new CommonUserResponse(x.User, x.User.MemberProfile);
+                    projectResponse.Workspace = x.Workspace.Adapt<WorkspaceResponse>();
+                    return projectResponse;
+                })
+                .ToList(),
+        };
+
+        return Result.Success(paginatedResponse);
     }
 }

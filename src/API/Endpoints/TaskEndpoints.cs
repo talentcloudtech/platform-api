@@ -7,6 +7,7 @@ using Platform.Application.Features.Tasks.CreateTask;
 using Platform.Application.Features.Tasks.DeleteTask;
 using Platform.Application.Features.Tasks.GetTaskById;
 using Platform.Application.Features.Tasks.SearchTasks;
+using Platform.Application.Features.Tasks.SearchUsersTask;
 using Platform.Application.Features.Tasks.UpdateTask;
 using Platform.Domain.Entities.Common;
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Platform.Application.Common.Responses;
 using Platform.Domain.Entities.Common;
 
 namespace Platform.Application.Features.Workspaces;
@@ -47,15 +48,5 @@ public record WorkspaceResponse
     /// <summary>
     /// Gets or sets the user who created the workspace.
     /// </summary>
-    public UserId CreatedBy { get; set; }
-
-    /// <summary>
-    /// Gets or sets the date when the workspace was last updated.
-    /// </summary>
-    public DateTime? UpdatedDate { get; set; }
-
-    /// <summary>
-    /// Gets or sets the user who last updated the workspace.
-    /// </summary>
-    public UserId? UpdatedBy { get; set; }
+    public CommonUserResponse? CreatedByUser { get; set; }
 }

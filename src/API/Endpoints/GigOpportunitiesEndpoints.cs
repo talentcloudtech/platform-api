@@ -6,7 +6,6 @@ using Platform.Application.Extensions;
 using Platform.Application.Features.GigOpportunities.CreateGigInvitation;
 using Platform.Application.Features.GigOpportunities.GetGigOpportunityById;
 using Platform.Application.Features.GigOpportunities.SearchGigOpportunities;
-using Platform.Domain.Auth.Interfaces;
 using Platform.Domain.Entities.Common;
 
 namespace Platform.API.Endpoints;
@@ -37,24 +36,24 @@ public static class GigOpportunityEndpoints
 
         group
             .MapGet(
-                "/{id}",
+                "/{memberRequestId}",
                 async (IMediator mediator, MemberRequestId id) =>
                 {
                     var result = await mediator.Send(new GetGigOpportunityByIdRequest(id));
                     return result.ToPlatformApiResult();
                 }
             )
-            .WithSummary("Get gig opportunity by id");
+            .WithSummary("Get gig opportunity by member request id");
 
         group
             .MapPost(
-                "/{id}/invitation",
+                "/{memberRequestId}/invitation",
                 async (IMediator mediator, MemberRequestId memberRequestId, CreateGigInvitationRequest request) =>
                 {
                     var result = await mediator.Send(request with { MemberRequestId = memberRequestId });
                     return result.ToPlatformApiResult();
                 }
             )
-            .WithSummary("Create a gig invitation");
+            .WithSummary("Create a gig invitation for a member request");
     }
 }

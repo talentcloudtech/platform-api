@@ -22,11 +22,6 @@ public record MemberRequestResponse
     public WorkspaceId WorkspaceId { get; init; }
 
     /// <summary>
-    /// Gets or sets the workspace.
-    /// </summary>
-    public WorkspaceResponse? Workspace { get; set; }
-
-    /// <summary>
     /// Gets or sets the title of the member request.
     /// </summary>
     public string Title { get; init; } = null!;
@@ -75,6 +70,11 @@ public record MemberRequestResponse
     /// Gets the date when the member request was last updated.
     /// </summary>
     public DateTime? CreatedDate { get; init; }
+
+    /// <summary>
+    /// Gets or sets the workspace.
+    /// </summary>
+    public WorkspaceResponse? Workspace { get; set; }
 
     /// <summary>
     /// Gets the user who created this member request.

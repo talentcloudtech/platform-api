@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
 using Platform.Application.Common.Responses;
-using Platform.Application.Features.Workspaces;
 using Platform.Domain.Auth.Interfaces;
 using Platform.Domain.Entities;
 
@@ -39,32 +38,31 @@ public class SearchGigOpportunitiesHandler(IContext context, ICurrentSession ses
         if (!isAdmin)
             return Result.Forbidden("You are not authorized to access this resource.");
 
-        var query = context.MemberRequests.Include(i => i.Workspace).Include(i => i.User.MemberProfile);
+        IQueryable<MemberRequest> query = context.MemberRequests.Include(i => i.Workspace).Include(i => i.User.MemberProfile);
 
         if (request.WorkspaceIds != null && request.WorkspaceIds.Any())
-            query.Where(i => request.WorkspaceIds.Contains(i.WorkspaceId));
+            query = query.Where(i => request.WorkspaceIds.Contains(i.WorkspaceId));
 
         if (request.MemberRequestIds != null && request.MemberRequestIds.Any())
-            query.Where(i => request.MemberRequestIds.Contains(i.Id));
+            query = query.Where(i => request.MemberRequestIds.Contains(i.Id));
 
         // Apply status filter
         if (request.Skills != null && request.Skills.Any())
-            query.Where(i => request.Skills.Any(skill => i.RequiredSkills.Contains(skill)));
+            query = query.Where(i => request.Skills.Any(skill => i.RequiredSkills.Contains(skill)));
 
         // Apply search filter
         if (!string.IsNullOrWhiteSpace(request.Search))
-            query.Where(i =>
+            query = query.Where(i =>
                 EF.Functions.Like(i.Title!.ToLower().Trim(), $"%{request.Search.ToLower().Trim()}%")
                 || EF.Functions.Like(i.Description!.ToLower(), $"%{request.Search.ToLower()}%")
             );
 
         // Apply sorting
         if (request.SortOrder.ToLower() == "asc")
-            query.OrderBy(i => EF.Property<object>(i, request.SortBy));
+            query = query.OrderBy(i => EF.Property<object>(i, request.SortBy));
         else
-            query.OrderByDescending(i => EF.Property<object>(i, request.SortBy));
+            query = query.OrderByDescending(i => EF.Property<object>(i, request.SortBy));
 
-        // Execute query and paginate results
         var gigOpportunities = await query.ToPaginatedListAsync(request.CurrentPage, request.PageSize);
 
         var paginatedResponse = new PaginatedList<GigOpportunityResponse>
