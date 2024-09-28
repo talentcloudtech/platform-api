@@ -39,9 +39,9 @@ public static class GigOpportunityEndpoints
         group
             .MapGet(
                 "/{memberRequestId}",
-                async (IMediator mediator, MemberRequestId id) =>
+                async (IMediator mediator, MemberRequestId memberRequestId) =>
                 {
-                    var result = await mediator.Send(new GetGigOpportunityByIdRequest(id));
+                    var result = await mediator.Send(new GetGigOpportunityByIdRequest(memberRequestId));
                     return result.ToPlatformApiResult();
                 }
             )
@@ -61,9 +61,9 @@ public static class GigOpportunityEndpoints
         group
             .MapGet(
                 "/{memberRequestId}/candidates",
-                async (IMediator mediator, MemberRequestId id) =>
+                async (IMediator mediator, MemberRequestId memberRequestId) =>
                 {
-                    var result = await mediator.Send(new GetGigOpportunityCandidatesRequest(id));
+                    var result = await mediator.Send(new GetGigOpportunityCandidatesRequest(memberRequestId));
                     return result.ToPlatformApiResult();
                 }
             )
