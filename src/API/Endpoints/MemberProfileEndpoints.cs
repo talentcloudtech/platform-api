@@ -16,6 +16,7 @@ using Platform.Application.Features.Languages.UpdateLanguage;
 using Platform.Application.Features.MemberProfiles.GetMemberProfileById;
 using Platform.Application.Features.MemberProfiles.GetPublicProfileById;
 using Platform.Application.Features.MemberProfiles.SearchMemberProfiles;
+using Platform.Application.Features.MemberProfiles.SearchUsers;
 using Platform.Application.Features.MemberProfiles.UpdateAvatar;
 using Platform.Application.Features.MemberProfiles.UpdateMemberProfile;
 using Platform.Application.Features.MemberSkills.CreateMemberSkill;
@@ -40,6 +41,18 @@ public static class MemberProfileEndpoints
     /// <param name="builder">The endpoint route builder.</param>
     public static void MapMemberProfileEndpoints(this IEndpointRouteBuilder builder)
     {
+        builder
+            .MapGet(
+                "api/users",
+                async (IMediator mediator, [AsParameters] SearchUsersRequest request) =>
+                {
+                    var result = await mediator.Send(request);
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Searches for users.")
+            .RequireAuthorization();
+
         var group = builder.MapGroup("api/memberProfiles").WithTags("MemberProfile").RequireAuthorization();
 
         group

@@ -20,7 +20,7 @@ namespace Platform.Application.Features.GigOpportunities.CreateGigInvitation;
 /// <param name="session">The current session information.</param>
 /// <param name="userManager">The user manager.</param>
 /// <returns>The result of the operation.</returns>
-public class CreateGigInvitationRequestHandler(IContext context, ICurrentSession session, UserManager<ApplicationUser> userManager)
+public class CreateGigInvitationHandler(IContext context, ICurrentSession session, UserManager<ApplicationUser> userManager)
     : IRequestHandler<CreateGigInvitationRequest, Result>
 {
     /// <summary>

@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Routing;
 using Platform.Application.Extensions;
 using Platform.Application.Features.GigOpportunities.CreateGigInvitation;
 using Platform.Application.Features.GigOpportunities.GetGigOpportunityById;
+using Platform.Application.Features.GigOpportunities.GetGigOpportunityCandidates;
 using Platform.Application.Features.GigOpportunities.SearchGigOpportunities;
+using Platform.Application.Features.GigOpportunities.UpdateGigOpportunityCandidate;
 using Platform.Domain.Entities.Common;
 
 namespace Platform.API.Endpoints;
@@ -55,5 +57,27 @@ public static class GigOpportunityEndpoints
                 }
             )
             .WithSummary("Create a gig invitation for a member request");
+
+        group
+            .MapGet(
+                "/{memberRequestId}/candidates",
+                async (IMediator mediator, MemberRequestId id) =>
+                {
+                    var result = await mediator.Send(new GetGigOpportunityCandidatesRequest(id));
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Get gig opportunity candidates by member request id");
+
+        group
+            .MapPatch(
+                "/{memberRequestId}/candidates/{userId}",
+                async (IMediator mediator, MemberRequestId memberRequestId, UserId userId, UpdateGigOpportunityCandidateRequest request) =>
+                {
+                    var result = await mediator.Send(request with { MemberRequestId = memberRequestId, UserId = userId });
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Update gig opportunity candidate status");
     }
 }
