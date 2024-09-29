@@ -45,6 +45,14 @@ public class SearchProjectsHandler(IContext context, ICurrentSession session) : 
         if (!string.IsNullOrEmpty(request.Search))
             query = query.Where(x => EF.Functions.Like(x.Title.ToLower().Trim(), $"%{request.Search!.ToLower().Trim()}%"));
 
+        // Apply start date filter
+        if (request.StartDate != null)
+            query = query.Where(x => x.CreatedDate >= request.StartDate);
+
+        // Apply end date filter
+        if (request.EndDate != null)
+            query = query.Where(x => x.CreatedDate <= request.EndDate);
+
         // Apply status filter
         if (request.Statuses!.Any())
             query = query.Where(x => request.Statuses!.Contains(x.Status));

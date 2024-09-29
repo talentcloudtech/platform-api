@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Ardalis.Result;
@@ -14,6 +15,8 @@ namespace Platform.Application.Features.Projects.SearchProjects;
 /// Represents a request to search for projects with optional filtering and pagination.
 /// </summary>
 /// <param name="Search">The optional search to filter projects by. If null, no filtering by search is applied.</param>
+/// <param name="StartDate">The optional start date to filter projects by. If null, no filtering by start date is applied.</param>
+/// <param name="EndDate">The optional end date to filter projects by. If null, no filtering by end date is applied.</param>
 /// <param name="Statuses">The optional status to filter projects by. If null, no filtering by status is applied.</param>
 /// <param name="SortBy">The optional sort by to filter projects by. If null, no filtering by sort is applied.</param>
 /// <param name="SortOrder">The optional sort order to filter projects by. If null, no filtering by sort order is applied.</param>
@@ -22,6 +25,8 @@ namespace Platform.Application.Features.Projects.SearchProjects;
 /// <returns>A paginated list of <see cref="ProjectResponse"/> matching the search criteria.</returns>
 public record SearchProjectsRequest(
     string? Search = null,
+    DateTime? StartDate = null,
+    DateTime? EndDate = null,
     ProjectStatus[]? Statuses = null,
     string SortBy = nameof(Project.CreatedDate),
     string SortOrder = "desc",

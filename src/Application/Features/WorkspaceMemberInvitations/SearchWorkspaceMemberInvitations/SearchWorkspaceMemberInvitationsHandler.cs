@@ -33,7 +33,10 @@ public class SearchWorkspaceMemberInvitationsHandler(IContext context, ICurrentS
     )
     {
         // Check if the user is a member of the workspace and has role workspace_owner or workspace_manager
-        var workspaceMember = await context.WorkspaceMembers.FindAsync(session.UserId, request.WorkspaceId, cancellationToken);
+        var workspaceMember = await context.WorkspaceMembers.FirstOrDefaultAsync(
+            x => x.WorkspaceId == request.WorkspaceId && x.UserId == session.UserId,
+            cancellationToken
+        );
         if (workspaceMember == null || workspaceMember.Role != WorkspaceRole.WorkspaceOwner || workspaceMember.Role != WorkspaceRole.WorkspaceManager)
             return Result.Forbidden("You are not authorized to access this workspace invitations.");
 
