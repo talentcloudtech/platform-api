@@ -4,25 +4,17 @@ using Ardalis.Result;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
+using Platform.Domain.Auth.Interfaces;
 
 namespace Platform.Application.Features.Accounts.GetAccountDetails;
 
 /// <summary>
 /// Handler for retrieving account details of the current user.
 /// </summary>
-public class GetAccountDetailsHandler : IRequestHandler<GetAccountDetailsRequest, Result<GetAccountDetailsResponse>>
+/// <param name="context">The database context.</param>
+/// <param name="session">The current session.</param>
+public class GetAccountDetailsHandler(IContext context, ICurrentSession session) : IRequestHandler<GetAccountDetailsRequest, Result<GetAccountDetailsResponse>>
 {
-    private readonly IContext _context;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="GetAccountDetailsHandler"/> class.
-    /// </summary>
-    /// <param name="context">The database context.</param>
-    public GetAccountDetailsHandler(IContext context)
-    {
-        _context = context;
-    }
-
     /// <summary>
     /// Handles the request to get account details.
     /// </summary>
@@ -32,7 +24,7 @@ public class GetAccountDetailsHandler : IRequestHandler<GetAccountDetailsRequest
     public async Task<Result<GetAccountDetailsResponse>> Handle(GetAccountDetailsRequest request, CancellationToken cancellationToken)
     {
         // Retrieve the user from the database, including their member profile
-        var user = await _context.Users.Include(u => u.MemberProfile).FirstOrDefaultAsync(u => u.Id == request.UserId, cancellationToken);
+        var user = await context.Users.Include(u => u.MemberProfile).FirstOrDefaultAsync(u => u.Id == request.UserId, cancellationToken);
 
         if (user == null)
         {
@@ -49,6 +41,7 @@ public class GetAccountDetailsHandler : IRequestHandler<GetAccountDetailsRequest
             FirstName = nameParts?.Length > 0 ? nameParts[0] : user.UserName,
             LastName = nameParts?.Length > 1 ? nameParts[1] : null,
             ProfilePictureUrl = user.MemberProfile?.ProfilePictureUrl,
+            UserRole = session.Role!.Name,
         };
 
         return Result.Success(accountDetails);

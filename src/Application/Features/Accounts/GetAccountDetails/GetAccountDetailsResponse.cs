@@ -1,4 +1,5 @@
 using Platform.Domain.Entities.Common;
+using Platform.Domain.Entities.Enums;
 
 namespace Platform.Application.Features.Accounts.GetAccountDetails;
 
@@ -36,6 +37,12 @@ public class GetAccountDetailsResponse
     /// Gets or sets the user's profile picture URL.
     /// </summary>
     public string? ProfilePictureUrl { get; set; }
+
+    /// <summary>
+    /// Gets or sets the user's role.
+    /// </summary>
+
+    public string? UserRole { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether the email is confirmed.
