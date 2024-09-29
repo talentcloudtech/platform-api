@@ -27,7 +27,7 @@ public class DeleteWorkspaceMemberInvitationHandler(IContext context, ICurrentSe
     {
         var invitation = await context
             .WorkspaceMemberInvitations.Include(x => x.Workspace.WorkspaceMembers)
-            .FirstOrDefaultAsync(x => x.Id == request.InvitationId && x.WorkspaceId == request.WorkspaceId, cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id == request.InvitationId, cancellationToken);
 
         if (invitation == null)
             return Result.NotFound("Workspace member invitation not found.");

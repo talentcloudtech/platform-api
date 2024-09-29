@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Platform.Domain.Entities;
-using Platform.Domain.Entities.Common;
 
 namespace Platform.Domain.Interfaces;
 

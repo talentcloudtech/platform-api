@@ -88,10 +88,17 @@ public class EmailSender : IEmailSender<ApplicationUser>, IEmailSender
         var mailRequests = new List<MailRequest>();
         foreach (var invitation in invitations)
         {
-            var invitationLink = $"{EnvironmentVariables.FrontendUrl}/workspaces/invitations/{invitation.Id}";
-            var signupLink = $"{EnvironmentVariables.FrontendUrl}/signup";
-            var body =
-                $@"
+            SendWorkspaceInvitationAsync(workspaceName, mailRequests, invitation);
+        }
+        await _emailService.SendEmailAsync(mailRequests);
+    }
+
+    private static void SendWorkspaceInvitationAsync(string workspaceName, List<MailRequest> mailRequests, WorkspaceMemberInvitation invitation)
+    {
+        var invitationLink = $"{EnvironmentVariables.FrontendUrl}/workspaces/invitations/{invitation.Id}";
+        var signupLink = $"{EnvironmentVariables.FrontendUrl}/signup";
+        var body =
+            $@"
                 You've been invited to join {workspaceName} by the workspace admin. This workspace provides a platform for seamless collaboration and efficient teamwork.
                 <br>
                 If you already have an account with us, simply click the button below to accept the invitation and start working with the team:
@@ -106,8 +113,6 @@ public class EmailSender : IEmailSender<ApplicationUser>, IEmailSender
                 <br>
             ";
 
-            mailRequests.Add(new MailRequest(to: [invitation.Email], subject: $"You've Been Invited to Join {workspaceName}!", body: body));
-        }
-        await _emailService.SendEmailAsync(mailRequests);
+        mailRequests.Add(new MailRequest(to: [invitation.Email], subject: $"You've Been Invited to Join {workspaceName}!", body: body));
     }
 }

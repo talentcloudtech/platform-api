@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Routing;
 using Platform.Application.Extensions;
 using Platform.Application.Features.WorkspaceMemberInvitations.DeleteWorkspaceMemberInvitation;
 using Platform.Application.Features.WorkspaceMemberInvitations.GetWorkspaceMemberInvitationById;
+using Platform.Application.Features.WorkspaceMemberInvitations.ResendWorkspaceMemberInvitation;
 using Platform.Application.Features.WorkspaceMemberInvitations.SearchWorkspaceMemberInvitations;
 using Platform.Application.Features.WorkspaceMemberInvitations.UpdateWorkspaceMemberInvitation;
 using Platform.Domain.Entities.Common;
@@ -58,11 +59,22 @@ public static class WorkspaceMemberInvitationEndpoints
             .WithSummary("Updates a workspace member invitation (accept or reject).");
 
         group
-            .MapDelete(
-                "{workspaceId}/invitations/{invitationId}",
-                async (IMediator mediator, WorkspaceId workspaceId, WorkspaceMemberInvitationId invitationId) =>
+            .MapPost(
+                "invitations/{invitationId}/resend",
+                async (IMediator mediator, WorkspaceMemberInvitationId invitationId) =>
                 {
-                    var result = await mediator.Send(new DeleteWorkspaceMemberInvitationRequest(workspaceId, invitationId));
+                    var result = await mediator.Send(new ResendWorkspaceMemberInvitationRequest { InvitationId = invitationId });
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Resend a workspace member invitation mail.");
+
+        group
+            .MapDelete(
+                "invitations/{invitationId}",
+                async (IMediator mediator, WorkspaceMemberInvitationId invitationId) =>
+                {
+                    var result = await mediator.Send(new DeleteWorkspaceMemberInvitationRequest(invitationId));
                     return result.ToPlatformApiResult();
                 }
             )
