@@ -37,7 +37,7 @@ public class SearchWorkspaceMemberInvitationsHandler(IContext context, ICurrentS
             x => x.WorkspaceId == request.WorkspaceId && x.UserId == session.UserId,
             cancellationToken
         );
-        if (workspaceMember == null || workspaceMember.Role != WorkspaceRole.WorkspaceOwner || workspaceMember.Role != WorkspaceRole.WorkspaceManager)
+        if (workspaceMember == null || (workspaceMember.Role != WorkspaceRole.WorkspaceOwner && workspaceMember.Role != WorkspaceRole.WorkspaceManager))
             return Result.Forbidden("You are not authorized to access this workspace invitations.");
 
         var query = context.WorkspaceMemberInvitations.Where(x => x.WorkspaceId == request.WorkspaceId);
