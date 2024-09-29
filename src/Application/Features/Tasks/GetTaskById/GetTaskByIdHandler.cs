@@ -7,6 +7,8 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
 using Platform.Application.Common.Responses;
+using Platform.Application.Features.Projects;
+using Platform.Application.Features.Workspaces;
 using Platform.Domain.Auth.Interfaces;
 
 namespace Platform.Application.Features.Tasks.GetTaskById;
@@ -29,11 +31,8 @@ public class GetTaskByIdHandler(IContext context, ICurrentSession session) : IRe
     {
         var task = await context
             .ProjectTasks.Include(x => x.Project.ProjectMembers)
-            .Include(x => x.Project.Workspace.WorkspaceMembers)
-            .FirstOrDefaultAsync(
-                x => x.Id == request.Id && x.ProjectId == request.ProjectId && x.Project.WorkspaceId == request.WorkspaceId,
-                cancellationToken
-            );
+            .Include(x => x.Workspace.WorkspaceMembers)
+            .FirstOrDefaultAsync(x => x.Id == request.Id && x.ProjectId == request.ProjectId && x.WorkspaceId == request.WorkspaceId, cancellationToken);
 
         if (task == null)
             return Result.NotFound("Task not found.");
@@ -41,6 +40,12 @@ public class GetTaskByIdHandler(IContext context, ICurrentSession session) : IRe
         if (!task.Project.ProjectMembers.Any(x => x.UserId == session.UserId) && !task.Project.Workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId))
             return Result.Forbidden("You don't have permission to view this task.");
 
-        return Result.Success(task.Adapt<TaskResponse>());
+        var response = task.Adapt<TaskResponse>();
+
+        response.CreatedByUser = new CommonUserResponse(task.User, task.User.MemberProfile);
+        response.Workspace = task.Workspace.Adapt<WorkspaceResponse>();
+        response.Project = task.Project.Adapt<ProjectResponse>();
+
+        return Result.Success(response);
     }
 }

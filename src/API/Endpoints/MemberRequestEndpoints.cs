@@ -1,7 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Platform.Application.Extensions;
 using Platform.Application.Features.MemberRequests.CreateMemberRequest;
@@ -23,7 +22,7 @@ public static class MemberRequestEndpoints
     /// <param name="builder">The endpoint route builder.</param>
     public static void MapMemberRequestEndpoints(this IEndpointRouteBuilder builder)
     {
-        var group = builder.MapGroup("api/workspaces/{workspaceId}/memberrequests").WithTags("MemberRequest").RequireAuthorization();
+        var group = builder.MapGroup("api/workspaces/{workspaceId}/memberRequests").WithTags("MemberRequest").RequireAuthorization();
 
         group
             .MapGet(

@@ -17,7 +17,7 @@ public class CreateMemberRequestValidator : AbstractValidator<CreateMemberReques
         RuleFor(x => x.Title).NotNull().NotEmpty().MaximumLength(StringSizes.Title);
         RuleFor(x => x.Description).MaximumLength(StringSizes.Max);
         RuleFor(x => x.StartDate).NotNull().NotEmpty();
-        RuleFor(x => x.EndDate).NotNull().NotEmpty().LessThan(x => x.StartDate);
+        RuleFor(x => x.EndDate).NotNull().NotEmpty().GreaterThan(x => x.StartDate);
         RuleFor(x => x.ExpectedBudget).GreaterThanOrEqualTo(0);
         RuleFor(x => x.MinutesPerDay).GreaterThanOrEqualTo(0);
         RuleFor(x => x.Timezone).NotNull().NotEmpty().MaximumLength(StringSizes.Short);

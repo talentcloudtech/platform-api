@@ -1,10 +1,7 @@
-using Ardalis.Result;
-using Ardalis.Result.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Platform.Application.Common.Responses;
 using Platform.Application.Extensions;
 using Platform.Application.Features.Skills.CreateSkill;
 using Platform.Application.Features.Skills.SearchSkills;

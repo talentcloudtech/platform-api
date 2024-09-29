@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Platform.Application.Extensions;
+using Platform.Application.Features.WorkspaceMemberInvitations.DeleteWorkspaceMemberInvitation;
 using Platform.Application.Features.WorkspaceMemberInvitations.GetWorkspaceMemberInvitationById;
 using Platform.Application.Features.WorkspaceMemberInvitations.SearchWorkspaceMemberInvitations;
 using Platform.Application.Features.WorkspaceMemberInvitations.UpdateWorkspaceMemberInvitation;
-using Platform.Domain.Auth.Interfaces;
 using Platform.Domain.Entities.Common;
 
 namespace Platform.API.Endpoints;
@@ -56,5 +56,16 @@ public static class WorkspaceMemberInvitationEndpoints
                 }
             )
             .WithSummary("Updates a workspace member invitation (accept or reject).");
+
+        group
+            .MapDelete(
+                "{workspaceId}/invitations/{invitationId}",
+                async (IMediator mediator, WorkspaceId workspaceId, WorkspaceMemberInvitationId invitationId) =>
+                {
+                    var result = await mediator.Send(new DeleteWorkspaceMemberInvitationRequest(workspaceId, invitationId));
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Deletes a workspace member invitation.");
     }
 }

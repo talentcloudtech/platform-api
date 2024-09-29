@@ -6,7 +6,6 @@ using Platform.Application.Extensions;
 using Platform.Application.Features.GigInvitations.GetGigInvitationById;
 using Platform.Application.Features.GigInvitations.GetUserGigInvitation;
 using Platform.Application.Features.GigInvitations.UpdateGigInvitationStatus;
-using Platform.Domain.Auth.Interfaces;
 using Platform.Domain.Entities.Common;
 
 namespace Platform.API.Endpoints;

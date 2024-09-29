@@ -1,11 +1,8 @@
-using System.Linq;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.Result;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
 using Platform.Domain.Entities;
 
 namespace Platform.Application.Features.Accounts.ConfirmEmail;
