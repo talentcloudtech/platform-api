@@ -83,9 +83,4 @@ public record PublicProfileResponse
     /// Gets or sets the external links associated with the member.
     /// </summary>
     public string[] ExternalLinks { get; set; } = [];
-
-    /// <summary>
-    /// Gets or sets the profile score of the member.
-    /// </summary>
-    public int ProfileScore { get; set; }
 }

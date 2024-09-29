@@ -4,6 +4,7 @@ using Ardalis.Result;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
+using Platform.Application.Features.MemberProfiles;
 using Platform.Domain.Auth.Interfaces;
 
 namespace Platform.Application.Features.Accounts.GetAccountDetails;
@@ -43,6 +44,9 @@ public class GetAccountDetailsHandler(IContext context, ICurrentSession session)
             ProfilePictureUrl = user.MemberProfile?.ProfilePictureUrl,
             UserRole = session.Role!.Name,
         };
+
+        if (user.MemberProfile != null)
+            accountDetails.ProfileScore = ProfileScoreCalculator.CalculateProfileScore(user.MemberProfile);
 
         return Result.Success(accountDetails);
     }

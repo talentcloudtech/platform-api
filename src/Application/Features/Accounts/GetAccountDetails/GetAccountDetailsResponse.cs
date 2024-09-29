@@ -48,4 +48,9 @@ public class GetAccountDetailsResponse
     /// Gets or sets a value indicating whether the email is confirmed.
     /// </summary>
     public bool EmailConfirmed { get; internal set; }
+
+    /// <summary>
+    /// Gets or sets the score of the member profile.
+    /// </summary>
+    public int ProfileScore { get; set; }
 }

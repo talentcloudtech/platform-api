@@ -5,7 +5,6 @@ using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
-using Platform.Domain.Auth.Interfaces;
 
 namespace Platform.Application.Features.MemberProfiles.GetPublicProfileById;
 
@@ -30,8 +29,6 @@ public class GetPublicProfileByIdHandler(IContext context) : IRequestHandler<Get
         if (memberProfile is null)
             return Result.NotFound("Member profile not found.");
 
-        var response = memberProfile.Adapt<PublicProfileResponse>();
-        response.ProfileScore = ProfileScoreCalculator.CalculateProfileScore(memberProfile);
-        return Result.Success(response);
+        return Result.Success(memberProfile.Adapt<PublicProfileResponse>());
     }
 }
