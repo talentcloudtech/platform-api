@@ -29,7 +29,7 @@ public static class WorkspaceMemberInvitationEndpoints
                 "/{workspaceId}/invitations",
                 async (IMediator mediator, WorkspaceId workspaceId, [AsParameters] SearchWorkspaceMemberInvitationsRequest request) =>
                 {
-                    var result = await mediator.Send(request);
+                    var result = await mediator.Send(request with { WorkspaceId = workspaceId });
                     return result.ToPlatformApiResult();
                 }
             )
