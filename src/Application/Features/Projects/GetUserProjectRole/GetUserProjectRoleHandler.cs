@@ -26,7 +26,7 @@ public class GetUserProjectRoleHandler(IContext context, ICurrentSession session
     public async Task<Result<ProjectMemberRoleResponse>> Handle(GetUserProjectRoleRequest request, CancellationToken cancellationToken)
     {
         var projectMemberRole = await context.ProjectMembers.FirstOrDefaultAsync(
-            pm => pm.ProjectId == request.ProjectId && pm.UserId == session.UserId,
+            pm => pm.ProjectId == request.ProjectId && pm.Project.WorkspaceId == request.WorkspaceId && pm.UserId == session.UserId,
             cancellationToken
         );
         if (projectMemberRole == null)

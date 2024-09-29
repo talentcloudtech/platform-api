@@ -96,9 +96,9 @@ public static class ProjectEndpoints
         group
             .MapGet(
                 "{id}/role",
-                async (IMediator mediator, ProjectId projectId) =>
+                async (IMediator mediator, WorkspaceId workspaceId, ProjectId projectId) =>
                 {
-                    var result = await mediator.Send(new GetUserProjectRoleRequest(projectId));
+                    var result = await mediator.Send(new GetUserProjectRoleRequest(workspaceId, projectId));
                     return result.ToPlatformApiResult();
                 }
             )
