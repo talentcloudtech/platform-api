@@ -30,6 +30,8 @@ public class GetPublicProfileByIdHandler(IContext context) : IRequestHandler<Get
         if (memberProfile is null)
             return Result.NotFound("Member profile not found.");
 
-        return memberProfile.Adapt<PublicProfileResponse>();
+        var response = memberProfile.Adapt<PublicProfileResponse>();
+        response.ProfileScore = ProfileScoreCalculator.CalculateProfileScore(memberProfile);
+        return Result.Success(response);
     }
 }

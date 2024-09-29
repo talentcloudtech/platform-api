@@ -88,4 +88,9 @@ public record MemberProfileResponse
     /// Gets or sets the URL of the resume file.
     /// </summary>
     public string? ResumeFileUrl { get; set; }
+
+    /// <summary>
+    /// Gets or sets the score of the member profile.
+    /// </summary>
+    public int ProfileScore { get; set; }
 }

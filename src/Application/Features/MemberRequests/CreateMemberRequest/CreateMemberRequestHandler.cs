@@ -35,7 +35,13 @@ public class CreateMemberRequestHandler(IContext context, ICurrentSession sessio
 
         var currentTimestamp = DateTime.UtcNow;
 
+        var skills = await context.Skills.Where(x => request.RequiredSkills.Distinct().Contains(x.Id)).ToListAsync(cancellationToken);
+
         var newMemberRequest = request.Adapt<MemberRequest>();
+
+        newMemberRequest.RequiredSkills = [];
+        skills.ForEach(x => newMemberRequest.RequiredSkills.Add(new MemberRequestSkill { SkillId = x.Id, Name = x.Name }));
+
         newMemberRequest.Status = MemberRequestStatus.Draft;
         newMemberRequest.CreatedBy = session.UserId;
         newMemberRequest.CreatedDate = currentTimestamp;

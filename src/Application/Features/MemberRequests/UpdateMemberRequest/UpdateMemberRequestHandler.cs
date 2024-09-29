@@ -103,7 +103,9 @@ public class UpdateMemberRequestHandler(IContext context, ICurrentSession sessio
             },
             ["requiredskills"] = (mr, req) =>
             {
-                mr.RequiredSkills = req.RequiredSkills ?? [];
+                var requiredSkills = req.RequiredSkills!.Distinct().ToList();
+                var skills = context.Skills.Where(x => requiredSkills.Contains(x.Id)).ToList();
+                mr.RequiredSkills = skills.Select(x => new MemberRequestSkill { SkillId = x.Id, Name = x.Name }).ToList();
             },
         };
 

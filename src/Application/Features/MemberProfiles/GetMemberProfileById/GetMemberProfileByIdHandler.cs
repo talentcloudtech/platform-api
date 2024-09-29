@@ -5,7 +5,6 @@ using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
-using Platform.Domain.Auth.Interfaces;
 
 namespace Platform.Application.Features.MemberProfiles.GetMemberProfileById;
 
@@ -27,11 +26,17 @@ public class GetMemberProfileByIdHandler(IContext context) : IRequestHandler<Get
     {
         var memberProfile = await context
             .MemberProfiles.Include(x => x.User)
+            .Include(x => x.Languages)
+            .Include(x => x.Skills)
+            .Include(x => x.Experiences)
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken: cancellationToken);
 
         if (memberProfile is null)
             return Result.NotFound("Member profile not found.");
 
-        return memberProfile.Adapt<MemberProfileResponse>();
+        var response = memberProfile.Adapt<MemberProfileResponse>();
+        response.ProfileScore = ProfileScoreCalculator.CalculateProfileScore(memberProfile);
+
+        return Result.Success(response);
     }
 }

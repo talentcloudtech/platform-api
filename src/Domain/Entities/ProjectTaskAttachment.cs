@@ -1,4 +1,3 @@
-using System;
 using Platform.Domain.Entities.Common;
 
 namespace Platform.Domain.Entities;
