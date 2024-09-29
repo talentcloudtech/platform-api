@@ -9,6 +9,7 @@ using Platform.Application.Common;
 using Platform.Application.Common.Responses;
 using Platform.Application.Features.Workspaces;
 using Platform.Domain.Auth.Interfaces;
+using Platform.Domain.Entities.Enums;
 
 namespace Platform.Application.Features.WorkspaceMemberInvitations.SearchWorkspaceMemberInvitations;
 
@@ -31,27 +32,37 @@ public class SearchWorkspaceMemberInvitationsHandler(IContext context, ICurrentS
         CancellationToken cancellationToken
     )
     {
-        var user = await context.Users.FindAsync(session.UserId, cancellationToken);
-        if (user == null)
-            return Result.NotFound("User not found.");
-        var workspaceMemberInvitations = context
-            .WorkspaceMemberInvitations.Include(x => x.Workspace)
-            .Where(x => user.Email != null && x.Email.ToLower().Trim() == user.Email.ToLower().Trim())
-            .OrderByDescending(x => x.CreatedDate);
+        // Check if the user is a member of the workspace and has role workspace_owner or workspace_manager
+        var workspaceMember = await context.WorkspaceMembers.FindAsync(session.UserId, request.WorkspaceId, cancellationToken);
+        if (workspaceMember == null || workspaceMember.Role != WorkspaceRole.WorkspaceOwner || workspaceMember.Role != WorkspaceRole.WorkspaceManager)
+            return Result.Forbidden("You are not authorized to access this workspace invitations.");
 
-        var workspaceMemberInvitationsResponse = await workspaceMemberInvitations.ToPaginatedListAsync(request.CurrentPage, request.PageSize);
+        var query = context.WorkspaceMemberInvitations.Where(x => x.WorkspaceId == request.WorkspaceId);
+
+        if (!string.IsNullOrEmpty(request.Email))
+            query = query.Where(x => x.Email.ToLower().Trim() == request.Email.ToLower().Trim());
+
+        if (request.SortOrder.ToLower() == "asc")
+            query = query.OrderBy(x => EF.Property<object>(x, request.SortBy));
+        else
+            query = query.OrderByDescending(x => EF.Property<object>(x, request.SortBy));
+
+        query = query.Include(x => x.Workspace).Include(x => x.User.MemberProfile);
+
+        var workspaceMemberInvitations = await query.ToPaginatedListAsync(request.CurrentPage, request.PageSize);
 
         var paginatedResponse = new PaginatedList<WorkspaceMemberInvitationResponse>
         {
-            CurrentPage = workspaceMemberInvitationsResponse.CurrentPage,
+            CurrentPage = workspaceMemberInvitations.CurrentPage,
 
-            TotalPages = workspaceMemberInvitationsResponse.TotalPages,
-            TotalItems = workspaceMemberInvitationsResponse.TotalItems,
-            Result = workspaceMemberInvitationsResponse
+            TotalPages = workspaceMemberInvitations.TotalPages,
+            TotalItems = workspaceMemberInvitations.TotalItems,
+            Result = workspaceMemberInvitations
                 .Result.Select(x =>
                 {
                     var response = x.Adapt<WorkspaceMemberInvitationResponse>();
                     response.Workspace = x.Workspace.Adapt<WorkspaceResponse>();
+                    response.InvitedBy = new CommonUserResponse(x.User, x.User.MemberProfile);
                     return response;
                 })
                 .ToList(),

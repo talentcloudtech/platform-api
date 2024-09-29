@@ -22,11 +22,11 @@ public static class WorkspaceMemberInvitationEndpoints
     /// <param name="builder">The endpoint route builder.</param>
     public static void MapWorkspaceMemberInvitationEndpoints(this IEndpointRouteBuilder builder)
     {
-        var group = builder.MapGroup("api/workspaces/invitations").WithTags("WorkspaceMemberInvitation").RequireAuthorization();
+        var group = builder.MapGroup("api/workspaces").WithTags("WorkspaceMemberInvitation").RequireAuthorization();
 
         group
             .MapGet(
-                "/",
+                "/{workspaceId}/invitations",
                 async (IMediator mediator, WorkspaceId workspaceId, [AsParameters] SearchWorkspaceMemberInvitationsRequest request) =>
                 {
                     var result = await mediator.Send(request);
@@ -37,7 +37,7 @@ public static class WorkspaceMemberInvitationEndpoints
 
         group
             .MapGet(
-                "{invitationId}",
+                "invitations/{invitationId}",
                 async (IMediator mediator, WorkspaceMemberInvitationId invitationId) =>
                 {
                     var result = await mediator.Send(new GetWorkspaceMemberInvitationByIdRequest(invitationId));
@@ -48,7 +48,7 @@ public static class WorkspaceMemberInvitationEndpoints
 
         group
             .MapPatch(
-                "{invitationId}",
+                "invitations/{invitationId}",
                 async (IMediator mediator, WorkspaceMemberInvitationId invitationId, UpdateWorkspaceMemberInvitationRequest request) =>
                 {
                     var result = await mediator.Send(request with { WorkspaceMemberInvitationId = invitationId });
