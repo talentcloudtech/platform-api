@@ -50,6 +50,10 @@ public class SearchTasksHandler(IContext context, ICurrentSession session) : IRe
         if (request.Statuses!.Any())
             query = query.Where(x => request.Statuses!.Contains(x.Status));
 
+        // Apply priority filter
+        if (request.Priorities!.Any())
+            query = query.Where(x => request.Priorities!.Contains(x.Priority));
+
         // Apply sorting
         if (request.SortOrder.ToLower() == "asc")
             query = query.OrderBy(i => EF.Property<object>(i, request.SortBy));
