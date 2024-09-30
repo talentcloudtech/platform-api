@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Platform.Api.Configurations;
+using Platform.Application.Dto;
 using Platform.Domain.Entities;
 using Platform.Domain.Entities.Common;
 using Platform.Domain.Interfaces;
@@ -114,5 +115,45 @@ public class EmailSender : IEmailSender<ApplicationUser>, IEmailSender
             ";
 
         mailRequests.Add(new MailRequest(to: [invitation.Email], subject: $"You've Been Invited to Join {workspaceName}!", body: body));
+    }
+
+    /// <summary>
+    /// Sends a gig invitation email to the specified email addresses.
+    /// </summary>
+    /// <param name="gigTitle">The title of the gig.</param>
+    /// <param name="invitations"> The invitations to send to the users. </param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    public async Task SendGigInvitationAsync(string gigTitle, List<GigInvitationSendEmailDto> invitations)
+    {
+        var mailRequests = new List<MailRequest>();
+        foreach (var invitation in invitations)
+        {
+            SendGigInvitationAsync(gigTitle, mailRequests, invitation);
+        }
+        await _emailService.SendEmailAsync(mailRequests);
+    }
+
+    private static void SendGigInvitationAsync(string gigTitle, List<MailRequest> mailRequests, GigInvitationSendEmailDto invitation)
+    {
+        var invitationLink = $"{EnvironmentVariables.FrontendUrl}/gig-opportunities/invitations/{invitation.Id}";
+        var body =
+            $@"
+                    Hello,
+                    <br><br>
+                    You’ve been invited to join the {gigTitle} team! This is an exciting opportunity for seamless collaboration and effective teamwork.
+                    <br><br>
+                    To view the job details, click the button below:
+                    <br>
+                    <div style='text-align: center;'>   
+                        <a href='{invitationLink}' style='background-color: green; color: white; padding: 10px 20px; text-decoration: none; display: inline-block;'>View Job Details</a>
+                    </div>
+                    <br>
+                    We’re excited to welcome you and look forward to working with you!
+                    <br><br>
+                    Best regards,<br>
+                    {gigTitle} Team
+                ";
+
+        mailRequests.Add(new MailRequest(to: [invitation.Email], subject: $"Invitation to Join the {gigTitle} Team – Review Job Details!", body: body));
     }
 }

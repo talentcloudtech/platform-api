@@ -36,16 +36,19 @@ public class SearchUsersForGigOpportunitiesHandler(IContext context, ICurrentSes
         if (session.Role!.Name != UserRole.Admin.Name)
             return Result.Forbidden("You are not authorized to access this resource.");
 
-        var memberRequest = await context.MemberRequests.FirstOrDefaultAsync(x => x.Id == request.MemberRequestId, cancellationToken);
+        var memberRequest = await context
+            .MemberRequests.Include(x => x.Workspace.WorkspaceMembers)
+            .FirstOrDefaultAsync(x => x.Id == request.MemberRequestId, cancellationToken);
         if (memberRequest == null)
             return Result.NotFound("Member request not found.");
 
         // Get users with Admin and Customer roles
         var adminIds = await userManager.GetUsersInRoleAsync(UserRole.Admin.Name);
         var customerIds = await userManager.GetUsersInRoleAsync(UserRole.Customer.Name);
+        var workspaceMemberIds = memberRequest.Workspace.WorkspaceMembers.Select(x => x.UserId).ToList();
 
         // Combine admin and customer IDs
-        var excludedUserIds = adminIds.Select(u => u.Id).Concat(customerIds.Select(u => u.Id)).Distinct().ToList();
+        var excludedUserIds = adminIds.Select(u => u.Id).Concat(customerIds.Select(u => u.Id)).Concat(workspaceMemberIds).Distinct().ToList();
         var requiredSkillsIds = memberRequest.RequiredSkills.Select(x => x.SkillId).ToList();
         var query = context.MemberProfiles.Include(x => x.User).Where(x => !excludedUserIds.Contains(x.User!.Id)).AsNoTracking();
         query = query.Where(x => x.Skills.Any(y => requiredSkillsIds.Contains(y.SkillId)));

@@ -37,20 +37,13 @@ public class GigApplicantInvitationStatusValidator
 
         if (isAdmin)
         {
-            if (
-                (
-                    currentStatus == GigApplicantInvitationStatus.Pending
-                    && (newStatus == GigApplicantInvitationStatus.Accepted || newStatus == GigApplicantInvitationStatus.Declined)
-                ) || (currentStatus == GigApplicantInvitationStatus.Accepted && newStatus == GigApplicantInvitationStatus.Shortlisted)
-            )
-            {
-                return Result.Success();
-            }
+            return Result.Success();
         }
         else if (isWorkspaceOwnerOrManager)
         {
             if (
-                (
+                (currentStatus == GigApplicantInvitationStatus.Accepted && newStatus == GigApplicantInvitationStatus.Shortlisted)
+                || (
                     currentStatus == GigApplicantInvitationStatus.Shortlisted
                     && (newStatus == GigApplicantInvitationStatus.InterviewScheduled || newStatus == GigApplicantInvitationStatus.NotSelected)
                 )
@@ -60,7 +53,6 @@ public class GigApplicantInvitationStatusValidator
                     && (newStatus == GigApplicantInvitationStatus.OfferExtended || newStatus == GigApplicantInvitationStatus.Rejected)
                 )
                 || (currentStatus == GigApplicantInvitationStatus.OfferAccepted && newStatus == GigApplicantInvitationStatus.Hired)
-                || (currentStatus == GigApplicantInvitationStatus.Accepted && newStatus == GigApplicantInvitationStatus.Withdrawn)
             )
             {
                 return Result.Success();
@@ -69,8 +61,26 @@ public class GigApplicantInvitationStatusValidator
         else if (isInvitedUser)
         {
             if (
-                currentStatus == GigApplicantInvitationStatus.OfferExtended
-                && (newStatus == GigApplicantInvitationStatus.OfferAccepted || newStatus == GigApplicantInvitationStatus.OfferDeclined)
+                (
+                    currentStatus == GigApplicantInvitationStatus.Pending
+                    && (newStatus == GigApplicantInvitationStatus.Accepted || newStatus == GigApplicantInvitationStatus.Rejected)
+                )
+                || (currentStatus == GigApplicantInvitationStatus.Accepted && (newStatus == GigApplicantInvitationStatus.Withdrawn))
+                || (
+                    currentStatus == GigApplicantInvitationStatus.OfferExtended
+                    && (newStatus == GigApplicantInvitationStatus.OfferAccepted || newStatus == GigApplicantInvitationStatus.OfferDeclined)
+                )
+                || (
+                    (
+                        currentStatus == GigApplicantInvitationStatus.Shortlisted
+                        || currentStatus == GigApplicantInvitationStatus.InterviewScheduled
+                        || currentStatus == GigApplicantInvitationStatus.InInterview
+                        || currentStatus == GigApplicantInvitationStatus.OfferExtended
+                        || currentStatus == GigApplicantInvitationStatus.OfferAccepted
+                        || currentStatus == GigApplicantInvitationStatus.Hired
+                    )
+                    && newStatus == GigApplicantInvitationStatus.Withdrawn
+                )
             )
             {
                 return Result.Success();
