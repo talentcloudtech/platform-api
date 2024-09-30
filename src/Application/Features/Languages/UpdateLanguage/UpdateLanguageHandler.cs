@@ -6,7 +6,7 @@ using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
-using Platform.Application.Features.Languages.UpdateLanguage;
+using Platform.Application.Features.MemberProfiles;
 
 namespace Platform.Application.Features.Languages.UpdateLanguage;
 
@@ -39,7 +39,7 @@ public class UpdateLanguageHandler(IContext context) : IRequestHandler<UpdateLan
 
         language.Name = request.Name;
         language.ProficiencyLevel = request.ProficiencyLevel;
-
+        memberProfile.IsProfileComplete = ProfileScoreCalculator.IsProfileComplete(memberProfile);
         await context.SaveChangesAsync(cancellationToken);
 
         return Result.Success(language.Adapt<LanguageResponse>());

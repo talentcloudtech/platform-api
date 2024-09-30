@@ -43,11 +43,8 @@ public class GetAccountDetailsHandler(IContext context, ICurrentSession session)
             LastName = nameParts?.Length > 1 ? nameParts[1] : null,
             ProfilePictureUrl = user.MemberProfile?.ProfilePictureUrl,
             UserRole = session.Role!.Name,
+            IsProfileComplete = user.MemberProfile?.IsProfileComplete ?? false,
         };
-
-        if (user.MemberProfile != null)
-            accountDetails.ProfileScore = ProfileScoreCalculator.CalculateProfileScore(user.MemberProfile);
-
         return Result.Success(accountDetails);
     }
 }

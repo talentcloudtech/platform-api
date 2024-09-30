@@ -12,10 +12,10 @@ public static class ProfileScoreCalculator
     /// Calculates the profile score based on the completeness of the member profile.
     /// </summary>
     /// <param name="profile">The member profile to calculate the score for.</param>
-    /// <returns>The profile score as an integer percentage (0-100).</returns>
-    public static int CalculateProfileScore(MemberProfile profile)
+    /// <returns>True if the profile is complete, false otherwise.</returns>
+    public static bool IsProfileComplete(MemberProfile profile)
     {
-        int totalFields = 10;
+        int totalFields = 9;
         int completedFields = 0;
 
         if (!string.IsNullOrWhiteSpace(profile.FullName))
@@ -36,9 +36,7 @@ public static class ProfileScoreCalculator
             completedFields++;
         if (profile.Skills.Any())
             completedFields++;
-        if (profile.Experiences.Any())
-            completedFields++;
 
-        return (int)((double)completedFields / totalFields * 100);
+        return totalFields == completedFields;
     }
 }

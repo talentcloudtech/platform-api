@@ -29,6 +29,7 @@ public class MemberProfileConfiguration : IEntityTypeConfiguration<MemberProfile
         builder.Property(x => x.Timezone).HasMaxLength(50);
         builder.Property(x => x.Address).HasMaxLength(StringSizes.Bio);
         builder.Property(x => x.ResumeFileUrl).HasMaxLength(StringSizes.Url);
+        builder.Property(x => x.IsProfileComplete).HasDefaultValue(false);
 
         builder.OwnsMany(
             x => x.Languages,

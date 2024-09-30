@@ -92,5 +92,5 @@ public record MemberProfileResponse
     /// <summary>
     /// Gets or sets the score of the member profile.
     /// </summary>
-    public int ProfileScore { get; set; }
+    public bool IsProfileComplete { get; set; }
 }

@@ -76,6 +76,7 @@ public class UpdateAvatarHandler : IRequestHandler<UpdateAvatarRequest, Result<U
         var existingProfilePictureUrl = memberProfile.ProfilePictureUrl;
 
         memberProfile.ProfilePictureUrl = containerBlob.Uri.ToString();
+        memberProfile.IsProfileComplete = ProfileScoreCalculator.IsProfileComplete(memberProfile);
         await context.SaveChangesAsync(cancellationToken);
 
         if (!string.IsNullOrEmpty(existingProfilePictureUrl))

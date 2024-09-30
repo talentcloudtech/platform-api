@@ -5,6 +5,7 @@ using Ardalis.Result;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
+using Platform.Application.Features.MemberProfiles;
 
 namespace Platform.Application.Features.Languages.DeleteLanguage;
 
@@ -37,6 +38,7 @@ public class DeleteLanguageHandler(IContext context) : IRequestHandler<DeleteLan
         }
 
         memberProfile.Languages?.Remove(language);
+        memberProfile.IsProfileComplete = ProfileScoreCalculator.IsProfileComplete(memberProfile);
         await context.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

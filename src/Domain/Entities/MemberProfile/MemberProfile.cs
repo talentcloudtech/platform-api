@@ -49,6 +49,11 @@ public class MemberProfile : Entity<UserId>
     public string? Address { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether the member profile is complete.
+    /// </summary>
+    public bool IsProfileComplete { get; set; }
+
+    /// <summary>
     /// Gets or sets the languages known by the member.
     /// </summary>
     public List<Language> Languages { get; set; } = new List<Language>();

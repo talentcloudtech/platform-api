@@ -362,6 +362,11 @@ namespace Platform.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
+                    b.Property<bool>("IsProfileComplete")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
                     b.Property<string>("ProfilePictureUrl")
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
@@ -1411,10 +1416,6 @@ namespace Platform.Migrations
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
                                 .HasColumnType("integer");
-
-                            b1.Property<string>("Identifier")
-                                .IsRequired()
-                                .HasColumnType("text");
 
                             b1.Property<string>("Name")
                                 .IsRequired()

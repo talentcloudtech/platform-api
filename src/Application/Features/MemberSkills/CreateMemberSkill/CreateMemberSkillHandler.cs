@@ -7,6 +7,7 @@ using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
+using Platform.Application.Features.MemberProfiles;
 using Platform.Domain.Entities;
 using Platform.Domain.Entities.Common;
 
@@ -61,7 +62,7 @@ public class CreateMemberSkillHandler(IContext context) : IRequestHandler<Create
             memberProfile.Skills = new List<MemberSkill>();
 
         memberProfile.Skills?.Add(memberSkill);
-
+        memberProfile.IsProfileComplete = ProfileScoreCalculator.IsProfileComplete(memberProfile);
         await context.SaveChangesAsync(cancellationToken);
 
         return Result.Success(memberSkill.Adapt<MemberSkillResponse>());

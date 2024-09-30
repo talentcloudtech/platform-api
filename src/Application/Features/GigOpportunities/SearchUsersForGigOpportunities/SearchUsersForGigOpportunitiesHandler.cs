@@ -50,8 +50,14 @@ public class SearchUsersForGigOpportunitiesHandler(IContext context, ICurrentSes
         // Combine admin and customer IDs
         var excludedUserIds = adminIds.Select(u => u.Id).Concat(customerIds.Select(u => u.Id)).Concat(workspaceMemberIds).Distinct().ToList();
         var requiredSkillsIds = memberRequest.RequiredSkills.Select(x => x.SkillId).ToList();
+
         var query = context.MemberProfiles.Include(x => x.User).Where(x => !excludedUserIds.Contains(x.User!.Id)).AsNoTracking();
+
+        // Filter by required skills
         query = query.Where(x => x.Skills.Any(y => requiredSkillsIds.Contains(y.SkillId)));
+
+        // Filter by profile completeness
+        query = query.Where(x => x.IsProfileComplete);
 
         var memberProfilesResponse = await query.ToPaginatedListAsync(1, 20);
 

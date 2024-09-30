@@ -50,7 +50,7 @@ public class GetAccountDetailsResponse
     public bool EmailConfirmed { get; internal set; }
 
     /// <summary>
-    /// Gets or sets the score of the member profile.
+    /// Gets or sets a value indicating whether the member profile is complete.
     /// </summary>
-    public int ProfileScore { get; set; }
+    public bool IsProfileComplete { get; set; }
 }

@@ -5,6 +5,7 @@ using Ardalis.Result;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
+using Platform.Application.Features.MemberProfiles;
 
 namespace Platform.Application.Features.MemberSkills.DeleteMemberSkill;
 
@@ -38,6 +39,7 @@ public class DeleteMemberSkillHandler(IContext context) : IRequestHandler<Delete
         }
 
         memberProfile.Skills?.Remove(skill);
+        memberProfile.IsProfileComplete = ProfileScoreCalculator.IsProfileComplete(memberProfile);
         await context.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

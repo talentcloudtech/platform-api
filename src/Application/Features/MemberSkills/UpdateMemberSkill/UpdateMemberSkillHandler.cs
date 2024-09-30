@@ -6,6 +6,7 @@ using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
+using Platform.Application.Features.MemberProfiles;
 
 namespace Platform.Application.Features.MemberSkills.UpdateMemberSkill;
 
@@ -48,7 +49,7 @@ public class UpdateMemberSkillHandler(IContext context) : IRequestHandler<Update
         memberSkill.SkillId = request.SkillId;
         memberSkill.Name = skill.Name;
         memberSkill.MonthsOfExperience = request.MonthsOfExperience;
-
+        memberProfile.IsProfileComplete = ProfileScoreCalculator.IsProfileComplete(memberProfile);
         await context.SaveChangesAsync(cancellationToken);
 
         return Result.Success(memberSkill.Adapt<MemberSkillResponse>());

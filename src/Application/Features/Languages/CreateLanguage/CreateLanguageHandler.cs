@@ -7,6 +7,7 @@ using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
+using Platform.Application.Features.MemberProfiles;
 using Platform.Domain.Entities;
 using Platform.Domain.Entities.Common;
 
@@ -54,6 +55,7 @@ public class CreateLanguageHandler(IContext context) : IRequestHandler<CreateLan
             memberProfile.Languages = new List<Language>();
 
         memberProfile.Languages?.Add(newLanguage);
+        memberProfile.IsProfileComplete = ProfileScoreCalculator.IsProfileComplete(memberProfile);
         await context.SaveChangesAsync(cancellationToken);
 
         return Result.Success(newLanguage.Adapt<LanguageResponse>());
