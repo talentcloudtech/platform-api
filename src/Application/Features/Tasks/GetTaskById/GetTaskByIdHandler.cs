@@ -32,6 +32,7 @@ public class GetTaskByIdHandler(IContext context, ICurrentSession session) : IRe
         var task = await context
             .ProjectTasks.Include(x => x.Project.ProjectMembers)
             .Include(x => x.Workspace.WorkspaceMembers)
+            .Include(x=>x.User.MemberProfile)
             .FirstOrDefaultAsync(x => x.Id == request.Id && x.ProjectId == request.ProjectId && x.WorkspaceId == request.WorkspaceId, cancellationToken);
 
         if (task == null)
