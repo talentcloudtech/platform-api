@@ -45,7 +45,7 @@ public class GetGigOpportunityCandidatesHandler(IContext context, ICurrentSessio
 
         IQueryable<GigApplicantInvitation> query = context.GigApplicantInvitations.Where(i => i.MemberRequestId == request.MemberRequestId);
 
-        query = query.Include(i => i.InvitedUser).Include(i => i.InvitedUser!.MemberProfile).Include(i => i.MemberRequest);
+        query = query.Include(i => i.CreatedByUser!.MemberProfile).Include(i => i.InvitedUser!.MemberProfile).Include(i => i.MemberRequest);
 
         if (!string.IsNullOrWhiteSpace(request.Search))
         {
