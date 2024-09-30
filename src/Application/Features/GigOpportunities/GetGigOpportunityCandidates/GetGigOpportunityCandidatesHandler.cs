@@ -57,6 +57,10 @@ public class GetGigOpportunityCandidatesHandler(IContext context, ICurrentSessio
             );
         }
 
+        //Filter by status
+        if (request.Statuses is not null && request.Statuses.Any())
+            query = query.Where(i => request.Statuses!.Contains(i.Status));
+
         var gigInvitations = await query.ToPaginatedListAsync(request.CurrentPage, request.PageSize);
 
         var paginatedResponse = new PaginatedList<GigInvitationResponse>
