@@ -13,7 +13,7 @@ The rest APIs are the talent cloud platform.
 Following the are configurations to be made
 
 1. **ConnectionStrings\_\_DefaultConnection**: The database connection string to PostgreSQL database
-1. **AzureBlobStorage\_\_ConnectionString**: The connection string to Azure Blob Storage 
+2. **AzureBlobStorage\_\_ConnectionString**: The connection string to Azure Blob Storage 
 
 ## Environment variables
 
