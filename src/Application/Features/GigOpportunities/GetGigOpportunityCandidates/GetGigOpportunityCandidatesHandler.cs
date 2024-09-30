@@ -31,7 +31,16 @@ public class GetGigOpportunityCandidatesHandler(IContext context, ICurrentSessio
     /// <returns>The result of the operation.</returns>
     public async Task<Result<PaginatedList<GigInvitationResponse>>> Handle(GetGigOpportunityCandidatesRequest request, CancellationToken cancellationToken)
     {
-        if (session.Role!.Name != UserRole.Admin.Name)
+        var memberRequest = await context
+            .MemberRequests.Include(x => x.Workspace.WorkspaceMembers)
+            .FirstOrDefaultAsync(mr => mr.Id == request.MemberRequestId, cancellationToken);
+
+        if (
+            session.Role!.Name != UserRole.Admin.Name
+            && !memberRequest!.Workspace.WorkspaceMembers.Any(x =>
+                x.UserId == session.UserId && (x.Role == WorkspaceRole.WorkspaceOwner || x.Role == WorkspaceRole.WorkspaceManager)
+            )
+        )
             return Result.Forbidden("You are not authorized to access this resource.");
 
         IQueryable<GigApplicantInvitation> query = context.GigApplicantInvitations.Where(i => i.MemberRequestId == request.MemberRequestId);
