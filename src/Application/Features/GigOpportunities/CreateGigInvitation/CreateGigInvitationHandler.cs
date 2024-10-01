@@ -40,6 +40,7 @@ public class CreateGigInvitationHandler(IContext context, ICurrentSession sessio
         // get the member request
         var memberRequest = await context
             .MemberRequests.Include(x => x.Invitations)
+            .Include(x => x.Workspace.WorkspaceMembers)
             .FirstOrDefaultAsync(x => x.Id == request.MemberRequestId, cancellationToken);
 
         if (memberRequest == null)
