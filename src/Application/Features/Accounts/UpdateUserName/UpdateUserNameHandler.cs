@@ -12,6 +12,7 @@ namespace Platform.Application.Features.Accounts.UpdateUserName;
 /// Handler for updating the username of a user.
 /// </summary>
 /// <param name="userManager">The user manager.</param>
+/// <param name="context">The database context.</param>
 public class UpdateUserNameHandler(IContext context, UserManager<ApplicationUser> userManager) : IRequestHandler<UpdateUsernameRequest, Result<string>>
 {
     /// <summary>

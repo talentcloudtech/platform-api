@@ -73,9 +73,9 @@ public static class GigOpportunityEndpoints
         group
             .MapGet(
                 "/{memberRequestId}/candidates",
-                async (IMediator mediator, MemberRequestId memberRequestId) =>
+                async (IMediator mediator, MemberRequestId memberRequestId, [AsParameters] GetGigOpportunityCandidatesRequest request) =>
                 {
-                    var result = await mediator.Send(new GetGigOpportunityCandidatesRequest(memberRequestId));
+                    var result = await mediator.Send(request with { MemberRequestId = memberRequestId });
                     return result.ToPlatformApiResult();
                 }
             )
