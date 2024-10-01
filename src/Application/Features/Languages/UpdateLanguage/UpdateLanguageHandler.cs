@@ -39,7 +39,7 @@ public class UpdateLanguageHandler(IContext context) : IRequestHandler<UpdateLan
 
         language.Name = request.Name;
         language.ProficiencyLevel = request.ProficiencyLevel;
-        memberProfile.IsProfileComplete = ProfileScoreCalculator.IsProfileComplete(memberProfile);
+        memberProfile.IsProfileComplete = MemberProfileEvaluator.IsProfileFullyCompleted(memberProfile);
         await context.SaveChangesAsync(cancellationToken);
 
         return Result.Success(language.Adapt<LanguageResponse>());

@@ -49,7 +49,7 @@ public class UpdateMemberSkillHandler(IContext context) : IRequestHandler<Update
         memberSkill.SkillId = request.SkillId;
         memberSkill.Name = skill.Name;
         memberSkill.MonthsOfExperience = request.MonthsOfExperience;
-        memberProfile.IsProfileComplete = ProfileScoreCalculator.IsProfileComplete(memberProfile);
+        memberProfile.IsProfileComplete = MemberProfileEvaluator.IsProfileFullyCompleted(memberProfile);
         await context.SaveChangesAsync(cancellationToken);
 
         return Result.Success(memberSkill.Adapt<MemberSkillResponse>());

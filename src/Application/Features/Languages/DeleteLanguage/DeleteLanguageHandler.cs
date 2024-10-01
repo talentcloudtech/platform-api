@@ -38,7 +38,7 @@ public class DeleteLanguageHandler(IContext context) : IRequestHandler<DeleteLan
         }
 
         memberProfile.Languages?.Remove(language);
-        memberProfile.IsProfileComplete = ProfileScoreCalculator.IsProfileComplete(memberProfile);
+        memberProfile.IsProfileComplete = MemberProfileEvaluator.IsProfileFullyCompleted(memberProfile);
         await context.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

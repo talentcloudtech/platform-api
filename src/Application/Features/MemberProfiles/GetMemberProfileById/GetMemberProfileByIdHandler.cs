@@ -35,6 +35,7 @@ public class GetMemberProfileByIdHandler(IContext context) : IRequestHandler<Get
             return Result.NotFound("Member profile not found.");
 
         var response = memberProfile.Adapt<MemberProfileResponse>();
+        response.ProfileCompletenessScore = MemberProfileEvaluator.GetProfileCompletenessScore(memberProfile);
 
         return Result.Success(response);
     }

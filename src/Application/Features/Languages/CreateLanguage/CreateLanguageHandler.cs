@@ -55,7 +55,7 @@ public class CreateLanguageHandler(IContext context) : IRequestHandler<CreateLan
             memberProfile.Languages = new List<Language>();
 
         memberProfile.Languages?.Add(newLanguage);
-        memberProfile.IsProfileComplete = ProfileScoreCalculator.IsProfileComplete(memberProfile);
+        memberProfile.IsProfileComplete = MemberProfileEvaluator.IsProfileFullyCompleted(memberProfile);
         await context.SaveChangesAsync(cancellationToken);
 
         return Result.Success(newLanguage.Adapt<LanguageResponse>());

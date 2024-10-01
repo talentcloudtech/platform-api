@@ -38,7 +38,7 @@ public class UpdateMemberProfileHandler(IContext context) : IRequestHandler<Upda
                 Timezone = request.Timezone,
                 ExternalLinks = request.ExternalLinks,
             };
-            memberProfile.IsProfileComplete = ProfileScoreCalculator.IsProfileComplete(memberProfile);
+            memberProfile.IsProfileComplete = MemberProfileEvaluator.IsProfileFullyCompleted(memberProfile);
             context.MemberProfiles.Add(memberProfile);
         }
         else
@@ -49,7 +49,7 @@ public class UpdateMemberProfileHandler(IContext context) : IRequestHandler<Upda
             memberProfile.Address = request.Address;
             memberProfile.Timezone = request.Timezone;
             memberProfile.ExternalLinks = request.ExternalLinks;
-            memberProfile.IsProfileComplete = ProfileScoreCalculator.IsProfileComplete(memberProfile);
+            memberProfile.IsProfileComplete = MemberProfileEvaluator.IsProfileFullyCompleted(memberProfile);
             context.MemberProfiles.Update(memberProfile);
         }
 

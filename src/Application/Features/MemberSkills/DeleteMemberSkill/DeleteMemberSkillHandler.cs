@@ -39,7 +39,7 @@ public class DeleteMemberSkillHandler(IContext context) : IRequestHandler<Delete
         }
 
         memberProfile.Skills?.Remove(skill);
-        memberProfile.IsProfileComplete = ProfileScoreCalculator.IsProfileComplete(memberProfile);
+        memberProfile.IsProfileComplete = MemberProfileEvaluator.IsProfileFullyCompleted(memberProfile);
         await context.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

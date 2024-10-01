@@ -44,6 +44,7 @@ public class GetAccountDetailsHandler(IContext context, ICurrentSession session)
             ProfilePictureUrl = user.MemberProfile?.ProfilePictureUrl,
             UserRole = session.Role!.Name,
             IsProfileComplete = user.MemberProfile?.IsProfileComplete ?? false,
+            ProfileCompletenessScore = MemberProfileEvaluator.GetProfileCompletenessScore(user.MemberProfile!),
         };
         return Result.Success(accountDetails);
     }

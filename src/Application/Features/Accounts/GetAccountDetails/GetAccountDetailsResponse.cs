@@ -53,4 +53,9 @@ public class GetAccountDetailsResponse
     /// Gets or sets a value indicating whether the member profile is complete.
     /// </summary>
     public bool IsProfileComplete { get; set; }
+
+    /// <summary>
+    /// Gets or sets the completeness score of the member profile.
+    /// </summary>
+    public int ProfileCompletenessScore { get; set; }
 }

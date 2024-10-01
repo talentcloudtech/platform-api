@@ -62,7 +62,7 @@ public class CreateMemberSkillHandler(IContext context) : IRequestHandler<Create
             memberProfile.Skills = new List<MemberSkill>();
 
         memberProfile.Skills?.Add(memberSkill);
-        memberProfile.IsProfileComplete = ProfileScoreCalculator.IsProfileComplete(memberProfile);
+        memberProfile.IsProfileComplete = MemberProfileEvaluator.IsProfileFullyCompleted(memberProfile);
         await context.SaveChangesAsync(cancellationToken);
 
         return Result.Success(memberSkill.Adapt<MemberSkillResponse>());
