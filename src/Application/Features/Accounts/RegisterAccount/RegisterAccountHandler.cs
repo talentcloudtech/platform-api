@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,15 +32,20 @@ public class RegisterAccountHandler(IContext context, UserManager<ApplicationUse
     {
         var user = new ApplicationUser { UserName = request.UserName.Trim(), Email = request.Email.Trim() };
 
+        var role = UserRole.FromString(request.Role);
+
+        if (role == null)
+            return Result.Invalid(new ValidationError { Identifier = "root", ErrorMessage = "Invalid role." });
+
+        if (role.Name == UserRole.Admin.Name)
+            return Result.Invalid(new ValidationError { Identifier = "root", ErrorMessage = "Admin role is not allowed to be registered by this endpoint." });
+
         var result = await userManager.CreateAsync(user, request.Password);
 
         if (!result.Succeeded)
-        {
             return Result.Invalid(result.Errors.Select(e => new ValidationError { Identifier = "root", ErrorMessage = e.Description }));
-        }
 
-        // assign role to user
-        await userManager.AddToRoleAsync(user, UserRole.User.Name);
+        await userManager.AddToRoleAsync(user, role.Name);
 
         var memberProfile = new MemberProfile { Id = user.Id, UserName = user.UserName };
 
