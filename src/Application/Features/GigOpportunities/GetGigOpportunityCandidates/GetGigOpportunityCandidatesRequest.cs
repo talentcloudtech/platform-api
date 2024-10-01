@@ -17,7 +17,7 @@ namespace Platform.Application.Features.GigOpportunities.GetGigOpportunityCandid
 /// <param name="PageSize">The number of items per page.</param>
 public record GetGigOpportunityCandidatesRequest(
     MemberRequestId MemberRequestId,
-    GigApplicantInvitationStatus[]? Statuses,
+    GigApplicantInvitationStatus[]? Statuses = null,
     string? Search = null,
     int CurrentPage = 1,
     int PageSize = 10
