@@ -36,7 +36,7 @@ public class UpdateUserFullNameHandler(IContext context) : IRequestHandler<Updat
             memberProfile = new MemberProfile
             {
                 Id = request.UserId,
-                UserName = currentUser?.UserName,
+                UserName = currentUser!.UserName,
                 FullName = request.FullName,
             };
             context.MemberProfiles.Add(memberProfile);
