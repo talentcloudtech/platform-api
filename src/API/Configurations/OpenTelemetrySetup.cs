@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Azure.Monitor.OpenTelemetry.Exporter;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using OpenTelemetry.Metrics;
@@ -41,6 +42,7 @@ public static class OpenTelemetrySetup
                     {
                         o.RecordException = true;
                     })
+                    .AddAzureMonitorTraceExporter()
                     .AddOtlpExporter();
             })
             .WithMetrics(telemetry =>
@@ -57,6 +59,7 @@ public static class OpenTelemetrySetup
                     )
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
+                    .AddAzureMonitorMetricExporter()
                     .AddOtlpExporter();
             });
     }

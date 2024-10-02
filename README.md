@@ -24,6 +24,7 @@ Copy `.env.example` to `.env` and fill in the following values, which are used b
 1. **FRONTEND_URL**: The frontend URL
 1. **COMMUNICATION_SERVICES_CONNECTION_STRING**: The azure communication service connection string
 1. **JWT_SECRET**: The JWT secret token, generate with `openssl rand -base64 32`
+1. **APPLICATIONINSIGHTS_CONNECTION_STRING**: The connection string to application insights
 
 ## Running locally
 
