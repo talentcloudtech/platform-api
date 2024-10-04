@@ -12,6 +12,7 @@ using Microsoft.Extensions.Options;
 using Platform.API.Configurations.OptionSetups;
 using Platform.Application.Common;
 using Platform.Application.Features.FileStorages.DeleteFile;
+using Platform.Domain.Entities.Common;
 using Platform.Domain.Entities.Enums;
 
 namespace Platform.Application.Features.Workspaces.UploadWorkspaceAvatar;
@@ -68,17 +69,25 @@ public class UploadWorkspaceAvatarHandler : IRequestHandler<UploadWorkspaceAvata
         if (!Array.Exists(AllowedExtensions, ext => string.Equals(ext, fileExt, StringComparison.OrdinalIgnoreCase)))
             return Result.Error("Invalid file type. Only image files (.jpg, .jpeg, .png, .gif, .pdf) are allowed.");
 
-        var fileName = Guid.NewGuid() + fileExt;
+        var fileName = CustomNewId.GenerateShortId() + fileExt;
 
         var containerClient = new BlobContainerClient(_azureBlobStorageOptions.ConnectionString, "workspace-logos");
 
         await containerClient.CreateIfNotExistsAsync(PublicAccessType.Blob);
 
         var containerBlob = containerClient.GetBlobClient(fileName);
+
+
         await using (var stream = request.File.OpenReadStream())
         {
             await containerBlob.UploadAsync(stream, cancellationToken);
         }
+
+        containerBlob.SetHttpHeaders(new BlobHttpHeaders
+        {
+            CacheControl = "public, max-age=31536000, immutable",
+            ContentType = FileHelper.GetContentType(fileName),
+        });
 
         var existingFileUrl = workspace.Logo;
 

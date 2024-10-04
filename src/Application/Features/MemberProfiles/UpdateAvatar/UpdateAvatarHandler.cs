@@ -73,6 +73,12 @@ public class UpdateAvatarHandler : IRequestHandler<UpdateAvatarRequest, Result<U
             await containerBlob.UploadAsync(stream, cancellationToken);
         }
 
+        containerBlob.SetHttpHeaders(new BlobHttpHeaders
+        {
+            CacheControl = "public, max-age=31536000, immutable",
+            ContentType = FileHelper.GetContentType(fileName),
+        });
+
         var existingProfilePictureUrl = memberProfile.ProfilePictureUrl;
 
         memberProfile.ProfilePictureUrl = containerBlob.Uri.ToString();
