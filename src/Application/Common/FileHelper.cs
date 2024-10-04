@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using Microsoft.AspNetCore.StaticFiles;
 
-
 namespace Platform.Application.Common;
 
 /// <summary>

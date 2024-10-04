@@ -77,17 +77,14 @@ public class UploadWorkspaceAvatarHandler : IRequestHandler<UploadWorkspaceAvata
 
         var containerBlob = containerClient.GetBlobClient(fileName);
 
-
         await using (var stream = request.File.OpenReadStream())
         {
             await containerBlob.UploadAsync(stream, cancellationToken);
         }
 
-        containerBlob.SetHttpHeaders(new BlobHttpHeaders
-        {
-            CacheControl = "public, max-age=31536000, immutable",
-            ContentType = FileHelper.GetContentType(fileName),
-        });
+        containerBlob.SetHttpHeaders(
+            new BlobHttpHeaders { CacheControl = "public, max-age=31536000, immutable", ContentType = FileHelper.GetContentType(fileName) }
+        );
 
         var existingFileUrl = workspace.Logo;
 
