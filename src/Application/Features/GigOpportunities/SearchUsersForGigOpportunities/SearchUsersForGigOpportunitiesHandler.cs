@@ -38,17 +38,21 @@ public class SearchUsersForGigOpportunitiesHandler(IContext context, ICurrentSes
 
         var memberRequest = await context
             .MemberRequests.Include(x => x.Workspace.WorkspaceMembers)
+            .Include(x => x.Invitations)
             .FirstOrDefaultAsync(x => x.Id == request.MemberRequestId, cancellationToken);
         if (memberRequest == null)
             return Result.NotFound("Member request not found.");
 
         // Get users with Admin and Customer roles
-        var adminIds = await userManager.GetUsersInRoleAsync(UserRole.Admin.Name);
-        var customerIds = await userManager.GetUsersInRoleAsync(UserRole.Customer.Name);
-        var workspaceMemberIds = memberRequest.Workspace.WorkspaceMembers.Select(x => x.UserId).ToList();
+        var admins = await userManager.GetUsersInRoleAsync(UserRole.Admin.Name);
+        var customers = await userManager.GetUsersInRoleAsync(UserRole.Customer.Name);
 
-        // Combine admin and customer IDs
-        var excludedUserIds = adminIds.Select(u => u.Id).Concat(customerIds.Select(u => u.Id)).Concat(workspaceMemberIds).Distinct().ToList();
+        var adminIds = admins.Select(u => u.Id);
+        var customerIds = customers.Select(u => u.Id);
+        var workspaceMemberIds = memberRequest.Workspace.WorkspaceMembers.Select(x => x.UserId).ToList();
+        var invitedUserIds = memberRequest.Invitations.Select(x => x.InvitedUserId).ToList();
+
+        var excludedUserIds = adminIds.Concat(customerIds).Concat(workspaceMemberIds).Concat(invitedUserIds).Distinct().ToList();
         var requiredSkillsIds = memberRequest.RequiredSkills.Select(x => x.SkillId).ToList();
 
         var query = context.MemberProfiles.Include(x => x.User).Where(x => !excludedUserIds.Contains(x.User!.Id)).AsNoTracking();
