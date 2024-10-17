@@ -8,7 +8,7 @@ namespace Platform.Application.Features.GigOpportunities;
 /// <summary>
 /// Validates the status transition of a gig applicant invitation.
 /// </summary>
-public class GigApplicantInvitationStatusValidator
+public static class GigApplicantInvitationStatusValidator
 {
     /// <summary>
     /// Validates the status transition of a gig applicant invitation.
@@ -29,65 +29,65 @@ public class GigApplicantInvitationStatusValidator
     {
         var validTransitions = GetValidTransitions(currentStatus);
         if (!validTransitions.Contains(newStatus))
-        {
             return Result.Error(
                 $"Invalid status transition from {currentStatus} to {newStatus}. " + $"Valid transitions are: {string.Join(", ", validTransitions)}"
             );
-        }
 
         if (isAdmin)
-        {
             return Result.Success();
-        }
-        else if (isWorkspaceOwnerOrManager)
-        {
-            if (
-                (currentStatus == GigApplicantInvitationStatus.Accepted && newStatus == GigApplicantInvitationStatus.Shortlisted)
-                || (
-                    currentStatus == GigApplicantInvitationStatus.Shortlisted
-                    && (newStatus == GigApplicantInvitationStatus.InterviewScheduled || newStatus == GigApplicantInvitationStatus.NotSelected)
-                )
-                || (currentStatus == GigApplicantInvitationStatus.InterviewScheduled && newStatus == GigApplicantInvitationStatus.InInterview)
-                || (
-                    currentStatus == GigApplicantInvitationStatus.InInterview
-                    && (newStatus == GigApplicantInvitationStatus.OfferExtended || newStatus == GigApplicantInvitationStatus.Rejected)
-                )
-                || (currentStatus == GigApplicantInvitationStatus.OfferAccepted && newStatus == GigApplicantInvitationStatus.Hired)
-            )
-            {
-                return Result.Success();
-            }
-        }
-        else if (isInvitedUser)
-        {
-            if (
-                (
-                    currentStatus == GigApplicantInvitationStatus.Pending
-                    && (newStatus == GigApplicantInvitationStatus.Accepted || newStatus == GigApplicantInvitationStatus.Rejected)
-                )
-                || (currentStatus == GigApplicantInvitationStatus.Accepted && (newStatus == GigApplicantInvitationStatus.Withdrawn))
-                || (
-                    currentStatus == GigApplicantInvitationStatus.OfferExtended
-                    && (newStatus == GigApplicantInvitationStatus.OfferAccepted || newStatus == GigApplicantInvitationStatus.OfferDeclined)
-                )
-                || (
-                    (
-                        currentStatus == GigApplicantInvitationStatus.Shortlisted
-                        || currentStatus == GigApplicantInvitationStatus.InterviewScheduled
-                        || currentStatus == GigApplicantInvitationStatus.InInterview
-                        || currentStatus == GigApplicantInvitationStatus.OfferExtended
-                        || currentStatus == GigApplicantInvitationStatus.OfferAccepted
-                        || currentStatus == GigApplicantInvitationStatus.Hired
-                    )
-                    && newStatus == GigApplicantInvitationStatus.Withdrawn
-                )
-            )
-            {
-                return Result.Success();
-            }
-        }
+
+        if (isWorkspaceOwnerOrManager && IsValidWorkspaceOwnerOrManagerTransition(currentStatus, newStatus))
+            return Result.Success();
+
+        if (isInvitedUser && IsValidInvitedUserTransition(currentStatus, newStatus))
+            return Result.Success();
 
         return Result.Error("You do not have permission to update this status.");
+    }
+
+    private static bool IsValidWorkspaceOwnerOrManagerTransition(GigApplicantInvitationStatus currentStatus, GigApplicantInvitationStatus newStatus)
+    {
+        return (currentStatus, newStatus) switch
+        {
+            (GigApplicantInvitationStatus.Accepted, GigApplicantInvitationStatus.Shortlisted) => true,
+            (GigApplicantInvitationStatus.Shortlisted, GigApplicantInvitationStatus.InterviewScheduled) => true,
+            (GigApplicantInvitationStatus.Shortlisted, GigApplicantInvitationStatus.NotSelected) => true,
+            (GigApplicantInvitationStatus.InterviewScheduled, GigApplicantInvitationStatus.InInterview) => true,
+            (GigApplicantInvitationStatus.InInterview, GigApplicantInvitationStatus.OfferExtended) => true,
+            (GigApplicantInvitationStatus.InInterview, GigApplicantInvitationStatus.Rejected) => true,
+            (GigApplicantInvitationStatus.OfferAccepted, GigApplicantInvitationStatus.Hired) => true,
+            _ => false,
+        };
+    }
+
+    private static bool IsValidInvitedUserTransition(GigApplicantInvitationStatus currentStatus, GigApplicantInvitationStatus newStatus)
+    {
+        if (newStatus == GigApplicantInvitationStatus.Withdrawn && IsWithdrawableStatus(currentStatus))
+            return true;
+
+        return (currentStatus, newStatus) switch
+        {
+            (GigApplicantInvitationStatus.Pending, GigApplicantInvitationStatus.Accepted) => true,
+            (GigApplicantInvitationStatus.Pending, GigApplicantInvitationStatus.Rejected) => true,
+            (GigApplicantInvitationStatus.Accepted, GigApplicantInvitationStatus.Withdrawn) => true,
+            (GigApplicantInvitationStatus.OfferExtended, GigApplicantInvitationStatus.OfferAccepted) => true,
+            (GigApplicantInvitationStatus.OfferExtended, GigApplicantInvitationStatus.OfferDeclined) => true,
+            _ => false,
+        };
+    }
+
+    private static bool IsWithdrawableStatus(GigApplicantInvitationStatus status)
+    {
+        return status switch
+        {
+            GigApplicantInvitationStatus.Shortlisted => true,
+            GigApplicantInvitationStatus.InterviewScheduled => true,
+            GigApplicantInvitationStatus.InInterview => true,
+            GigApplicantInvitationStatus.OfferExtended => true,
+            GigApplicantInvitationStatus.OfferAccepted => true,
+            GigApplicantInvitationStatus.Hired => true,
+            _ => false,
+        };
     }
 
     private static GigApplicantInvitationStatus[] GetValidTransitions(GigApplicantInvitationStatus currentStatus)

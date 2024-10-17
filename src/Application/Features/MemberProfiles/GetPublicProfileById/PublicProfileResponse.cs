@@ -20,6 +20,16 @@ public record PublicProfileResponse
     public string? FullName { get; set; }
 
     /// <summary>
+    /// Gets or sets the first name associated with the account.
+    /// </summary>
+    public string? FirstName { get; set; }
+
+    /// <summary>
+    /// Gets or sets the last name associated with the account.
+    /// </summary>
+    public string? LastName { get; set; }
+
+    /// <summary>
     /// Gets or sets the user name of the member.
     /// </summary>
     public string? UserName { get; set; }

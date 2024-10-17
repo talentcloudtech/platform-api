@@ -25,10 +25,15 @@ public class GetPublicProfileByIdHandler(IContext context) : IRequestHandler<Get
     public async Task<Result<PublicProfileResponse>> Handle(GetPublicProfileByIdRequest request, CancellationToken cancellationToken)
     {
         var memberProfile = await context.MemberProfiles.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken: cancellationToken);
-
         if (memberProfile is null)
             return Result.NotFound("Member profile not found.");
 
-        return Result.Success(memberProfile.Adapt<PublicProfileResponse>());
+        var nameParts = memberProfile.FullName?.Split(' ');
+        var response = memberProfile.Adapt<PublicProfileResponse>();
+        response.FullName = response.FullName ?? response.UserName;
+        response.FirstName = nameParts?.Length > 0 ? nameParts[0] : response.UserName;
+        response.LastName = nameParts?.Length > 1 ? nameParts[1] : null;
+
+        return Result.Success(response);
     }
 }
