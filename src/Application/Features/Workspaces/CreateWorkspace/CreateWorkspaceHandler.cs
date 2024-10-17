@@ -30,6 +30,9 @@ public class CreateWorkspaceHandler(IContext context, ICurrentSession session) :
     {
         var currentTimeStamp = DateTime.UtcNow;
 
+        if (session.Role!.Name != UserRole.Admin.Name && session.Role!.Name != UserRole.Customer.Name)
+            return Result.Forbidden("User does not have permission to create a workspace.");
+
         var newWorkspace = request.Adapt<Workspace>();
         newWorkspace.CreatedBy = session.UserId;
         newWorkspace.CreatedDate = currentTimeStamp;
