@@ -30,8 +30,12 @@ public class CreateMemberRequestHandler(IContext context, ICurrentSession sessio
         if (workspace == null)
             return Result.NotFound("Workspace not found.");
 
-        if (!workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId && x.Role == WorkspaceRole.WorkspaceOwner))
-            return Result.Forbidden("You are not a owner of this workspace. You can't create a member request.");
+        if (
+            !workspace.WorkspaceMembers.Any(x =>
+                x.UserId == session.UserId && (x.Role == WorkspaceRole.WorkspaceOwner || x.Role == WorkspaceRole.WorkspaceManager)
+            )
+        )
+            return Result.Forbidden("You are not a owner or manager of this workspace. You can't create a member request.");
 
         var currentTimestamp = DateTime.UtcNow;
 
