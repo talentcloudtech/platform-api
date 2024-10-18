@@ -109,6 +109,11 @@ public interface IContext : IDataProtectionKeyContext, IAsyncDisposable, IDispos
     public DbSet<GigApplicantInvitation> GigApplicantInvitations { get; }
 
     /// <summary>
+    /// Gets or sets the DbSet of RemoteJob entities.
+    /// </summary>
+    public DbSet<RemoteJob> RemoteJobs { get; }
+
+    /// <summary>
     /// Asynchronously saves all changes made in this context to the underlying database.
     /// </summary>
     /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
