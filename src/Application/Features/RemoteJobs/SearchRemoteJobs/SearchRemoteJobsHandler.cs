@@ -17,7 +17,6 @@ namespace Platform.Application.Features.RemoteJobs.SearchRemoteJobs;
 /// </summary>
 public class SearchRemoteJobsHandler(IContext context) : IRequestHandler<SearchRemoteJobsRequest, Result<PaginatedList<RemoteJobResponse>>>
 {
-
     /// <summary>
     /// Handles the request to search for remote jobs.
     /// </summary>
@@ -27,8 +26,10 @@ public class SearchRemoteJobsHandler(IContext context) : IRequestHandler<SearchR
 
         // Apply search filter
         if (!string.IsNullOrEmpty(request.Search))
-            query = query.Where(x => EF.Functions.Like(x.Title.ToLower().Trim(), $"%{request.Search.ToLower().Trim()}%") ||
-                                     EF.Functions.Like(x.CompanyName.ToLower().Trim(), $"%{request.Search.ToLower().Trim()}%"));
+            query = query.Where(x =>
+                EF.Functions.Like(x.Title.ToLower().Trim(), $"%{request.Search.ToLower().Trim()}%")
+                || EF.Functions.Like(x.CompanyName.ToLower().Trim(), $"%{request.Search.ToLower().Trim()}%")
+            );
 
         // Apply category filter
         if (!string.IsNullOrEmpty(request.Category))
@@ -47,9 +48,10 @@ public class SearchRemoteJobsHandler(IContext context) : IRequestHandler<SearchR
             query = query.Where(x => x.Status == request.Status);
 
         // Apply sorting
-        query = request.SortOrder.ToLower() == "asc"
-            ? query.OrderBy(i => EF.Property<object>(i, request.SortBy))
-            : query.OrderByDescending(i => EF.Property<object>(i, request.SortBy));
+        query =
+            request.SortOrder.ToLower() == "asc"
+                ? query.OrderBy(i => EF.Property<object>(i, request.SortBy))
+                : query.OrderByDescending(i => EF.Property<object>(i, request.SortBy));
 
         var remoteJobs = await query.ToPaginatedListAsync(request.CurrentPage, request.PageSize);
 
@@ -58,7 +60,7 @@ public class SearchRemoteJobsHandler(IContext context) : IRequestHandler<SearchR
             CurrentPage = remoteJobs.CurrentPage,
             TotalPages = remoteJobs.TotalPages,
             TotalItems = remoteJobs.TotalItems,
-            Result = remoteJobs.Result.Select(x => x.Adapt<RemoteJobResponse>()).ToList()
+            Result = remoteJobs.Result.Select(x => x.Adapt<RemoteJobResponse>()).ToList(),
         };
 
         return Result.Success(paginatedResponse);

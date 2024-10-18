@@ -29,19 +29,19 @@ namespace Platform.Migrations
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedBy = table.Column<string>(type: "character varying(25)", maxLength: 25, nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    UpdatedBy = table.Column<string>(type: "character varying(25)", maxLength: 25, nullable: true)
+                    UpdatedBy = table.Column<string>(type: "character varying(25)", maxLength: 25, nullable: true),
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RemoteJobs", x => x.Id);
-                });
+                }
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "RemoteJobs");
+            migrationBuilder.DropTable(name: "RemoteJobs");
         }
     }
 }

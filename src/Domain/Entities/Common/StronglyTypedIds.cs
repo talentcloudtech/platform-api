@@ -434,8 +434,6 @@ public partial struct GigApplicantInvitationId : IStringId
     }
 }
 
-
-
 /// <summary>
 /// Represents a strongly typed identifier for a remote job.
 /// </summary>
