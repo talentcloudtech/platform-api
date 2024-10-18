@@ -433,3 +433,22 @@ public partial struct GigApplicantInvitationId : IStringId
         return new GigApplicantInvitationId(id);
     }
 }
+
+
+
+/// <summary>
+/// Represents a strongly typed identifier for a remote job.
+/// </summary>
+[StronglyTypedId]
+public partial struct RemoteJobId : IStringId
+{
+    /// <summary>
+    /// Implicitly converts a id to a RemoteJobId.
+    /// </summary>
+    /// <param name="id">The id value.</param>
+    /// <returns>A new instance of RemoteJobId.</returns>
+    public static implicit operator RemoteJobId(string id)
+    {
+        return new RemoteJobId(id);
+    }
+}
