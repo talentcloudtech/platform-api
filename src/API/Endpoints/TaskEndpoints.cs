@@ -13,18 +13,18 @@ using Platform.Application.Features.Tasks.SearchUsersTask;
 using Platform.Application.Features.Tasks.UpdateTask;
 using Platform.Domain.Entities.Common;
 
-namespace Platform.Api.Endpoints;
+namespace Platform.API.Endpoints;
 
 /// <summary>
 /// Endpoints for project tasks.
 /// </summary>
-public static class TaskEndpoints
+public class TaskEndpoints : IEndpoints
 {
     /// <summary>
     /// Maps the project task endpoints.
     /// </summary>
     /// <param name="builder">The endpoint route builder.</param>
-    public static void MapProjectTaskEndpoints(this IEndpointRouteBuilder builder)
+    public static void MapEndpoints(IEndpointRouteBuilder builder)
     {
         builder
             .MapGet(

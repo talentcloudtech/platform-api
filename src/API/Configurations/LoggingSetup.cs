@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
-namespace Platform.Api.Configurations;
+namespace Platform.API.Configurations;
 
 /// <summary>
 /// Provides extension methods to configure logging for the application using Serilog.

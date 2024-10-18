@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 
-namespace Platform.Api.Configurations;
+namespace Platform.API.Configurations;
 
 /// <summary>
 /// Represents the setup for validation.

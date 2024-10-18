@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Platform.Api.Configurations;
+using Platform.API.Configurations;
 using Platform.API.Configurations.OptionSetups;
 using Platform.Application.Common;
 using Platform.Domain.Entities;

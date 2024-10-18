@@ -7,7 +7,7 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Platform.Application.Extensions;
 
-namespace Platform.Api.Configurations;
+namespace Platform.API.Configurations;
 
 /// <summary>
 /// Represents the OpenTelemetry setup class.

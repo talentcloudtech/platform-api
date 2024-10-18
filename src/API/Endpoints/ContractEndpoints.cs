@@ -10,18 +10,18 @@ using Platform.Application.Features.Contracts.SearchContracts;
 using Platform.Application.Features.Contracts.UpdateContract;
 using Platform.Domain.Entities.Common;
 
-namespace Platform.Api.Endpoints;
+namespace Platform.API.Endpoints;
 
 /// <summary>
 /// Represents the endpoints for contracts.
 /// </summary>
-public static class ContractEndpoints
+public class ContractEndpoints : IEndpoints
 {
     /// <summary>
     /// Maps the endpoints for contracts.
     /// </summary>
     /// <param name="builder">The endpoint route builder.</param>
-    public static void MapContractEndpoints(this IEndpointRouteBuilder builder)
+    public static void MapEndpoints(IEndpointRouteBuilder builder)
     {
         var group = builder.MapGroup("api/workspaces/{workspaceId}/contracts").WithTags("Contract").RequireAuthorization();
 

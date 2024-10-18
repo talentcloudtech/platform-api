@@ -1,4 +1,4 @@
-﻿namespace Platform.Api;
+﻿namespace Platform.API;
 
 /// <summary>
 /// Represents an assembly marker.

@@ -11,18 +11,18 @@ using Platform.Application.Features.Projects.SearchProjects;
 using Platform.Application.Features.Projects.UpdateProject;
 using Platform.Domain.Entities.Common;
 
-namespace Platform.Api.Endpoints;
+namespace Platform.API.Endpoints;
 
 /// <summary>
 /// Represents the endpoints for projects.
 /// </summary>
-public static class ProjectEndpoints
+public class ProjectEndpoints : IEndpoints
 {
     /// <summary>
     /// Maps the endpoints for projects.
     /// </summary>
     /// <param name="builder">The endpoint route builder.</param>
-    public static void MapProjectEndpoints(this IEndpointRouteBuilder builder)
+    public static void MapEndpoints(IEndpointRouteBuilder builder)
     {
         builder
             .MapGet(

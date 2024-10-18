@@ -1,6 +1,6 @@
 using System;
 
-namespace Platform.Api.Configurations;
+namespace Platform.API.Configurations;
 
 /// <summary>
 /// Provides access to environment variables.

@@ -6,8 +6,8 @@ using System.Net.Mime;
 using System.Threading.Tasks;
 using Azure.Communication.Email;
 using Microsoft.Extensions.Options;
-using Platform.Api.Configurations;
-using Platform.Api.Configurations.OptionSetups;
+using Platform.API.Configurations;
+using Platform.API.Configurations.OptionSetups;
 using Platform.Domain.Interfaces;
 
 namespace Platform.Application.Services.Email;

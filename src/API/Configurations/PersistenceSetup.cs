@@ -11,7 +11,7 @@ using Platform.Domain.Entities;
 using Platform.Domain.Interfaces;
 using Platform.Infrastructure;
 
-namespace Platform.Api.Configurations;
+namespace Platform.API.Configurations;
 
 /// <summary>
 /// Provides extension methods to configure persistence and database-related services for the application.

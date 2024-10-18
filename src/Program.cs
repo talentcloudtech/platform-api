@@ -7,10 +7,10 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Platform.Api.Common;
-using Platform.Api.Configurations;
+using Platform.API.Common;
 using Platform.API.Configurations;
-using Platform.Api.Endpoints;
+using Platform.API.Configurations;
+using Platform.API.Endpoints;
 using Platform.API.Endpoints;
 
 DotNetEnv.Env.Load();
@@ -77,21 +77,8 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapFileStorageEndpoints();
-app.MapWebhookEndpoints();
-app.MapAccountEndpoints();
-app.MapMemberProfileEndpoints();
-app.MapSkillsEndpoints();
-app.MapWorkspaceEndpoints();
-app.MapWorkspaceMemberEndpoints();
-app.MapWorkspaceMemberInvitationEndpoints();
-app.MapProjectEndpoints();
-app.MapProjectMemberEndpoints();
-app.MapProjectTaskEndpoints();
-app.MapContractEndpoints();
-app.MapMemberRequestEndpoints();
-app.MapGigOpportunityEndpoints();
-app.MapGigInvitationEndpoints();
+// Replace all individual endpoint mappings with this single line
+app.MapAllEndpoints();
 
 app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 

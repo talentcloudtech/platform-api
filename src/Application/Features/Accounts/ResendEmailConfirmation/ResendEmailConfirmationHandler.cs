@@ -5,7 +5,7 @@ using System.Web;
 using Ardalis.Result;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Platform.Api.Configurations;
+using Platform.API.Configurations;
 using Platform.Domain.Entities;
 
 namespace Platform.Application.Features.Accounts.ResendEmailConfirmation;

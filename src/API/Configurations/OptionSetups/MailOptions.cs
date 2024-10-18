@@ -1,6 +1,6 @@
 using static Platform.API.Configurations.ServiceCollectionExtensions;
 
-namespace Platform.Api.Configurations.OptionSetups;
+namespace Platform.API.Configurations.OptionSetups;
 
 /// <summary>
 /// Represents the configuration options for email settings.

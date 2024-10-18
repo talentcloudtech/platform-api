@@ -10,18 +10,18 @@ using Platform.Application.Features.ProjectMembers.SearchProjectMembers;
 using Platform.Application.Features.ProjectMembers.UpdateProjectMember;
 using Platform.Domain.Entities.Common;
 
-namespace Platform.Api.Endpoints;
+namespace Platform.API.Endpoints;
 
 /// <summary>
 /// Endpoints for project members.
 /// </summary>
-public static class ProjectMemberEndpoints
+public class ProjectMemberEndpoints : IEndpoints
 {
     /// <summary>
     /// Maps the project member endpoints.
     /// </summary>
     /// <param name="builder">The endpoint route builder.</param>
-    public static void MapProjectMemberEndpoints(this IEndpointRouteBuilder builder)
+    public static void MapEndpoints(IEndpointRouteBuilder builder)
     {
         var group = builder.MapGroup("api/workspaces/{workspaceId}/projects/{projectId}/members").WithTags("ProjectMember").RequireAuthorization();
 

@@ -3,7 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using Platform.Api.Configurations;
+using Platform.API.Configurations;
 using Platform.Application.Extensions;
 using Platform.Application.Features.Accounts.ChangeEmail;
 using Platform.Application.Features.Accounts.ConfirmEmail;
@@ -20,18 +20,18 @@ using Platform.Application.Features.Accounts.UpdateUserFullName;
 using Platform.Application.Features.Accounts.UpdateUserName;
 using Platform.Domain.Auth.Interfaces;
 
-namespace Platform.Api.Endpoints;
+namespace Platform.API.Endpoints;
 
 /// <summary>
 /// Represents the endpoints for account-related operations.
 /// </summary>
-public static class AccountEndpoints
+public class AccountEndpoints : IEndpoints
 {
     /// <summary>
     /// Maps the endpoints for account-related operations.
     /// </summary>
     /// <param name="builder">The endpoint route builder.</param>
-    public static void MapAccountEndpoints(this IEndpointRouteBuilder builder)
+    public static void MapEndpoints(IEndpointRouteBuilder builder)
     {
         var group = builder.MapGroup("api/accounts").WithTags("Account");
 

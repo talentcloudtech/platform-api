@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Platform.Application.Common;
 using Platform.Infrastructure;
 
-namespace Platform.Api.Configurations;
+namespace Platform.API.Configurations;
 
 /// <summary>
 /// Represents the application setup.

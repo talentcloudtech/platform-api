@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6,7 +5,7 @@ using System.Web;
 using Ardalis.Result;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Platform.Api.Configurations;
+using Platform.API.Configurations;
 using Platform.Application.Common;
 using Platform.Domain.Entities;
 using Platform.Domain.Entities.Enums;

@@ -9,18 +9,18 @@ using Platform.Application.Features.MemberRequests.SearchMemberRequests;
 using Platform.Application.Features.MemberRequests.UpdateMemberRequest;
 using Platform.Domain.Entities.Common;
 
-namespace Platform.Api.Endpoints;
+namespace Platform.API.Endpoints;
 
 /// <summary>
 /// Represents the endpoints for member requests.
 /// </summary>
-public static class MemberRequestEndpoints
+public class MemberRequestEndpoints : IEndpoints
 {
     /// <summary>
     /// Maps the endpoints for member requests.
     /// </summary>
     /// <param name="builder">The endpoint route builder.</param>
-    public static void MapMemberRequestEndpoints(this IEndpointRouteBuilder builder)
+    public static void MapEndpoints(IEndpointRouteBuilder builder)
     {
         var group = builder.MapGroup("api/workspaces/{workspaceId}/memberRequests").WithTags("MemberRequest").RequireAuthorization();
 

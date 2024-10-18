@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Platform.Api.Configurations;
+using Platform.API.Configurations;
 using Platform.Domain.Entities;
 using Platform.Infrastructure;
 

@@ -32,13 +32,13 @@ namespace Platform.API.Endpoints;
 /// <summary>
 /// Represents the endpoints for member profiles.
 /// </summary>
-public static class MemberProfileEndpoints
+public class MemberProfileEndpoints : IEndpoints
 {
     /// <summary>
     /// Maps the endpoints for member profiles.
     /// </summary>
     /// <param name="builder">The endpoint route builder.</param>
-    public static void MapMemberProfileEndpoints(this IEndpointRouteBuilder builder)
+    public static void MapEndpoints(IEndpointRouteBuilder builder)
     {
         builder
             .MapGet(
@@ -111,19 +111,19 @@ public static class MemberProfileEndpoints
             .DisableAntiforgery();
 
         // Experience endpoints
-        group.MapGroup("experiences").WithTags("Experience").MapExperienceEndpoints();
+        MapExperienceEndpoints(group.MapGroup("experiences").WithTags("Experience"));
 
         // Education endpoints
-        group.MapGroup("educations").WithTags("Education").MapEducationEndpoints();
+        MapEducationEndpoints(group.MapGroup("educations").WithTags("Education"));
 
         // Language endpoints
-        group.MapGroup("languages").WithTags("Language").MapLanguageEndpoints();
+        MapLanguageEndpoints(group.MapGroup("languages").WithTags("Language"));
 
         // ProjectInfo endpoints
-        group.MapGroup("projects").WithTags("ProjectInfo").MapProjectInfoEndpoints();
+        MapProjectInfoEndpoints(group.MapGroup("projects").WithTags("ProjectInfo"));
 
         // MemberSkill endpoints
-        group.MapGroup("skills").WithTags("MemberSkill").MapMemberSkillEndpoints();
+        MapMemberSkillEndpoints(group.MapGroup("skills").WithTags("MemberSkill"));
     }
 
     /// <summary>
@@ -131,7 +131,7 @@ public static class MemberProfileEndpoints
     /// </summary>
     /// <param name="group">The route group builder.</param>
     /// <returns>The route group builder with experience endpoints.</returns>
-    private static RouteGroupBuilder MapExperienceEndpoints(this RouteGroupBuilder group)
+    private static void MapExperienceEndpoints(RouteGroupBuilder group)
     {
         group
             .MapPost(
@@ -165,8 +165,6 @@ public static class MemberProfileEndpoints
                 }
             )
             .WithSummary("Deletes an experience from a member profile.");
-
-        return group;
     }
 
     /// <summary>
@@ -174,7 +172,7 @@ public static class MemberProfileEndpoints
     /// </summary>
     /// <param name="group">The route group builder.</param>
     /// <returns>The route group builder with education endpoints.</returns>
-    private static RouteGroupBuilder MapEducationEndpoints(this RouteGroupBuilder group)
+    private static void MapEducationEndpoints(RouteGroupBuilder group)
     {
         group
             .MapPost(
@@ -208,8 +206,6 @@ public static class MemberProfileEndpoints
                 }
             )
             .WithSummary("Deletes an education from a member profile.");
-
-        return group;
     }
 
     /// <summary>
@@ -217,8 +213,7 @@ public static class MemberProfileEndpoints
     /// </summary>
     /// <param name="group">The route group builder.</param>
     /// <returns>The route group builder with language endpoints.</returns>
-
-    private static RouteGroupBuilder MapLanguageEndpoints(this RouteGroupBuilder group)
+    private static void MapLanguageEndpoints(RouteGroupBuilder group)
     {
         group
             .MapPost(
@@ -252,8 +247,6 @@ public static class MemberProfileEndpoints
                 }
             )
             .WithSummary("Deletes a language from a member profile.");
-
-        return group;
     }
 
     /// <summary>
@@ -261,7 +254,7 @@ public static class MemberProfileEndpoints
     /// </summary>
     /// <param name="group">The route group builder.</param>
     /// <returns></returns>
-    private static RouteGroupBuilder MapProjectInfoEndpoints(this RouteGroupBuilder group)
+    private static void MapProjectInfoEndpoints(RouteGroupBuilder group)
     {
         group
             .MapPost(
@@ -295,8 +288,6 @@ public static class MemberProfileEndpoints
                 }
             )
             .WithSummary("Deletes a project from a member profile.");
-
-        return group;
     }
 
     /// <summary>
@@ -304,7 +295,7 @@ public static class MemberProfileEndpoints
     /// </summary>
     /// <param name="group">The route group builder.</param>
     /// <returns>The route group builder with member skill endpoints.</returns>
-    private static RouteGroupBuilder MapMemberSkillEndpoints(this RouteGroupBuilder group)
+    private static void MapMemberSkillEndpoints(RouteGroupBuilder group)
     {
         group
             .MapPost(
@@ -345,7 +336,5 @@ public static class MemberProfileEndpoints
                 }
             )
             .WithSummary("Deletes a skill from a member profile.");
-
-        return group;
     }
 }

@@ -12,13 +12,13 @@ namespace Platform.API.Endpoints;
 /// <summary>
 /// Represents the endpoints for skills.
 /// </summary>
-public static class SkillEndpoints
+public class SkillEndpoints : IEndpoints
 {
     /// <summary>
     /// Maps the endpoints for skills.
     /// </summary>
     /// <param name="builder">The endpoint route builder.</param>
-    public static void MapSkillsEndpoints(this IEndpointRouteBuilder builder)
+    public static void MapEndpoints(IEndpointRouteBuilder builder)
     {
         var group = builder.MapGroup("api/skills").WithTags("Skills").RequireAuthorization();
 

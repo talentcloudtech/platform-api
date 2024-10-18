@@ -16,13 +16,13 @@ namespace Platform.API.Endpoints;
 /// <summary>
 /// Maps the workspace member endpoints.
 /// </summary>
-public static class WorkspaceMemberEndpoints
+public class WorkspaceMemberEndpoints : IEndpoints
 {
     /// <summary>
     /// Maps the workspace member endpoints.
     /// </summary>
     /// <param name="builder">The endpoint route builder.</param>
-    public static void MapWorkspaceMemberEndpoints(this IEndpointRouteBuilder builder)
+    public static void MapEndpoints(IEndpointRouteBuilder builder)
     {
         var group = builder.MapGroup("api/workspaces/{workspaceId}/members").WithTags("WorkspaceMember").RequireAuthorization();
 

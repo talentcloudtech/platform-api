@@ -11,13 +11,13 @@ namespace Platform.API.Endpoints;
 /// <summary>
 /// Represents the endpoints for file storage.
 /// </summary>
-public static class FileStorageEndpoints
+public class FileStorageEndpoints : IEndpoints
 {
     /// <summary>
     /// Maps the endpoints for file storage.
     /// </summary>
     /// <param name="builder">The endpoint route builder.</param>
-    public static void MapFileStorageEndpoints(this IEndpointRouteBuilder builder)
+    public static void MapEndpoints(IEndpointRouteBuilder builder)
     {
         var group = builder.MapGroup("api/fileStorage").WithTags("FileStorage").RequireAuthorization();
 

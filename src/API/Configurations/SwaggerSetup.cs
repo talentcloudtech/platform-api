@@ -9,7 +9,7 @@ using Platform.Domain.Entities.Common;
 using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
-namespace Platform.Api.Configurations;
+namespace Platform.API.Configurations;
 
 /// <summary>
 /// Provides extension methods to configure Swagger for API documentation.

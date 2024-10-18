@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace Platform.Api.Common;
+namespace Platform.API.Common;
 
 /// <summary>
 /// Handles exceptions occurring in the application by logging the error and returning a standardized error response.

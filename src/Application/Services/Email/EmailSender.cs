@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Platform.Api.Configurations;
+using Platform.API.Configurations;
 using Platform.Application.Dto;
 using Platform.Domain.Entities;
 using Platform.Domain.Entities.Common;

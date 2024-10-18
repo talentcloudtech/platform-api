@@ -16,13 +16,13 @@ namespace Platform.API.Endpoints;
 /// <summary>
 /// Maps the gig opportunity endpoints.
 /// </summary>
-public static class GigOpportunityEndpoints
+public class GigOpportunityEndpoints : IEndpoints
 {
     /// <summary>
     /// Maps the gig opportunity endpoints.
     /// </summary>
     /// <param name="builder">The endpoint route builder.</param>
-    public static void MapGigOpportunityEndpoints(this IEndpointRouteBuilder builder)
+    public static void MapEndpoints(IEndpointRouteBuilder builder)
     {
         var group = builder.MapGroup("api/gig-opportunities").WithTags("GigOpportunity").RequireAuthorization();
 
