@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Platform.Application.Extensions;
 using Platform.Application.Features.WorkspaceTransactions.CreateWorkspaceTransaction;
+using Platform.Application.Features.WorkspaceTransactions.SearchWorkspaceTransactions;
 using Platform.Domain.Entities.Common;
 
 namespace Platform.API.Endpoints;
@@ -21,16 +22,16 @@ public class WorkspaceTransactionEndpoints : IEndpoints
     {
         var group = builder.MapGroup("api/workspaces/{workspaceId}/transactions").WithTags("WorkspaceTransaction").RequireAuthorization();
 
-        // group
-        //     .MapGet(
-        //         "/",
-        //         async (IMediator mediator, WorkspaceId workspaceId, [AsParameters] SearchWorkspaceTransactionsRequest request) =>
-        //         {
-        //             var result = await mediator.Send(request with { WorkspaceId = workspaceId });
-        //             return result.ToPlatformApiResult();
-        //         }
-        //     )
-        //     .WithSummary("Searches for member requests.");
+        group
+            .MapGet(
+                "/",
+                async (IMediator mediator, WorkspaceId workspaceId, [AsParameters] SearchWorkspaceTransactionRequest request) =>
+                {
+                    var result = await mediator.Send(request with { WorkspaceId = workspaceId });
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Searches for workspace transactions.");
 
         group
             .MapPost(

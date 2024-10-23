@@ -44,8 +44,8 @@ public class CreateWorkspaceTransactionHandler(IContext context, ICurrentSession
             WorkspaceId = request.WorkspaceId,
             Amount = request.Amount,
             PaymentMethod = request.PaymentMethod,
-            Type = TransactionType.Credit, // Changed to Credit as per the requirement
-            Description = "Workspace credit transaction",
+            Type = TransactionType.Credit,
+            Description = $"Transaction created at {currentTimeStamp:yyyy-MM-dd}",
             TransactionId = Guid.NewGuid().ToString(),
             Status = TransactionStatus.Pending,
             CreatedBy = session.UserId,
