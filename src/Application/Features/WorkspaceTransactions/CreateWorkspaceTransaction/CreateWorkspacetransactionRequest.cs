@@ -2,6 +2,7 @@ using Ardalis.Result;
 using Domain.Entities.Enums;
 using MediatR;
 using Platform.Domain.Entities.Common;
+using System.Text.Json.Serialization;
 
 namespace Platform.Application.Features.WorkspaceTransactions.CreateWorkspaceTransaction;
 
@@ -13,7 +14,8 @@ public record CreateWorkspaceTransactionRequest : IRequest<Result<WorkspaceTrans
     /// <summary>
     /// Gets or sets the ID of the workspace.
     /// </summary>
-    public required WorkspaceId WorkspaceId { get; init; }
+    [JsonIgnore]
+    public WorkspaceId WorkspaceId { get; init; }
 
     /// <summary>
     /// Gets or sets the amount of the transaction.
