@@ -1,10 +1,8 @@
-
-
-using Platform.Application.Common.Responses;
+using System.Text.Json.Serialization;
 using Ardalis.Result;
 using MediatR;
+using Platform.Application.Common.Responses;
 using Platform.Domain.Entities;
-using System.Text.Json.Serialization;
 using Platform.Domain.Entities.Common;
 
 namespace Platform.Application.Features.WorkspaceTransactions.SearchWorkspaceTransactions;
@@ -23,7 +21,8 @@ public record SearchWorkspaceTransactionRequest(
     string SortOrder = "desc",
     int CurrentPage = 1,
     int PageSize = 10
-) : IRequest<Result<PaginatedList<WorkspaceTransactionResponse>>>{
+) : IRequest<Result<PaginatedList<WorkspaceTransactionResponse>>>
+{
     /// <summary>
     /// Gets or sets the workspace ID.
     /// </summary>

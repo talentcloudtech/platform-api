@@ -28,11 +28,14 @@ public class SearchWorkspaceTransactionsHandler(IContext context, ICurrentSessio
     /// <param name="request">The search criteria for filtering and paginating workspaces.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A paginated list of workspaces.</returns>
-    public async Task<Result<PaginatedList<WorkspaceTransactionResponse>>> Handle(SearchWorkspaceTransactionRequest request, CancellationToken cancellationToken)
+    public async Task<Result<PaginatedList<WorkspaceTransactionResponse>>> Handle(
+        SearchWorkspaceTransactionRequest request,
+        CancellationToken cancellationToken
+    )
     {
         IQueryable<WorkspaceTransaction> query = context.WorkspaceTransactions;
 
-          if (session.Role!.Name != UserRole.Admin.Name && session.Role!.Name != UserRole.Customer.Name)
+        if (session.Role!.Name != UserRole.Admin.Name && session.Role!.Name != UserRole.Customer.Name)
             return Result.Forbidden("User does not have permission to create a workspace transaction.");
 
         // Apply search filter

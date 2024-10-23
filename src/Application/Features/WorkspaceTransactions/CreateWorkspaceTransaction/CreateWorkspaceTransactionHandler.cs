@@ -5,11 +5,11 @@ using Ardalis.Result;
 using Domain.Entities.Enums;
 using Mapster;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
 using Platform.Domain.Auth.Interfaces;
 using Platform.Domain.Entities;
 using Platform.Domain.Entities.Enums;
-using Microsoft.EntityFrameworkCore;
 
 namespace Platform.Application.Features.WorkspaceTransactions.CreateWorkspaceTransaction;
 
@@ -19,7 +19,8 @@ namespace Platform.Application.Features.WorkspaceTransactions.CreateWorkspaceTra
 /// <param name="context">The database context.</param>
 /// <param name="session">The current session.</param>
 /// <returns>The result of the operation.</returns>
-public class CreateWorkspaceTransactionHandler(IContext context, ICurrentSession session) : IRequestHandler<CreateWorkspaceTransactionRequest, Result<WorkspaceTransactionResponse>>
+public class CreateWorkspaceTransactionHandler(IContext context, ICurrentSession session)
+    : IRequestHandler<CreateWorkspaceTransactionRequest, Result<WorkspaceTransactionResponse>>
 {
     /// <summary>
     /// Handles the request to create a new workspace transaction.
@@ -49,7 +50,7 @@ public class CreateWorkspaceTransactionHandler(IContext context, ICurrentSession
             TransactionId = Guid.NewGuid().ToString(),
             Status = TransactionStatus.Pending,
             CreatedBy = session.UserId,
-            CreatedDate = currentTimeStamp
+            CreatedDate = currentTimeStamp,
         };
 
         context.WorkspaceTransactions.Add(newTransaction);

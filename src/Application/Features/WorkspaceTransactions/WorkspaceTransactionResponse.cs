@@ -1,6 +1,6 @@
 using System;
-using Platform.Domain.Entities.Common;
 using Domain.Entities.Enums;
+using Platform.Domain.Entities.Common;
 
 namespace Platform.Application.Features.WorkspaceTransactions;
 
@@ -54,4 +54,3 @@ public class WorkspaceTransactionResponse
     /// </summary>
     public DateTime CreatedDate { get; set; }
 }
-
