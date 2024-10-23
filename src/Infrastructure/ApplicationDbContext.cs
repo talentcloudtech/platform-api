@@ -121,13 +121,23 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<RemoteJob> RemoteJobs { get; set; } = null!;
 
     /// <summary>
+    /// Gets or sets the DbSet of WorkspaceTransaction entities.
+    /// </summary>
+    public DbSet<WorkspaceTransaction> WorkspaceTransactions { get; set; } = null!;
+
+    /// <summary>
+    /// Gets or sets the DbSet of WorkspaceTransaction entities.
+    /// </summary>
+    public DbSet<MemberTransaction> MemberTransactions { get; set; } = null!;
+
+    /// <summary>
     /// Configures the model for the database context.
     /// </summary>
     /// <param name="builder">The builder to use for configuration.</param>
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-        builder.ApplyConfigurationsFromAssembly(typeof(ProjectConfiguration).Assembly);
+        builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 
         builder.Entity<ApplicationUser>(entity =>
         {

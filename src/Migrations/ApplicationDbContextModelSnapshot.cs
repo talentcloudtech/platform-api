@@ -461,6 +461,66 @@ namespace Platform.Migrations
                     b.ToTable("MemberRequests");
                 });
 
+            modelBuilder.Entity("Platform.Domain.Entities.MemberTransaction", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("PaymentMethod")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("TransactionId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("MemberTransactions");
+                });
+
             modelBuilder.Entity("Platform.Domain.Entities.Message", b =>
                 {
                     b.Property<string>("Id")
@@ -1018,6 +1078,9 @@ namespace Platform.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<decimal>("CurrentBalance")
+                        .HasColumnType("numeric");
+
                     b.Property<string>("Logo")
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
@@ -1130,6 +1193,66 @@ namespace Platform.Migrations
                     b.HasIndex("WorkspaceId");
 
                     b.ToTable("WorkspaceMemberInvitations");
+                });
+
+            modelBuilder.Entity("Platform.Domain.Entities.WorkspaceTransaction", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("PaymentMethod")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("TransactionId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("WorkspaceId")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("WorkspaceId");
+
+                    b.ToTable("WorkspaceTransactions");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<Platform.Domain.Entities.Common.UserId>", b =>
@@ -1510,6 +1633,61 @@ namespace Platform.Migrations
                     b.Navigation("Workspace");
                 });
 
+            modelBuilder.Entity("Platform.Domain.Entities.MemberTransaction", b =>
+                {
+                    b.HasOne("Platform.Domain.Entities.ApplicationUser", "CreatedByUser")
+                        .WithMany("CreatedMemberTransactions")
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Platform.Domain.Entities.ApplicationUser", "User")
+                        .WithMany("MemberTransactions")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.OwnsMany("Platform.Domain.Entities.PayerDetails", "PayerDetails", b1 =>
+                        {
+                            b1.Property<string>("MemberTransactionId")
+                                .HasColumnType("character varying(25)");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("ContractId")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<string>("ProjectId")
+                                .HasColumnType("text");
+
+                            b1.Property<string>("TaskId")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<string>("WorkspaceId")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.HasKey("MemberTransactionId", "Id");
+
+                            b1.ToTable("MemberTransactions");
+
+                            b1.ToJson("PayerDetails");
+
+                            b1.WithOwner()
+                                .HasForeignKey("MemberTransactionId");
+                        });
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("PayerDetails");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Platform.Domain.Entities.MessageAttachment", b =>
                 {
                     b.HasOne("Platform.Domain.Entities.Message", "Message")
@@ -1694,17 +1872,76 @@ namespace Platform.Migrations
                     b.Navigation("Workspace");
                 });
 
+            modelBuilder.Entity("Platform.Domain.Entities.WorkspaceTransaction", b =>
+                {
+                    b.HasOne("Platform.Domain.Entities.ApplicationUser", "User")
+                        .WithMany("WorkspaceTransactions")
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Platform.Domain.Entities.Workspace", "Workspace")
+                        .WithMany("WorkspaceTransactions")
+                        .HasForeignKey("WorkspaceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.OwnsMany("Platform.Domain.Entities.PayeeDetails", "PayeeDetails", b1 =>
+                        {
+                            b1.Property<string>("WorkspaceTransactionId")
+                                .HasColumnType("character varying(25)");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("ContractId")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<string>("OpportunityId")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<int>("OrderType")
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("TaskId")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.HasKey("WorkspaceTransactionId", "Id");
+
+                            b1.ToTable("WorkspaceTransactions");
+
+                            b1.ToJson("PayeeDetails");
+
+                            b1.WithOwner()
+                                .HasForeignKey("WorkspaceTransactionId");
+                        });
+
+                    b.Navigation("PayeeDetails");
+
+                    b.Navigation("User");
+
+                    b.Navigation("Workspace");
+                });
+
             modelBuilder.Entity("Platform.Domain.Entities.ApplicationUser", b =>
                 {
                     b.Navigation("Contracts");
 
                     b.Navigation("CreatedGigApplicantInvitations");
 
+                    b.Navigation("CreatedMemberTransactions");
+
                     b.Navigation("GigApplicantInvitations");
 
                     b.Navigation("MemberProfile");
 
                     b.Navigation("MemberRequests");
+
+                    b.Navigation("MemberTransactions");
 
                     b.Navigation("ProjectMembers");
 
@@ -1719,6 +1956,8 @@ namespace Platform.Migrations
                     b.Navigation("WorkspaceMemberInvitations");
 
                     b.Navigation("WorkspaceMembers");
+
+                    b.Navigation("WorkspaceTransactions");
 
                     b.Navigation("Workspaces");
                 });
@@ -1758,6 +1997,8 @@ namespace Platform.Migrations
                     b.Navigation("WorkspaceMemberInvitations");
 
                     b.Navigation("WorkspaceMembers");
+
+                    b.Navigation("WorkspaceTransactions");
                 });
 #pragma warning restore 612, 618
         }

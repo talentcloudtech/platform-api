@@ -114,6 +114,16 @@ public interface IContext : IDataProtectionKeyContext, IAsyncDisposable, IDispos
     public DbSet<RemoteJob> RemoteJobs { get; }
 
     /// <summary>
+    /// Gets or sets the DbSet of WorkspaceTransaction entities.
+    /// </summary>
+    public DbSet<WorkspaceTransaction> WorkspaceTransactions { get; }
+
+    /// <summary>
+    /// Gets or sets the DbSet of MemberTransaction entities.
+    /// </summary>
+    public DbSet<MemberTransaction> MemberTransactions { get; }
+
+    /// <summary>
     /// Asynchronously saves all changes made in this context to the underlying database.
     /// </summary>
     /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>

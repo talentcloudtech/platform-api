@@ -41,6 +41,11 @@ public class Workspace : AuditableEntity<WorkspaceId>
     public string? Logo { get; set; }
 
     /// <summary>
+    /// Gets or sets the current balance of the workspace.
+    /// </summary>
+    public decimal CurrentBalance { get; set; }
+
+    /// <summary>
     /// Gets or sets the user associated with this project.
     /// </summary>
     public ApplicationUser User { get; set; } = null!;
@@ -74,4 +79,9 @@ public class Workspace : AuditableEntity<WorkspaceId>
     /// Gets or sets the collection of member requests.
     /// </summary>
     public ICollection<MemberRequest> MemberRequests { get; set; } = new List<MemberRequest>();
+
+    /// <summary>
+    /// Gets or sets the transactions of the workspace.
+    /// </summary>
+    public ICollection<WorkspaceTransaction> WorkspaceTransactions { get; set; } = new List<WorkspaceTransaction>();
 }

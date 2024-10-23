@@ -450,3 +450,37 @@ public partial struct RemoteJobId : IStringId
         return new RemoteJobId(id);
     }
 }
+
+/// <summary>
+/// Represents a strongly typed identifier for a member transaction.
+/// </summary>
+[StronglyTypedId]
+public partial struct MemberTransactionId : IStringId
+{
+    /// <summary>
+    /// Implicitly converts a id to a MemberTransactionId.
+    /// </summary>
+    /// <param name="id">The id value.</param>
+    /// <returns>A new instance of MemberTransactionId.</returns>
+    public static implicit operator MemberTransactionId(string id)
+    {
+        return new MemberTransactionId(id);
+    }
+}
+
+/// <summary>
+/// Represents a strongly typed identifier for a workspace transaction.
+/// </summary>
+[StronglyTypedId]
+public partial struct WorkspaceTransactionId : IStringId
+{
+    /// <summary>
+    /// Implicitly converts a id to a WorkspaceTransactionId.
+    /// </summary>
+    /// <param name="id">The id value.</param>
+    /// <returns>A new instance of WorkspaceTransactionId.</returns>
+    public static implicit operator WorkspaceTransactionId(string id)
+    {
+        return new WorkspaceTransactionId(id);
+    }
+}

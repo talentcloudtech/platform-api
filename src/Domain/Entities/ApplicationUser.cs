@@ -79,6 +79,21 @@ public class ApplicationUser : IdentityUser<UserId>
     /// Gets or sets the list of gig applicant invitations created by the user.
     /// </summary>
     public List<GigApplicantInvitation> CreatedGigApplicantInvitations { get; set; } = [];
+
+    /// <summary>
+    /// Gets or sets the list of workspace transactions created by the user.
+    /// </summary>
+    public List<WorkspaceTransaction> WorkspaceTransactions { get; set; } = [];
+
+    /// <summary>
+    /// Gets or sets the list of member transactions associated with the user.
+    /// </summary>
+    public List<MemberTransaction> MemberTransactions { get; set; } = [];
+
+    /// <summary>
+    /// Gets or sets the list of member transactions created by the user.
+    /// </summary>
+    public List<MemberTransaction> CreatedMemberTransactions { get; set; } = [];
 }
 
 /// <summary>
