@@ -34,8 +34,8 @@ public class SearchMemberTransactionsHandler(IContext context, ICurrentSession s
     {
         IQueryable<MemberTransaction> query = context.MemberTransactions;
 
-        if (session.Role!.Name != UserRole.Admin.Name && session.Role!.Name != UserRole.Customer.Name)
-            return Result.Forbidden("User does not have permission to create a member transaction.");
+        if (session.Role!.Name != UserRole.User.Name)
+            return Result.Forbidden("Admin and Customer does not have permission to search member transactions.");
 
         // Apply search filter
         if (!string.IsNullOrEmpty(request.Search))
