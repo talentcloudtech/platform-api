@@ -35,7 +35,7 @@ public class SearchWorkspaceTransactionsHandler(IContext context, ICurrentSessio
     {
         IQueryable<WorkspaceTransaction> query = context.WorkspaceTransactions;
 
-        if (session.Role!.Name != UserRole.Admin.Name && session.Role!.Name != UserRole.Customer.Name)
+        if (session.Role!.Name != UserRole.User.Name)
             return Result.Forbidden("User does not have permission to create a workspace transaction.");
 
         // Apply search filter
