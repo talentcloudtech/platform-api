@@ -20,10 +20,10 @@ public record CreateMemberTransactionRequest : IRequest<Result<MemberTransaction
     /// <summary>
     /// Gets or sets the amount of the transaction.
     /// </summary>
-    public required decimal Amount { get; init; }
+    public decimal Amount { get; init; }
 
     /// <summary>
     /// Gets or sets the payment method of the transaction.
     /// </summary>
-    public required PaymentMethod PaymentMethod { get; init; }
+    public PaymentMethod PaymentMethod { get; init; }
 }
