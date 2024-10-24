@@ -37,18 +37,14 @@ public class CreateMemberTransactionHandler(IContext context, ICurrentSession se
         if (session.Role!.Name != UserRole.User.Name)
             return Result.Forbidden("User does not have permission to create a member transaction.");
 
-        var newTransaction = new MemberTransaction
-        {
-            UserId = session.UserId,
-            Amount = request.Amount,
-            PaymentMethod = request.PaymentMethod,
-            Type = TransactionType.Credit,
-            Description = $"Transaction created at {currentTimeStamp:yyyy-MM-dd}",
-            TransactionId = Guid.NewGuid().ToString(),
-            Status = TransactionStatus.Pending,
-            CreatedBy = session.UserId,
-            CreatedDate = currentTimeStamp,
-        };
+        var newTransaction = request.Adapt<MemberTransaction>();
+        newTransaction.UserId = session.UserId;
+        newTransaction.Type = TransactionType.Credit;
+        newTransaction.Description = $"Transaction created at {currentTimeStamp:yyyy-MM-dd}";
+        newTransaction.TransactionId = Guid.NewGuid().ToString();
+        newTransaction.Status = TransactionStatus.Pending;
+        newTransaction.CreatedBy = session.UserId;
+        newTransaction.CreatedDate = currentTimeStamp;
 
         context.MemberTransactions.Add(newTransaction);
 

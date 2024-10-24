@@ -24,7 +24,7 @@ public class MemberTransactionResponse
     /// <summary>
     /// Gets or sets the name of the member associated with this transaction.
     /// </summary>
-    public required string MemberName { get; set; }
+    public string MemberName { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets the type of the transaction (Credit or Debit).
@@ -44,12 +44,12 @@ public class MemberTransactionResponse
     /// <summary>
     /// Gets or sets the description of the transaction.
     /// </summary>
-    public string? Description { get; set; }
+    public string Description { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets the external transaction identifier.
     /// </summary>
-    public required string TransactionId { get; set; }
+    public string TransactionId { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets the status of the transaction.
@@ -69,7 +69,7 @@ public class MemberTransactionResponse
     /// <summary>
     /// Gets or sets the name of the user who created the transaction.
     /// </summary>
-    public required string CreatedByName { get; set; }
+    public string CreatedByName { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets the identifier of the associated workspace, if applicable.
@@ -79,7 +79,7 @@ public class MemberTransactionResponse
     /// <summary>
     /// Gets or sets the name of the associated workspace, if applicable.
     /// </summary>
-    public required string WorkspaceName { get; set; }
+    public string WorkspaceName { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets the identifier of the associated project, if applicable.
@@ -89,7 +89,7 @@ public class MemberTransactionResponse
     /// <summary>
     /// Gets or sets the name of the associated project, if applicable.
     /// </summary>
-    public required string ProjectName { get; set; }
+    public string ProjectName { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets the payer details associated with the transaction.
@@ -105,10 +105,10 @@ public class PayerDetailsResponse
     /// <summary>
     /// Gets or sets the name of the payer.
     /// </summary>
-    public string? PayerName { get; set; }
+    public string PayerName { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets the email of the payer.
     /// </summary>
-    public string? PayerEmail { get; set; }
+    public string PayerEmail { get; set; } = null!;
 }

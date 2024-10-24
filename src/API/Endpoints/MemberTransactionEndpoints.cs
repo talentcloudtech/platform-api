@@ -20,14 +20,14 @@ public class MemberTransactionEndpoints : IEndpoints
     /// <param name="builder">The endpoint route builder.</param>
     public static void MapEndpoints(IEndpointRouteBuilder builder)
     {
-        var group = builder.MapGroup("api/members/{memberId}/transactions").WithTags("MemberTransaction").RequireAuthorization();
+        var group = builder.MapGroup("api/transactions").WithTags("MemberTransaction").RequireAuthorization();
 
         group
             .MapGet(
                 "/",
-                async (IMediator mediator, UserId userId, [AsParameters] SearchMemberTransactionRequest request) =>
+                async (IMediator mediator, [AsParameters] SearchMemberTransactionRequest request) =>
                 {
-                    var result = await mediator.Send(request with { MemberId = userId });
+                    var result = await mediator.Send(request);
                     return result.ToPlatformApiResult();
                 }
             )
@@ -36,9 +36,9 @@ public class MemberTransactionEndpoints : IEndpoints
         group
             .MapPost(
                 "/",
-                async (IMediator mediator, UserId userId, CreateMemberTransactionRequest request) =>
+                async (IMediator mediator, CreateMemberTransactionRequest request) =>
                 {
-                    var result = await mediator.Send(request with { MemberId = userId });
+                    var result = await mediator.Send(request);
                     return result.ToPlatformApiResult();
                 }
             )
