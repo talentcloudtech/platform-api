@@ -1,17 +1,16 @@
 using FluentValidation;
-using Platform.Application.Common;
 
 namespace Platform.Application.Features.WorkspaceTransactions.CreateWorkspaceTransaction;
 
 /// <summary>
 /// Validator for the <see cref="CreateWorkspaceTransactionRequest"/> class, ensuring that the necessary fields are provided and correctly formatted.
 /// </summary>
-public class CreateWorkspaceValidator : AbstractValidator<CreateWorkspaceTransactionRequest>
+public class CreateWorkspaceTransactionValidator : AbstractValidator<CreateWorkspaceTransactionRequest>
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="CreateWorkspaceValidator"/> class.
+    /// Initializes a new instance of the <see cref="CreateWorkspaceTransactionValidator"/> class.
     /// </summary>
-    public CreateWorkspaceValidator()
+    public CreateWorkspaceTransactionValidator()
     {
         RuleFor(x => x.Amount).NotEmpty();
         RuleFor(x => x.PaymentMethod).NotEmpty();
