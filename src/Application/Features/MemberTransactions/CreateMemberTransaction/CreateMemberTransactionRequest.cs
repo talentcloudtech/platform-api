@@ -1,8 +1,8 @@
+using System.Text.Json.Serialization;
 using Ardalis.Result;
 using Domain.Entities.Enums;
 using MediatR;
 using Platform.Domain.Entities.Common;
-using System.Text.Json.Serialization;
 
 namespace Platform.Application.Features.MemberTransactions.CreateMemberTransaction;
 

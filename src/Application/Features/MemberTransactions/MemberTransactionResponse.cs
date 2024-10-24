@@ -1,8 +1,8 @@
 using System;
-using Domain.Entities.Enums;
-using Platform.Domain.Entities.Common;
-using Platform.Application.Common.Responses;
 using System.Collections.Generic;
+using Domain.Entities.Enums;
+using Platform.Application.Common.Responses;
+using Platform.Domain.Entities.Common;
 
 namespace Platform.Application.Features.MemberTransactions;
 
@@ -95,7 +95,6 @@ public class MemberTransactionResponse
     /// Gets or sets the payer details associated with the transaction.
     /// </summary>
     public List<PayerDetailsResponse> PayerDetails { get; set; } = new List<PayerDetailsResponse>();
-
 }
 
 /// <summary>

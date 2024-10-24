@@ -30,10 +30,7 @@ public class SearchMemberTransactionsHandler(IContext context, ICurrentSession s
     /// <param name="request">The search criteria for filtering and paginating workspaces.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A paginated list of workspaces.</returns>
-    public async Task<Result<PaginatedList<MemberTransactionResponse>>> Handle(
-        SearchMemberTransactionRequest request,
-        CancellationToken cancellationToken
-    )
+    public async Task<Result<PaginatedList<MemberTransactionResponse>>> Handle(SearchMemberTransactionRequest request, CancellationToken cancellationToken)
     {
         IQueryable<MemberTransaction> query = context.MemberTransactions;
 
