@@ -53,9 +53,9 @@ public class WorkspaceEndpoints : IEndpoints
         group
             .MapPost(
                 "/",
-                async (IMediator mediator, CreateWorkspaceRequest request) =>
+                async (IMediator mediator, ICurrentSession session, CreateWorkspaceRequest request) =>
                 {
-                    var result = await mediator.Send(request);
+                    var result = await mediator.Send(request with { Role = session.Role, UserId = session.UserId });
 
                     return result.ToPlatformApiResult();
                 }

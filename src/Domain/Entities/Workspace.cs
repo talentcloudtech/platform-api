@@ -46,6 +46,11 @@ public class Workspace : AuditableEntity<WorkspaceId>
     public decimal CurrentBalance { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether the workspace is the default workspace.
+    /// </summary>
+    public bool IsDefault { get; set; } = false;
+
+    /// <summary>
     /// Gets or sets the user associated with this project.
     /// </summary>
     public ApplicationUser User { get; set; } = null!;

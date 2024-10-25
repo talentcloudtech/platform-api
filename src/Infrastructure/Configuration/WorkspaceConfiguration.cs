@@ -27,6 +27,7 @@ public class WorkspaceConfiguration : IEntityTypeConfiguration<Workspace>
         builder.Property(x => x.Address).HasMaxLength(StringSizes.ShortAddress);
         builder.Property(x => x.Logo).HasMaxLength(StringSizes.Url);
         builder.Property(x => x.Urls).HasColumnType("text[]").IsRequired(false);
+        builder.Property(x => x.IsDefault);
 
         builder.Property(x => x.CreatedBy).HasMaxLength(25).HasConversion<UserId.EfCoreValueConverter>();
         builder.Property(x => x.CreatedDate).HasConversion<DateTime>();

@@ -1,8 +1,8 @@
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Ardalis.Result;
 using MediatR;
 using Platform.Domain.Entities.Common;
+using Platform.Domain.Entities.Enums;
 
 namespace Platform.Application.Features.Workspaces.CreateWorkspace;
 
@@ -11,6 +11,24 @@ namespace Platform.Application.Features.Workspaces.CreateWorkspace;
 /// </summary>
 public record CreateWorkspaceRequest : IRequest<Result<WorkspaceResponse>>
 {
+    /// <summary>
+    /// Gets or sets the user ID.
+    /// </summary>
+    [JsonIgnore]
+    public UserId UserId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the role of the user.
+    /// </summary>
+    [JsonIgnore]
+    public UserRole Role { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the workspace is the default workspace.
+    /// </summary>
+    [JsonIgnore]
+    public bool IsDefault { get; set; } = false;
+
     /// <summary>
     /// Gets or sets the name of the workspace.
     /// </summary>

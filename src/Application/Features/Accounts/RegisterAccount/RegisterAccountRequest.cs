@@ -11,4 +11,5 @@ namespace Platform.Application.Features.Accounts.RegisterAccount;
 /// <param name="Email">The email address for the new account.</param>
 /// <param name="Password">The password for the new account.</param>
 /// <param name="Role">The role for the new account.</param>
-public record RegisterAccountRequest(string UserName, string Email, string Password, string Role) : IRequest<Result>;
+/// <param name="OrganizationName">The name of the organization for the new account.</param>
+public record RegisterAccountRequest(string UserName, string Email, string Password, string Role, string? OrganizationName) : IRequest<Result>;

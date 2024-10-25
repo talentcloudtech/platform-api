@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Platform.API.Configurations;
 using Platform.Application.Common;
+using Platform.Application.Features.Workspaces.CreateWorkspace;
 using Platform.Domain.Entities;
 using Platform.Domain.Entities.Enums;
 
@@ -18,7 +19,8 @@ namespace Platform.Application.Features.Accounts.RegisterAccount;
 /// <param name="context">The context.</param>
 /// <param name="userManager">The user manager to use for creating the user.</param>
 /// <param name="emailSender">The email sender to use for sending the confirmation email.</param>
-public class RegisterAccountHandler(IContext context, UserManager<ApplicationUser> userManager, IEmailSender<ApplicationUser> emailSender)
+/// <param name="mediator">The mediator to use for sending the request to create a new workspace.</param>
+public class RegisterAccountHandler(IContext context, IMediator mediator, UserManager<ApplicationUser> userManager, IEmailSender<ApplicationUser> emailSender)
     : IRequestHandler<RegisterAccountRequest, Result>
 {
     /// <summary>
@@ -39,12 +41,27 @@ public class RegisterAccountHandler(IContext context, UserManager<ApplicationUse
         if (role.Name == UserRole.Admin.Name)
             return Result.Invalid(new ValidationError { Identifier = "root", ErrorMessage = "Admin role is not allowed to be registered by this endpoint." });
 
+        if (role.Name == UserRole.Customer.Name && string.IsNullOrWhiteSpace(request.OrganizationName))
+            return Result.Invalid(new ValidationError { Identifier = "root", ErrorMessage = "Organization name is required for enterprise users." });
+
         var result = await userManager.CreateAsync(user, request.Password);
 
         if (!result.Succeeded)
             return Result.Invalid(result.Errors.Select(e => new ValidationError { Identifier = "root", ErrorMessage = e.Description }));
 
         await userManager.AddToRoleAsync(user, role.Name);
+
+        if (role.Name == UserRole.Customer.Name && !string.IsNullOrWhiteSpace(request.OrganizationName))
+            await mediator.Send(
+                new CreateWorkspaceRequest
+                {
+                    UserId = user.Id,
+                    Role = role,
+                    Name = request.OrganizationName,
+                    IsDefault = true,
+                },
+                cancellationToken
+            );
 
         var memberProfile = new MemberProfile { Id = user.Id, UserName = user.UserName };
 

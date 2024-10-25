@@ -16,9 +16,8 @@ namespace Platform.Application.Features.Workspaces.CreateWorkspace;
 /// Handler for creating a new workspace.
 /// </summary>
 /// <param name="context">The database context.</param>
-/// <param name="session">The current session.</param>
 /// <returns>The result of the operation.</returns>
-public class CreateWorkspaceHandler(IContext context, ICurrentSession session) : IRequestHandler<CreateWorkspaceRequest, Result<WorkspaceResponse>>
+public class CreateWorkspaceHandler(IContext context) : IRequestHandler<CreateWorkspaceRequest, Result<WorkspaceResponse>>
 {
     /// <summary>
     /// Handles the request to create a new workspace.
@@ -30,20 +29,20 @@ public class CreateWorkspaceHandler(IContext context, ICurrentSession session) :
     {
         var currentTimeStamp = DateTime.UtcNow;
 
-        if (session.Role!.Name != UserRole.Admin.Name && session.Role!.Name != UserRole.Customer.Name)
+        if (request.Role.Name != UserRole.Admin.Name && request.Role.Name != UserRole.Customer.Name)
             return Result.Forbidden("User does not have permission to create a workspace.");
 
         var newWorkspace = request.Adapt<Workspace>();
-        newWorkspace.CreatedBy = session.UserId;
+        newWorkspace.CreatedBy = request.UserId;
         newWorkspace.CreatedDate = currentTimeStamp;
         newWorkspace.WorkspaceMembers =
         [
             new WorkspaceMember
             {
                 WorkspaceId = newWorkspace.Id,
-                UserId = session.UserId,
+                UserId = request.UserId,
                 Role = WorkspaceRole.WorkspaceOwner,
-                CreatedBy = session.UserId,
+                CreatedBy = request.UserId,
                 CreatedDate = currentTimeStamp,
             },
         ];

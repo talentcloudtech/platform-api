@@ -1081,6 +1081,9 @@ namespace Platform.Migrations
                     b.Property<decimal>("CurrentBalance")
                         .HasColumnType("numeric");
 
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Logo")
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
