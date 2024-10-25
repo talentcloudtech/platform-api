@@ -41,6 +41,11 @@ public record WorkspaceResponse
     public string? Logo { get; set; }
 
     /// <summary>
+    /// Gets or sets a value indicating whether the workspace is the default workspace.
+    /// </summary>
+    public bool IsDefault { get; set; } = false;
+
+    /// <summary>
     /// Gets or sets the date when the workspace was created.
     /// </summary>
     public DateTime CreatedDate { get; set; }

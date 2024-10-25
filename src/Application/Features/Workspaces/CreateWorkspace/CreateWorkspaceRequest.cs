@@ -21,7 +21,7 @@ public record CreateWorkspaceRequest : IRequest<Result<WorkspaceResponse>>
     /// Gets or sets the role of the user.
     /// </summary>
     [JsonIgnore]
-    public UserRole Role { get; set; }
+    public UserRole Role { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets a value indicating whether the workspace is the default workspace.
