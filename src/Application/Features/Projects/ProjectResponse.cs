@@ -1,6 +1,9 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using Platform.Application.Common.Responses;
 using Platform.Application.Features.Workspaces;
+using Platform.Domain.Entities;
 using Platform.Domain.Entities.Common;
 using Platform.Domain.Entities.Enums;
 
@@ -75,4 +78,14 @@ public record ProjectResponse
     /// Gets or sets the created by user.
     /// </summary>
     public CommonUserResponse? CreatedByUser { get; set; }
+
+    /// <summary>
+    /// Gets or sets the project technologies.
+    /// </summary>
+    public IList<ProjectTechnology> Technologies { get; set; } = new List<ProjectTechnology>();
+
+    /// <summary>
+    /// Gets or sets the type of the project.
+    /// </summary>
+    public ProjectType Type { get; init; }
 }
