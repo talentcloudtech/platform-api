@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Ardalis.Result;
 using MediatR;
+using Platform.Domain.Entities;
 using Platform.Domain.Entities.Common;
+using Platform.Domain.Entities.Enums;
 
 namespace Platform.Application.Features.Projects.CreateProject;
 
@@ -41,4 +44,14 @@ public record CreateProjectRequest : IRequest<Result<ProjectResponse>>
     /// Gets or sets the budget for the project.
     /// </summary>
     public decimal? Budget { get; init; }
+
+    /// <summary>
+    /// Gets or sets the type of the project.
+    /// </summary>
+    public ProjectType Type { get; init; }
+
+    /// <summary>
+    /// Gets or sets the technologies.
+    /// </summary>
+    public IList<ProjectTechnology> Technologies { get; init; } = new List<ProjectTechnology>();
 }

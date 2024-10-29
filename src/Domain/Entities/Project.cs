@@ -56,6 +56,16 @@ public class Project : AuditableEntity<ProjectId>
     public ProjectStatus Status { get; set; }
 
     /// <summary>
+    /// Gets or sets the status of the project.
+    /// </summary>
+    public ProjectType Type { get; set; }
+
+    /// <summary>
+    /// Gets or sets the technologies.
+    /// </summary>
+    public IList<ProjectTechnology> Technologies { get; set; } = new List<ProjectTechnology>();
+
+    /// <summary>
     /// Gets or sets the collection of project members.
     /// </summary>
     public ICollection<ProjectMember> ProjectMembers { get; set; } = new List<ProjectMember>();

@@ -41,6 +41,7 @@ public class CreateProjectHandler(IContext context, ICurrentSession session) : I
 
         var newProject = request.Adapt<Project>();
         newProject.Status = ProjectStatus.Draft;
+        newProject.Type = ProjectType.SelfManaged;
         newProject.CreatedBy = session.UserId;
         newProject.CreatedDate = currentTimestamp;
         newProject.ProjectMembers.Add(
