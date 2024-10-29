@@ -737,6 +737,10 @@ namespace Platform.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(25)
                         .HasColumnType("character varying(25)");
@@ -1744,6 +1748,35 @@ namespace Platform.Migrations
                         .HasForeignKey("WorkspaceId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.OwnsMany("Platform.Domain.Entities.ProjectTechnology", "Technologies", b1 =>
+                        {
+                            b1.Property<string>("ProjectId")
+                                .HasColumnType("character varying(25)");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("Name")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<string>("TechnologyId")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.HasKey("ProjectId", "Id");
+
+                            b1.ToTable("Projects");
+
+                            b1.ToJson("Technologies");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProjectId");
+                        });
+
+                    b.Navigation("Technologies");
 
                     b.Navigation("User");
 

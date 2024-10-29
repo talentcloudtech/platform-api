@@ -51,6 +51,8 @@ public class UpdateProjectHandler(IContext context, ICurrentSession session) : I
         originalProject.EndDate = request.EndDate;
         originalProject.Budget = request.Budget;
         originalProject.Status = request.Status;
+        originalProject.Type = request.Type;
+        originalProject.Technologies = request.Technologies;
         originalProject.UpdatedBy = session.UserId;
         originalProject.UpdatedDate = DateTime.UtcNow;
 

@@ -28,6 +28,15 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Project>
         builder.Property(x => x.EndDate).HasConversion<DateTime>();
         builder.Property(x => x.Budget).HasColumnType("decimal(18, 2)");
         builder.Property(x => x.Status).HasConversion<string>();
+        builder.Property(x => x.Type).HasConversion<string>();
+        builder.OwnsMany(
+            x => x.Technologies,
+            x =>
+            {
+                x.ToJson();
+                x.Property(s => s.TechnologyId).HasConversion(v => v.Value, v => new SkillId(v));
+            }
+        );
 
         builder.Property(x => x.CreatedBy).HasMaxLength(25).HasConversion<UserId.EfCoreValueConverter>();
         builder.Property(x => x.CreatedDate).HasConversion<DateTime>();
