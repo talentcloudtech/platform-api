@@ -38,7 +38,7 @@ public class Project : AuditableEntity<ProjectId>
     /// <summary>
     /// Gets or sets the start date of the project.
     /// </summary>
-    public DateTime StartDate { get; set; }
+    public DateTime? StartDate { get; set; }
 
     /// <summary>
     /// Gets or sets the end date of the project.

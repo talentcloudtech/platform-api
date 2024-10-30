@@ -37,7 +37,7 @@ public record ProjectResponse
     /// <summary>
     /// Gets or sets the start date of the project.
     /// </summary>
-    public DateTime StartDate { get; init; }
+    public DateTime? StartDate { get; init; }
 
     /// <summary>
     /// Gets or sets the end date of the project.
