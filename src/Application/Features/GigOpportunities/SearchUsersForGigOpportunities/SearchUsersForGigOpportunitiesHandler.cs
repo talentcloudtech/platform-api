@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,7 +22,7 @@ namespace Platform.Application.Features.GigOpportunities.SearchUsersForGigOpport
 /// <param name="userManager">The user manager.</param>
 /// <returns>The result of the operation.</returns>
 public class SearchUsersForGigOpportunitiesHandler(IContext context, ICurrentSession session, UserManager<ApplicationUser> userManager)
-    : IRequestHandler<SearchUsersForGigOpportunitiesRequest, Result<List<GigOpportunityUserResponse>>> // Updated to use GigOpportunityUserResponse
+    : IRequestHandler<SearchUsersForGigOpportunitiesRequest, Result<PaginatedList<GigOpportunityUserResponse>>>
 {
     /// <summary>
     /// Handles the request to search for member profiles for a gig opportunity.
@@ -31,7 +30,10 @@ public class SearchUsersForGigOpportunitiesHandler(IContext context, ICurrentSes
     /// <param name="request">The search criteria for filtering and paginating member profiles.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A list of <see cref="GigOpportunityUserResponse"/> matching the search criteria.</returns>
-    public async Task<Result<List<GigOpportunityUserResponse>>> Handle(SearchUsersForGigOpportunitiesRequest request, CancellationToken cancellationToken)
+    public async Task<Result<PaginatedList<GigOpportunityUserResponse>>> Handle(
+        SearchUsersForGigOpportunitiesRequest request,
+        CancellationToken cancellationToken
+    )
     {
         if (session.Role!.Name != UserRole.Admin.Name)
             return Result.Forbidden("You are not authorized to access this resource.");
@@ -63,13 +65,15 @@ public class SearchUsersForGigOpportunitiesHandler(IContext context, ICurrentSes
         // Filter by profile completeness
         query = query.Where(x => x.IsProfileComplete);
 
-        var memberProfilesResponse = await query.ToPaginatedListAsync(1, 20);
+        var memberProfilesResponse = await query.ToPaginatedListAsync(request.CurrentPage, request.PageSize);
 
         var random = new Random();
-        var response = new List<GigOpportunityUserResponse>();
-        if (memberProfilesResponse.Result.Any())
+        var paginatedResponse = new PaginatedList<GigOpportunityUserResponse>
         {
-            response = memberProfilesResponse
+            CurrentPage = memberProfilesResponse.CurrentPage,
+            TotalPages = memberProfilesResponse.TotalPages,
+            TotalItems = memberProfilesResponse.TotalItems,
+            Result = memberProfilesResponse
                 .Result.Select(x =>
                 {
                     var commonUserResponse = new CommonUserResponse(x.User!, x);
@@ -80,13 +84,12 @@ public class SearchUsersForGigOpportunitiesHandler(IContext context, ICurrentSes
                         FirstName = commonUserResponse.FirstName,
                         LastName = commonUserResponse.LastName,
                         ProfilePictureUrl = commonUserResponse.ProfilePictureUrl,
-                        Score = random.Next(50, 101), // Generate random score between 50 and 100
+                        Score = random.Next(50, 101), // Generate random score between 50 and 100 for now. Later AI will be used to calculate the score.
                     };
                 })
-                .OrderByDescending(x => x.Score) // Order by score in descending order
-                .ToList();
-        }
+                .ToList(),
+        };
 
-        return Result.Success(response);
+        return Result.Success(paginatedResponse);
     }
 }
