@@ -1,17 +1,11 @@
-using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Platform.API.Common;
 using Platform.API.Configurations;
-using Platform.API.Configurations;
-using Platform.API.Endpoints;
-using Platform.API.Endpoints;
 
 DotNetEnv.Env.Load();
 
