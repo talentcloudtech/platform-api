@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Platform.Domain.Entities.Common;
@@ -14,6 +15,11 @@ public class ApplicationUser : IdentityUser<UserId>
     /// Gets or sets the ID of the application user.
     /// </summary>
     public override UserId Id { get; set; } = CustomNewId.GenerateStandardId();
+
+    /// <summary>
+    /// Gets or sets the date and time when the user was registered.
+    /// </summary>
+    public DateTime CreatedAt { get; set; }
 
     /// <summary>
     /// Gets or sets the member profile associated with the user.

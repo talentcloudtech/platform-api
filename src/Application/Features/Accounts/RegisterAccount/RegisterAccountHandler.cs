@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,7 +32,7 @@ public class RegisterAccountHandler(IContext context, IMediator mediator, UserMa
     /// <returns>The result of the registration process.</returns>
     public async Task<Result> Handle(RegisterAccountRequest request, CancellationToken cancellationToken)
     {
-        var user = new ApplicationUser { UserName = request.UserName.Trim(), Email = request.Email.Trim() };
+        var user = new ApplicationUser { UserName = request.UserName.Trim(), Email = request.Email.Trim(), CreatedAt = DateTime.UtcNow };
 
         var role = UserRole.FromString(request.Role);
 
