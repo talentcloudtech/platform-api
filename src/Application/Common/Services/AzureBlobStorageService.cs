@@ -39,9 +39,9 @@ public class AzureBlobStorageService : IBlobStorageService
     /// <exception cref="InvalidOperationException">Thrown when the file type is not allowed.</exception>
     public async Task<string> UploadFileAsync(
         IFormFile file,
-        string workspaceId,
-        string? projectId = null,
-        string? taskId = null,
+        WorkspaceId workspaceId,
+        ProjectId? projectId = null,
+        ProjectTaskId? taskId = null,
         CancellationToken cancellationToken = default)
     {
         var fileExt = Path.GetExtension(file.FileName)?.ToLowerInvariant();
@@ -91,14 +91,14 @@ public class AzureBlobStorageService : IBlobStorageService
         await blobClient.DeleteIfExistsAsync(cancellationToken: cancellationToken);
     }
 
-    private static string BuildContainerPath(string workspaceId, string? projectId = null, string? taskId = null)
+    private static string BuildContainerPath(WorkspaceId workspaceId, ProjectId? projectId = null, ProjectTaskId? taskId = null)
     {
         var path = $"WorkspaceIds/{workspaceId}";
 
-        if (!string.IsNullOrEmpty(projectId))
+        if (projectId != null)
             path += $"/ProjectIds/{projectId}";
 
-        if (!string.IsNullOrEmpty(taskId))
+        if (taskId != null)
             path += $"/TaskIds/{taskId}";
 
         return path;

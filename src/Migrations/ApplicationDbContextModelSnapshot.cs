@@ -1184,7 +1184,7 @@ namespace Platform.Migrations
 
                     b.HasIndex("WorkspaceId");
 
-                    b.ToTable("WorkspaceAsset");
+                    b.ToTable("WorkspaceAssets");
                 });
 
             modelBuilder.Entity("Platform.Domain.Entities.WorkspaceMember", b =>

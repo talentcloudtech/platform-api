@@ -131,6 +131,11 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<MemberTransaction> MemberTransactions { get; set; } = null!;
 
     /// <summary>
+    /// Gets or sets the DbSet of WorkspaceAsset entities.
+    /// </summary>
+    public DbSet<WorkspaceAsset> WorkspaceAssets { get; set; } = null!;
+
+    /// <summary>
     /// Configures the model for the database context.
     /// </summary>
     /// <param name="builder">The builder to use for configuration.</param>

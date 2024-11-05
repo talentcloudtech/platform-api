@@ -1,5 +1,6 @@
 using Domain.Entities.Enums;
 using Platform.Domain.Entities.Common;
+using Platform.Domain.Entities.Enums;
 using System;
 using System.Collections.Generic;
 
@@ -13,37 +14,37 @@ public class WorkspaceAsset : AuditableEntity<WorkspaceAssetId>
     /// <summary>
     /// Gets or sets the workspace ID.
     /// </summary>
-    public required WorkspaceId WorkspaceId { get; init; }
+    public required WorkspaceId WorkspaceId { get; set; }
 
     /// <summary>
     /// Gets or sets the project ID (optional).
     /// </summary>
-    public ProjectId? ProjectId { get; init; }
+    public ProjectId? ProjectId { get; set; }
 
     /// <summary>
     /// Gets or sets the task ID (optional).
     /// </summary>
-    public ProjectTaskId? TaskId { get; init; }
+    public ProjectTaskId? TaskId { get; set; }
 
     /// <summary>
     /// Gets or sets the file URL.
     /// </summary>
-    public required string FileUrl { get; init; }
+    public required string FileUrl { get; set; }
 
     /// <summary>
     /// Gets or sets the file MIME type.
     /// </summary>
-    public required string FileType { get; init; }
+    public required string FileType { get; set; }
 
     /// <summary>
     /// Gets or sets the file size in bytes.
     /// </summary>
-    public required long FileSize { get; init; }
+    public required long FileSize { get; set; }
 
     /// <summary>
     /// Gets or sets the scope of the asset.
     /// </summary>
-    public required AssetScope Scope { get; init; }
+    public required AssetScope Scope { get; set; }
 
 
     /// <summary>

@@ -14,17 +14,17 @@ public record UploadWorkspaceFileRequest : IRequest<Result<UploadWorkspaceFileRe
     /// <summary>
     /// The ID of the workspace.    
     /// </summary>
-    public required string WorkspaceId { get; init; }
+    public required WorkspaceId WorkspaceId { get; init; }
 
     /// <summary>
     /// The ID of the project.
     /// </summary>
-    public string? ProjectId { get; init; }
+    public ProjectId? ProjectId { get; init; }
 
     /// <summary>
     /// The ID of the task.
     /// </summary>
-    public string? TaskId { get; init; }
+    public ProjectTaskId? TaskId { get; init; }
 
     /// <summary>
     /// The file to upload.

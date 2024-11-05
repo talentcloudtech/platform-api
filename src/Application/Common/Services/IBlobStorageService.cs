@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Http;
+using Platform.Domain.Entities.Common;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,9 +21,9 @@ public interface IBlobStorageService
     /// <returns>The URL of the uploaded file.</returns>
     Task<string> UploadFileAsync(
         IFormFile file,
-        string workspaceId,
-        string? projectId = null,
-        string? taskId = null,
+        WorkspaceId workspaceId,
+        ProjectId? projectId = null,
+        ProjectTaskId? taskId = null,
         CancellationToken cancellationToken = default
     );
 

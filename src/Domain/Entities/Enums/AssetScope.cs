@@ -1,22 +1,22 @@
-namespace Domain.Entities.Enums;
+namespace Platform.Domain.Entities.Enums;
 
 /// <summary>
-/// Asset scope enum
+/// Defines the scope of an asset in the workspace hierarchy
 /// </summary>
 public enum AssetScope
 {
     /// <summary>
-    /// Asset belongs to a workspace.
+    /// Asset belongs to a workspace
     /// </summary>
     Workspace,
 
     /// <summary>
-    /// Asset belongs to a project.
+    /// Asset belongs to a project
     /// </summary>
     Project,
 
     /// <summary>
-    /// Asset belongs to a task.
+    /// Asset belongs to a task
     /// </summary>
     Task
 }
