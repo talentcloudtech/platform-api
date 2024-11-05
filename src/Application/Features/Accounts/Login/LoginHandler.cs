@@ -38,9 +38,11 @@ public class LoginHandler(
     {
         var query = userManager.Users.Include(u => u.RefreshTokens);
 
+        var normalizedInput = request.UserName.Trim().ToLower();
+
         ApplicationUser? user = _emailRegex.IsMatch(request.UserName)
-            ? await query.FirstOrDefaultAsync(u => u.Email == request.UserName)
-            : await query.FirstOrDefaultAsync(u => u.UserName == request.UserName);
+            ? await query.FirstOrDefaultAsync(u => u.Email!.ToLower() == normalizedInput)
+            : await query.FirstOrDefaultAsync(u => u.UserName!.ToLower() == normalizedInput);
 
         if (user is null)
         {
