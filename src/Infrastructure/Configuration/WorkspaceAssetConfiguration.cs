@@ -36,9 +36,8 @@ public class WorkspaceAssetConfiguration : IEntityTypeConfiguration<WorkspaceAss
         builder.Property(x => x.UpdatedDate).HasConversion<DateTime>();
 
         builder.HasOne(x => x.Workspace).WithMany(w => w.WorkspaceAssets).HasForeignKey(x => x.WorkspaceId).OnDelete(DeleteBehavior.Restrict);
-
         builder.HasOne(x => x.Project).WithMany(p => p.WorkspaceAssets).HasForeignKey(x => x.ProjectId).OnDelete(DeleteBehavior.Restrict);
-
         builder.HasOne(x => x.Task).WithMany(t => t.WorkspaceAssets).HasForeignKey(x => x.TaskId).OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne(w => w.User).WithMany(u => u.WorkspaceAssets).HasForeignKey(w => w.CreatedBy).OnDelete(DeleteBehavior.Restrict);
     }
 }

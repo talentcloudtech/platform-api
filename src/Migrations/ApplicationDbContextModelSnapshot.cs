@@ -1165,10 +1165,6 @@ namespace Platform.Migrations
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("character varying(25)");
-
                     b.Property<string>("WorkspaceId")
                         .IsRequired()
                         .HasMaxLength(25)
@@ -1176,11 +1172,11 @@ namespace Platform.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedBy");
+
                     b.HasIndex("ProjectId");
 
                     b.HasIndex("TaskId");
-
-                    b.HasIndex("UserId");
 
                     b.HasIndex("WorkspaceId");
 
@@ -1945,6 +1941,12 @@ namespace Platform.Migrations
 
             modelBuilder.Entity("Platform.Domain.Entities.WorkspaceAsset", b =>
                 {
+                    b.HasOne("Platform.Domain.Entities.ApplicationUser", "User")
+                        .WithMany("WorkspaceAssets")
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Platform.Domain.Entities.Project", "Project")
                         .WithMany("WorkspaceAssets")
                         .HasForeignKey("ProjectId")
@@ -1954,12 +1956,6 @@ namespace Platform.Migrations
                         .WithMany("WorkspaceAssets")
                         .HasForeignKey("TaskId")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Platform.Domain.Entities.ApplicationUser", "User")
-                        .WithMany("WorkspaceAssets")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.HasOne("Platform.Domain.Entities.Workspace", "Workspace")
                         .WithMany("WorkspaceAssets")

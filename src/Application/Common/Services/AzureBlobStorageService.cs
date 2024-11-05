@@ -74,9 +74,9 @@ public class AzureBlobStorageService : IBlobStorageService
                 },
                 cancellationToken
             );
-        }
 
-        return blobClient.Uri.ToString();
+            return blobClient.Uri.ToString();
+        }
     }
 
     /// <summary>

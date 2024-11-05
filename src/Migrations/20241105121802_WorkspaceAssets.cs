@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Platform.Migrations;
 
 /// <inheritdoc />
-public partial class WorkspaceAssetTable : Migration
+public partial class WorkspaceAssets : Migration
 {
     /// <inheritdoc />
     protected override void Up(MigrationBuilder migrationBuilder)
     {
         migrationBuilder.CreateTable(
-            name: "WorkspaceAsset",
+            name: "WorkspaceAssets",
             columns: table => new
             {
                 Id = table.Column<string>(type: "character varying(25)", maxLength: 25, nullable: false),
@@ -23,7 +23,6 @@ public partial class WorkspaceAssetTable : Migration
                 FileType = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
                 FileSize = table.Column<long>(type: "bigint", nullable: false),
                 Scope = table.Column<string>(type: "text", nullable: false),
-                UserId = table.Column<string>(type: "character varying(25)", nullable: false),
                 CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                 CreatedBy = table.Column<string>(type: "character varying(25)", maxLength: 25, nullable: false),
                 UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -31,30 +30,30 @@ public partial class WorkspaceAssetTable : Migration
             },
             constraints: table =>
             {
-                table.PrimaryKey("PK_WorkspaceAsset", x => x.Id);
+                table.PrimaryKey("PK_WorkspaceAssets", x => x.Id);
                 table.ForeignKey(
-                    name: "FK_WorkspaceAsset_AspNetUsers_UserId",
-                    column: x => x.UserId,
+                    name: "FK_WorkspaceAssets_AspNetUsers_CreatedBy",
+                    column: x => x.CreatedBy,
                     principalTable: "AspNetUsers",
                     principalColumn: "Id",
-                    onDelete: ReferentialAction.Cascade
+                    onDelete: ReferentialAction.Restrict
                 );
                 table.ForeignKey(
-                    name: "FK_WorkspaceAsset_ProjectTasks_TaskId",
+                    name: "FK_WorkspaceAssets_ProjectTasks_TaskId",
                     column: x => x.TaskId,
                     principalTable: "ProjectTasks",
                     principalColumn: "Id",
                     onDelete: ReferentialAction.Restrict
                 );
                 table.ForeignKey(
-                    name: "FK_WorkspaceAsset_Projects_ProjectId",
+                    name: "FK_WorkspaceAssets_Projects_ProjectId",
                     column: x => x.ProjectId,
                     principalTable: "Projects",
                     principalColumn: "Id",
                     onDelete: ReferentialAction.Restrict
                 );
                 table.ForeignKey(
-                    name: "FK_WorkspaceAsset_Workspaces_WorkspaceId",
+                    name: "FK_WorkspaceAssets_Workspaces_WorkspaceId",
                     column: x => x.WorkspaceId,
                     principalTable: "Workspaces",
                     principalColumn: "Id",
@@ -63,18 +62,18 @@ public partial class WorkspaceAssetTable : Migration
             }
         );
 
-        migrationBuilder.CreateIndex(name: "IX_WorkspaceAsset_ProjectId", table: "WorkspaceAsset", column: "ProjectId");
+        migrationBuilder.CreateIndex(name: "IX_WorkspaceAssets_CreatedBy", table: "WorkspaceAssets", column: "CreatedBy");
 
-        migrationBuilder.CreateIndex(name: "IX_WorkspaceAsset_TaskId", table: "WorkspaceAsset", column: "TaskId");
+        migrationBuilder.CreateIndex(name: "IX_WorkspaceAssets_ProjectId", table: "WorkspaceAssets", column: "ProjectId");
 
-        migrationBuilder.CreateIndex(name: "IX_WorkspaceAsset_UserId", table: "WorkspaceAsset", column: "UserId");
+        migrationBuilder.CreateIndex(name: "IX_WorkspaceAssets_TaskId", table: "WorkspaceAssets", column: "TaskId");
 
-        migrationBuilder.CreateIndex(name: "IX_WorkspaceAsset_WorkspaceId", table: "WorkspaceAsset", column: "WorkspaceId");
+        migrationBuilder.CreateIndex(name: "IX_WorkspaceAssets_WorkspaceId", table: "WorkspaceAssets", column: "WorkspaceId");
     }
 
     /// <inheritdoc />
     protected override void Down(MigrationBuilder migrationBuilder)
     {
-        migrationBuilder.DropTable(name: "WorkspaceAsset");
+        migrationBuilder.DropTable(name: "WorkspaceAssets");
     }
 }

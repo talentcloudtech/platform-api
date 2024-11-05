@@ -12,6 +12,11 @@ namespace Platform.Domain.Entities;
 public class WorkspaceAsset : AuditableEntity<WorkspaceAssetId>
 {
     /// <summary>
+    /// Gets or sets the unique identifier for the workspace assets id.
+    /// </summary>
+    public override WorkspaceAssetId Id { get; set; } = CustomNewId.GenerateStandardId();
+
+    /// <summary>
     /// Gets or sets the workspace ID.
     /// </summary>
     public required WorkspaceId WorkspaceId { get; set; }
