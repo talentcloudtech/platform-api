@@ -1,9 +1,9 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Platform.Application.Common;
 using Platform.Domain.Entities;
 using Platform.Domain.Entities.Common;
-using System;
 
 namespace Platform.Infrastructure.Configuration;
 
@@ -35,19 +35,10 @@ public class WorkspaceAssetConfiguration : IEntityTypeConfiguration<WorkspaceAss
         builder.Property(x => x.UpdatedBy).HasMaxLength(25).HasConversion<UserId.EfCoreValueConverter>();
         builder.Property(x => x.UpdatedDate).HasConversion<DateTime>();
 
-        builder.HasOne(x => x.Workspace)
-            .WithMany(w => w.WorkspaceAssets)
-            .HasForeignKey(x => x.WorkspaceId)
-            .OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne(x => x.Workspace).WithMany(w => w.WorkspaceAssets).HasForeignKey(x => x.WorkspaceId).OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasOne(x => x.Project)
-            .WithMany(p => p.WorkspaceAssets)
-            .HasForeignKey(x => x.ProjectId)
-            .OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne(x => x.Project).WithMany(p => p.WorkspaceAssets).HasForeignKey(x => x.ProjectId).OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasOne(x => x.Task)
-            .WithMany(t => t.WorkspaceAssets)
-            .HasForeignKey(x => x.TaskId)
-            .OnDelete(DeleteBehavior.Restrict);
+        builder.HasOne(x => x.Task).WithMany(t => t.WorkspaceAssets).HasForeignKey(x => x.TaskId).OnDelete(DeleteBehavior.Restrict);
     }
 }

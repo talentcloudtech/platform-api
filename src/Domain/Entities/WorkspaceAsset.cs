@@ -1,8 +1,8 @@
+using System;
+using System.Collections.Generic;
 using Domain.Entities.Enums;
 using Platform.Domain.Entities.Common;
 using Platform.Domain.Entities.Enums;
-using System;
-using System.Collections.Generic;
 
 namespace Platform.Domain.Entities;
 
@@ -46,7 +46,6 @@ public class WorkspaceAsset : AuditableEntity<WorkspaceAssetId>
     /// </summary>
     public required AssetScope Scope { get; set; }
 
-
     /// <summary>
     /// Gets or sets the project associated with this task.
     /// </summary>
@@ -66,6 +65,4 @@ public class WorkspaceAsset : AuditableEntity<WorkspaceAssetId>
     /// Gets or sets the user associated with this asset.
     /// </summary>
     public ApplicationUser User { get; set; } = null!;
-
-
 }

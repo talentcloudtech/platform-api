@@ -18,5 +18,5 @@ public enum AssetScope
     /// <summary>
     /// Asset belongs to a task
     /// </summary>
-    Task
+    Task,
 }

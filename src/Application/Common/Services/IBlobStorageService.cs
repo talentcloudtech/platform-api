@@ -1,7 +1,7 @@
-using Microsoft.AspNetCore.Http;
-using Platform.Domain.Entities.Common;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Platform.Domain.Entities.Common;
 
 namespace Platform.Application.Common.Services;
 

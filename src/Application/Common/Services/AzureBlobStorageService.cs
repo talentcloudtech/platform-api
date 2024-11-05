@@ -1,23 +1,24 @@
+using System;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Platform.API.Configurations.OptionSetups;
 using Platform.Domain.Entities.Common;
-using System;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Platform.Application.Common.Services;
 
 /// <summary>
-/// Azure Blob Storage Service implementation.  
+/// Azure Blob Storage Service implementation.
 /// </summary>
 public class AzureBlobStorageService : IBlobStorageService
 {
     private readonly AzureBlobStorageOptions _options;
     private static readonly string[] AllowedExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".pdf" };
+
     /// <summary>
     /// Initializes a new instance of the <see cref="AzureBlobStorageService"/> class.
     /// </summary>
@@ -28,7 +29,7 @@ public class AzureBlobStorageService : IBlobStorageService
     }
 
     /// <summary>
-    /// Uploads a file to the Azure Blob Storage.   
+    /// Uploads a file to the Azure Blob Storage.
     /// </summary>
     /// <param name="file">The file to upload.</param>
     /// <param name="workspaceId">The workspace ID.</param>
@@ -42,7 +43,8 @@ public class AzureBlobStorageService : IBlobStorageService
         WorkspaceId workspaceId,
         ProjectId? projectId = null,
         ProjectTaskId? taskId = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         var fileExt = Path.GetExtension(file.FileName)?.ToLowerInvariant();
 
@@ -60,28 +62,33 @@ public class AzureBlobStorageService : IBlobStorageService
 
         await using (var stream = file.OpenReadStream())
         {
-            await blobClient.UploadAsync(stream, new BlobUploadOptions
-            {
-                HttpHeaders = new BlobHttpHeaders
+            await blobClient.UploadAsync(
+                stream,
+                new BlobUploadOptions
                 {
-                    CacheControl = "public, max-age=31536000, immutable",
-                    ContentType = FileHelper.GetContentType(fileName)
-                }
-            }, cancellationToken);
+                    HttpHeaders = new BlobHttpHeaders
+                    {
+                        CacheControl = "public, max-age=31536000, immutable",
+                        ContentType = FileHelper.GetContentType(fileName),
+                    },
+                },
+                cancellationToken
+            );
         }
 
         return blobClient.Uri.ToString();
     }
 
     /// <summary>
-    /// Deletes a file from the Azure Blob Storage. 
+    /// Deletes a file from the Azure Blob Storage.
     /// </summary>
     /// <param name="fileUrl">The URL of the file to delete.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
     public async Task DeleteFileAsync(string fileUrl, CancellationToken cancellationToken = default)
     {
-        if (string.IsNullOrEmpty(fileUrl)) return;
+        if (string.IsNullOrEmpty(fileUrl))
+            return;
 
         var uri = new Uri(fileUrl);
         var containerClient = new BlobContainerClient(_options.ConnectionString, "WorkspaceAssets");

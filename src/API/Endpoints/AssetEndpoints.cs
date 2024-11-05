@@ -25,9 +25,15 @@ public class AssetEndpoints : IEndpoints
         group
             .MapPost(
                 "/",
-                async (IMediator mediator, WorkspaceId workspaceId, IFormFile file) =>
+                async (IMediator mediator, WorkspaceId workspaceId, ProjectId? projectId, ProjectTaskId? taskId, IFormFile file) =>
                 {
-                    var request = new UploadWorkspaceFileRequest { File = file, WorkspaceId = workspaceId.Value };
+                    var request = new UploadWorkspaceFileRequest
+                    {
+                        WorkspaceId = workspaceId,
+                        ProjectId = projectId,
+                        TaskId = taskId,
+                        File = file,
+                    };
                     var result = await mediator.Send(request);
                     return result.ToPlatformApiResult();
                 }

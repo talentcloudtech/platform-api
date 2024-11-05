@@ -501,4 +501,3 @@ public partial struct WorkspaceAssetId : IStringId
         return new WorkspaceAssetId(id);
     }
 }
-
