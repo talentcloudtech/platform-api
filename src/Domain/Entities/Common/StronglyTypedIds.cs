@@ -484,3 +484,21 @@ public partial struct WorkspaceTransactionId : IStringId
         return new WorkspaceTransactionId(id);
     }
 }
+
+/// <summary>
+/// Represents a strongly typed identifier for a workspace asset.
+/// </summary>
+[StronglyTypedId]
+public partial struct WorkspaceAssetId : IStringId
+{
+    /// <summary>
+    /// Implicitly converts a id to a WorkspaceAssetId.
+    /// </summary>
+    /// <param name="id">The id value.</param>
+    /// <returns>A new instance of WorkspaceAssetId.</returns>
+    public static implicit operator WorkspaceAssetId(string id)
+    {
+        return new WorkspaceAssetId(id);
+    }
+}
+

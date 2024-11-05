@@ -84,4 +84,9 @@ public class ProjectTask : AuditableEntity<ProjectTaskId>
     /// Gets or sets the collection of task assignments.
     /// </summary>
     public ICollection<ProjectTaskAssignment> Assignments { get; set; } = new List<ProjectTaskAssignment>();
+
+    /// <summary>
+    /// Gets or sets the collection of assets.
+    /// </summary>
+    public ICollection<WorkspaceAsset> WorkspaceAssets { get; set; } = new List<WorkspaceAsset>();
 }

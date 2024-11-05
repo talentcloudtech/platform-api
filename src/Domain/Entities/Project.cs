@@ -79,4 +79,9 @@ public class Project : AuditableEntity<ProjectId>
     /// Gets or sets the user associated with this project.
     /// </summary>
     public ApplicationUser User { get; set; } = null!;
+
+    /// <summary>
+    /// Gets or sets the collection of assets.
+    /// </summary>
+    public ICollection<WorkspaceAsset> WorkspaceAssets { get; set; } = new List<WorkspaceAsset>();
 }

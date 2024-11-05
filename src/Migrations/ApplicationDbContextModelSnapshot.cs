@@ -1119,6 +1119,74 @@ namespace Platform.Migrations
                     b.ToTable("Workspaces");
                 });
 
+            modelBuilder.Entity("Platform.Domain.Entities.WorkspaceAsset", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("FileSize")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("FileType")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("FileUrl")
+                        .IsRequired()
+                        .HasMaxLength(2048)
+                        .HasColumnType("character varying(2048)");
+
+                    b.Property<string>("ProjectId")
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.Property<string>("Scope")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("TaskId")
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("character varying(25)");
+
+                    b.Property<string>("WorkspaceId")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.HasIndex("TaskId");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("WorkspaceId");
+
+                    b.ToTable("WorkspaceAsset");
+                });
+
             modelBuilder.Entity("Platform.Domain.Entities.WorkspaceMember", b =>
                 {
                     b.Property<string>("Id")
@@ -1875,6 +1943,39 @@ namespace Platform.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Platform.Domain.Entities.WorkspaceAsset", b =>
+                {
+                    b.HasOne("Platform.Domain.Entities.Project", "Project")
+                        .WithMany("WorkspaceAssets")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Platform.Domain.Entities.ProjectTask", "Task")
+                        .WithMany("WorkspaceAssets")
+                        .HasForeignKey("TaskId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Platform.Domain.Entities.ApplicationUser", "User")
+                        .WithMany("WorkspaceAssets")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Platform.Domain.Entities.Workspace", "Workspace")
+                        .WithMany("WorkspaceAssets")
+                        .HasForeignKey("WorkspaceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+
+                    b.Navigation("Task");
+
+                    b.Navigation("User");
+
+                    b.Navigation("Workspace");
+                });
+
             modelBuilder.Entity("Platform.Domain.Entities.WorkspaceMember", b =>
                 {
                     b.HasOne("Platform.Domain.Entities.ApplicationUser", "User")
@@ -1994,6 +2095,8 @@ namespace Platform.Migrations
 
                     b.Navigation("Tasks");
 
+                    b.Navigation("WorkspaceAssets");
+
                     b.Navigation("WorkspaceMemberInvitations");
 
                     b.Navigation("WorkspaceMembers");
@@ -2018,11 +2121,15 @@ namespace Platform.Migrations
                     b.Navigation("ProjectMembers");
 
                     b.Navigation("ProjectTasks");
+
+                    b.Navigation("WorkspaceAssets");
                 });
 
             modelBuilder.Entity("Platform.Domain.Entities.ProjectTask", b =>
                 {
                     b.Navigation("Assignments");
+
+                    b.Navigation("WorkspaceAssets");
                 });
 
             modelBuilder.Entity("Platform.Domain.Entities.Workspace", b =>
@@ -2034,6 +2141,8 @@ namespace Platform.Migrations
                     b.Navigation("ProjectTasks");
 
                     b.Navigation("Projects");
+
+                    b.Navigation("WorkspaceAssets");
 
                     b.Navigation("WorkspaceMemberInvitations");
 

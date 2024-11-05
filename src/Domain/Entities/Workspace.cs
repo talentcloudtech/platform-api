@@ -89,4 +89,9 @@ public class Workspace : AuditableEntity<WorkspaceId>
     /// Gets or sets the transactions of the workspace.
     /// </summary>
     public ICollection<WorkspaceTransaction> WorkspaceTransactions { get; set; } = new List<WorkspaceTransaction>();
+
+    /// <summary>
+    /// Gets or sets the collection of assets.
+    /// </summary>
+    public ICollection<WorkspaceAsset> WorkspaceAssets { get; set; } = new List<WorkspaceAsset>();
 }
