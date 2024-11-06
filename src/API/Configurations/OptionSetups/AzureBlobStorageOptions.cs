@@ -27,4 +27,9 @@ public class AzureBlobStorageOptions : IConfigurableOptions
     /// Gets or sets the name of the member resume container.
     /// </summary>
     public required string ResumeContainer { get; set; }
+
+    /// <summary>
+    /// Gets or sets the name of the workspace asset container.
+    /// </summary>
+    public required string WorkspaceAssets { get; set; }
 }

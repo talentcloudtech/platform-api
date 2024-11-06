@@ -100,6 +100,11 @@ public class ApplicationUser : IdentityUser<UserId>
     /// Gets or sets the list of member transactions created by the user.
     /// </summary>
     public List<MemberTransaction> CreatedMemberTransactions { get; set; } = [];
+
+    /// <summary>
+    /// Gets or sets the list of workspace assets associated with the user.
+    /// </summary>
+    public List<WorkspaceAsset> WorkspaceAssets { get; set; } = [];
 }
 
 /// <summary>

@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Platform.API.Common;
 using Platform.API.Configurations;
+using Platform.Application.Common.Services;
 
 DotNetEnv.Env.Load();
 
@@ -37,6 +38,9 @@ builder.Services.AddMediatRSetup();
 
 // Exception handler
 builder.Services.AddExceptionHandler<ExceptionHandler>();
+
+// Blob storage
+builder.Services.AddScoped<IBlobStorageService, AzureBlobStorageService>();
 
 //IOptionConfigure
 builder.Services.ConfigureAllOptions(builder.Configuration);
