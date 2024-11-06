@@ -17,7 +17,7 @@ namespace Platform.Application.Common.Services;
 public class AzureBlobStorageService : IBlobStorageService
 {
     private readonly AzureBlobStorageOptions _options;
-    private static readonly string[] AllowedExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".pdf" };
+    private static readonly string[] AllowedExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx" };
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AzureBlobStorageService"/> class.
@@ -100,13 +100,13 @@ public class AzureBlobStorageService : IBlobStorageService
 
     private static string BuildContainerPath(WorkspaceId workspaceId, ProjectId? projectId = null, ProjectTaskId? taskId = null)
     {
-        var path = $"WorkspaceIds/{workspaceId}";
+        var path = $"{workspaceId}";
 
         if (projectId != null)
-            path += $"/ProjectIds/{projectId}";
+            path += $"/Projects/{projectId}";
 
         if (taskId != null)
-            path += $"/TaskIds/{taskId}";
+            path += $"/Tasks/{taskId}";
 
         return path;
     }

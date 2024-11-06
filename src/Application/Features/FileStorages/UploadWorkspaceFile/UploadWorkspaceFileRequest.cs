@@ -1,6 +1,7 @@
 using Ardalis.Result;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Platform.Application.Features.WorkspaceAssets;
 using Platform.Domain.Entities.Common;
 
 namespace Platform.Application.Features.FileStorages.UploadWorkspaceFile;
@@ -8,7 +9,7 @@ namespace Platform.Application.Features.FileStorages.UploadWorkspaceFile;
 /// <summary>
 /// Represents a request to upload a file to the workspace.
 /// </summary>
-public record UploadWorkspaceFileRequest : IRequest<Result<UploadWorkspaceFileResponse>>
+public record UploadWorkspaceFileRequest : IRequest<Result<WorkspaceAssetResponse>>
 {
     /// <summary>
     /// Gets or sets the workspace ID.

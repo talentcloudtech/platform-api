@@ -52,6 +52,11 @@ public class WorkspaceAsset : AuditableEntity<WorkspaceAssetId>
     public required AssetScope Scope { get; set; }
 
     /// <summary>
+    /// Gets or sets the file name.
+    /// </summary>
+    public required string FileName { get; set; }
+
+    /// <summary>
     /// Gets or sets the project associated with this task.
     /// </summary>
     public Project Project { get; set; } = null!;

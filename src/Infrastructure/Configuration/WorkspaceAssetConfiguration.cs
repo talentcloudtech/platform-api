@@ -28,6 +28,7 @@ public class WorkspaceAssetConfiguration : IEntityTypeConfiguration<WorkspaceAss
         builder.Property(x => x.FileUrl).HasMaxLength(2048).IsRequired();
         builder.Property(x => x.FileType).HasMaxLength(256).IsRequired();
         builder.Property(x => x.FileSize).IsRequired();
+        builder.Property(x => x.FileName).HasMaxLength(256).IsRequired();
         builder.Property(x => x.Scope).HasConversion<string>().IsRequired();
 
         builder.Property(x => x.CreatedBy).HasMaxLength(25).HasConversion<UserId.EfCoreValueConverter>();

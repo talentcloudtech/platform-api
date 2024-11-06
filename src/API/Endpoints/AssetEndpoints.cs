@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Routing;
 using Platform.Application.Extensions;
 using Platform.Application.Features.FileStorages.GenerateSasUri;
 using Platform.Application.Features.FileStorages.UploadWorkspaceFile;
+using Platform.Application.Features.WorkspaceAssets.SearchWorkspaceAssets;
 using Platform.Domain.Entities.Common;
 
 namespace Platform.API.Endpoints;
@@ -40,5 +41,14 @@ public class AssetEndpoints : IEndpoints
             )
             .WithSummary("Upload file and generate download url.")
             .DisableAntiforgery();
+
+        group.MapGet(
+            "/",
+            async (IMediator mediator, WorkspaceId workspaceId, [AsParameters] SearchWorkspaceAssetsRequest request) =>
+            {
+                var result = await mediator.Send(request with { WorkspaceId = workspaceId });
+                return result.ToPlatformApiResult();
+            }
+        );
     }
 }

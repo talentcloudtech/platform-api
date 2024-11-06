@@ -1133,6 +1133,11 @@ namespace Platform.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
                     b.Property<long>("FileSize")
                         .HasColumnType("bigint");
 

@@ -2,9 +2,11 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.Result;
+using Mapster;
 using MediatR;
 using Platform.Application.Common;
 using Platform.Application.Common.Services;
+using Platform.Application.Features.WorkspaceAssets;
 using Platform.Domain.Auth.Interfaces;
 using Platform.Domain.Entities;
 using Platform.Domain.Entities.Common;
@@ -15,7 +17,7 @@ namespace Platform.Application.Features.FileStorages.UploadWorkspaceFile;
 /// <summary>
 /// Handles the process of uploading a file to the workspace asset container in Azure Blob Storage.
 /// </summary>
-public class UploadWorkspaceFileHandler : IRequestHandler<UploadWorkspaceFileRequest, Result<UploadWorkspaceFileResponse>>
+public class UploadWorkspaceFileHandler : IRequestHandler<UploadWorkspaceFileRequest, Result<WorkspaceAssetResponse>>
 {
     private readonly IBlobStorageService _blobStorageService;
     private readonly IContext _context;
@@ -31,10 +33,21 @@ public class UploadWorkspaceFileHandler : IRequestHandler<UploadWorkspaceFileReq
         _currentUser = currentUser;
     }
 
+    private static AssetScope DetermineScope(ProjectId? projectId, ProjectTaskId? taskId)
+    {
+        if (taskId != null)
+            return AssetScope.Task;
+
+        if (projectId != null)
+            return AssetScope.Project;
+
+        return AssetScope.Workspace;
+    }
+
     /// <summary>
     /// Handles the process of uploading a file to the workspace asset container in Azure Blob Storage.
     /// </summary>
-    public async Task<Result<UploadWorkspaceFileResponse>> Handle(UploadWorkspaceFileRequest request, CancellationToken cancellationToken)
+    public async Task<Result<WorkspaceAssetResponse>> Handle(UploadWorkspaceFileRequest request, CancellationToken cancellationToken)
     {
         try
         {
@@ -49,6 +62,7 @@ public class UploadWorkspaceFileHandler : IRequestHandler<UploadWorkspaceFileReq
                 WorkspaceId = request.WorkspaceId,
                 ProjectId = request.ProjectId,
                 TaskId = request.TaskId,
+                FileName = request.File.FileName,
                 FileUrl = fileUrl,
                 FileType = request.File.ContentType,
                 FileSize = request.File.Length,
@@ -62,22 +76,11 @@ public class UploadWorkspaceFileHandler : IRequestHandler<UploadWorkspaceFileReq
             _context.WorkspaceAssets.Add(workspaceAsset);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return Result.Success(new UploadWorkspaceFileResponse { FileUrl = fileUrl, WorkspaceId = request.WorkspaceId });
+            return Result.Success(workspaceAsset.Adapt<WorkspaceAssetResponse>());
         }
         catch (Exception ex)
         {
             return Result.Error($"Failed to upload file: {ex.Message}");
         }
-    }
-
-    private static AssetScope DetermineScope(ProjectId? projectId, ProjectTaskId? taskId)
-    {
-        if (taskId != null)
-            return AssetScope.Task;
-
-        if (projectId != null)
-            return AssetScope.Project;
-
-        return AssetScope.Workspace;
     }
 }
