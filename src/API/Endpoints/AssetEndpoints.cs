@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Routing;
 using Platform.Application.Extensions;
 using Platform.Application.Features.FileStorages.GenerateSasUri;
 using Platform.Application.Features.FileStorages.UploadWorkspaceFile;
+using Platform.Application.Features.WorkspaceAssets.DeleteWorkspaceAsset;
 using Platform.Application.Features.WorkspaceAssets.SearchWorkspaceAssets;
 using Platform.Domain.Entities.Common;
 
@@ -50,5 +51,17 @@ public class AssetEndpoints : IEndpoints
                 return result.ToPlatformApiResult();
             }
         );
+
+        group
+            .MapDelete(
+                "/asset/{assetId}",
+                async (IMediator mediator, WorkspaceId workspaceId, WorkspaceAssetId assetId) =>
+                {
+                    var request = new DeleteWorkspaceAssetRequest(workspaceId, assetId);
+                    var result = await mediator.Send(request);
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Delete a workspace asset");
     }
 }
