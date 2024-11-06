@@ -91,7 +91,7 @@ public class AzureBlobStorageService : IBlobStorageService
             return;
 
         var uri = new Uri(fileUrl);
-        var containerClient = new BlobContainerClient(_options.ConnectionString, "WorkspaceAssets");
+        var containerClient = new BlobContainerClient(_options.ConnectionString, "workspaceassets");
         var blobPath = uri.LocalPath.TrimStart('/').Split('/', 2)[1];
         var blobClient = containerClient.GetBlobClient(blobPath);
 
