@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Platform.Application.Common.Responses;
 using Platform.Domain.Entities.Common;
+using Platform.Domain.Entities.Enums;
 
 namespace Platform.Application.Features.Workspaces;
 
@@ -54,4 +55,9 @@ public record WorkspaceResponse
     /// Gets or sets the user who created the workspace.
     /// </summary>
     public CommonUserResponse? CreatedByUser { get; set; }
+
+    /// <summary>
+    /// Gets or sets the role of the current user in the workspace.
+    /// </summary>
+    public WorkspaceRole MemberRole { get; set; }
 }
