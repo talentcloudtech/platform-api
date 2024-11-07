@@ -17,7 +17,6 @@ namespace Platform.Application.Common.Services;
 public class AzureBlobStorageService : IBlobStorageService
 {
     private readonly AzureBlobStorageOptions _options;
-    private static readonly string[] AllowedExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx" };
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AzureBlobStorageService"/> class.
@@ -37,7 +36,6 @@ public class AzureBlobStorageService : IBlobStorageService
     /// <param name="taskId">The task ID.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The URL of the uploaded file.</returns>
-    /// <exception cref="InvalidOperationException">Thrown when the file type is not allowed.</exception>
     public async Task<string> UploadFileAsync(
         IFormFile file,
         WorkspaceId workspaceId,
@@ -46,11 +44,15 @@ public class AzureBlobStorageService : IBlobStorageService
         CancellationToken cancellationToken = default
     )
     {
-        var fileExt = Path.GetExtension(file.FileName)?.ToLowerInvariant();
+        if (file == null || file.Length == 0)
+            throw new InvalidOperationException("No file was provided or file is empty.");
 
-        if (!Array.Exists(AllowedExtensions, ext => string.Equals(ext, fileExt, StringComparison.OrdinalIgnoreCase)))
-            throw new InvalidOperationException("Invalid file type. Only image files (.jpg, .jpeg, .png, .gif) and PDFs (.pdf) are allowed.");
+        // Check file size (e.g., 100MB limit)
+        const long maxFileSize = 100 * 1024 * 1024; // 100MB in bytes
+        if (file.Length > maxFileSize)
+            throw new InvalidOperationException("File size exceeds the maximum limit of 100MB.");
 
+        var fileExt = Path.GetExtension(file.FileName);
         var fileName = $"{CustomNewId.GenerateShortId()}{fileExt}";
         var containerPath = BuildContainerPath(workspaceId, projectId, taskId);
 
@@ -66,11 +68,7 @@ public class AzureBlobStorageService : IBlobStorageService
                 stream,
                 new BlobUploadOptions
                 {
-                    HttpHeaders = new BlobHttpHeaders
-                    {
-                        CacheControl = "public, max-age=31536000, immutable",
-                        ContentType = FileHelper.GetContentType(fileName),
-                    },
+                    HttpHeaders = new BlobHttpHeaders { CacheControl = "public, max-age=31536000, immutable", ContentType = file.ContentType },
                 },
                 cancellationToken
             );
