@@ -9,6 +9,7 @@ using Platform.Application.Common;
 using Platform.Application.Common.Responses;
 using Platform.Domain.Auth.Interfaces;
 using Platform.Domain.Entities;
+using Platform.Domain.Entities.Enums;
 
 namespace Platform.Application.Features.Workspaces.SearchWorkspaces;
 
@@ -29,7 +30,7 @@ public class SearchWorkspacesHandler(IContext context, ICurrentSession session)
     /// <returns>A paginated list of workspaces.</returns>
     public async Task<Result<PaginatedList<WorkspaceResponse>>> Handle(SearchWorkspacesRequest request, CancellationToken cancellationToken)
     {
-        IQueryable<Workspace> query = context.Workspaces.Include(i => i.User.MemberProfile);
+        IQueryable<Workspace> query = context.Workspaces.Include(i => i.User.MemberProfile).Include(i => i.WorkspaceMembers);
 
         // Apply workspace member filter
         query = query.Where(x => x.WorkspaceMembers.Any(m => m.UserId == session.UserId));
@@ -56,6 +57,7 @@ public class SearchWorkspacesHandler(IContext context, ICurrentSession session)
                 {
                     var workspaceResponse = x.Adapt<WorkspaceResponse>();
                     workspaceResponse.CreatedByUser = new CommonUserResponse(x.User, x.User.MemberProfile);
+                    workspaceResponse.MemberRole = x.WorkspaceMembers.FirstOrDefault(m => m.UserId == session.UserId)?.Role ?? WorkspaceRole.WorkspaceMember;
                     return workspaceResponse;
                 })
                 .ToList(),
