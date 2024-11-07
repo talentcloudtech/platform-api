@@ -30,14 +30,20 @@ public class SearchUsersProjectHandler(IContext context, ICurrentSession session
     /// <returns>A paginated list of <see cref="ProjectResponse"/> matching the search criteria.</returns>
     public async Task<Result<PaginatedList<ProjectResponse>>> Handle(SearchUsersProjectRequest request, CancellationToken cancellationToken)
     {
-        IQueryable<Project> query = context.Projects.Include(i => i.Workspace).Include(i => i.User.MemberProfile);
+        var query = context.Projects.Include(i => i.Workspace).Include(i => i.User.MemberProfile).AsQueryable();
+
+        if (session.Role?.Name == UserRole.Admin.Name && request.ShowAll)
+            query = query.Where(x => true);
 
         //Apply workspace and project role filter
-        query = query.Where(x =>
-            x.Workspace.WorkspaceMembers.Any(m =>
-                m.UserId == session.UserId && (m.Role == WorkspaceRole.WorkspaceOwner || m.Role == WorkspaceRole.WorkspaceManager)
-            ) || x.ProjectMembers.Any(m => m.UserId == session.UserId)
-        );
+        if (session.Role?.Name != UserRole.Admin.Name || (session.Role?.Name == UserRole.Admin.Name && !request.ShowAll))
+        {
+            query = query.Where(x =>
+                x.Workspace.WorkspaceMembers.Any(m =>
+                    m.UserId == session.UserId && (m.Role == WorkspaceRole.WorkspaceOwner || m.Role == WorkspaceRole.WorkspaceManager)
+                ) || x.ProjectMembers.Any(m => m.UserId == session.UserId)
+            );
+        }
 
         //Apply workspace filter
         if (request.WorkspaceIds!.Any())
@@ -50,6 +56,10 @@ public class SearchUsersProjectHandler(IContext context, ICurrentSession session
         // Apply status filter
         if (request.Statuses!.Any())
             query = query.Where(i => request.Statuses!.Contains(i.Status));
+
+        // Apply project type filter
+        if (request.ProjectType != null)
+            query = query.Where(i => i.Type == request.ProjectType);
 
         // Apply search filter
         if (!string.IsNullOrWhiteSpace(request.Search))
