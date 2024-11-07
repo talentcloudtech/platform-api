@@ -15,9 +15,11 @@ namespace Platform.Application.Features.Projects.SearchProjects;
 /// <param name="Search">The optional search to filter projects by. If null, no filtering by search is applied.</param>
 /// <param name="SortBy">The optional sort by to filter projects by. If null, no filtering by sort is applied.</param>
 /// <param name="SortOrder">The optional sort order to filter projects by. If null, no filtering by sort order is applied.</param>
+/// <param name="ShowAll">The optional show all to filter projects by. If false, no filtering by show all is applied.</param>
 /// <param name="Statuses">The optional status to filter projects by. If null, no filtering by status is applied.</param>
 /// <param name="CurrentPage">The current page number for pagination. Defaults to 1.</param>
 /// <param name="PageSize">The number of items per page for pagination. Defaults to 10.</param>
+/// <param name="ProjectType">The optional project type to filter projects by. If null, no filtering by project type is applied.</param>
 /// <returns>A paginated list of <see cref="ProjectResponse"/> matching the search criteria.</returns>
 public record SearchUsersProjectRequest(
     WorkspaceId[]? WorkspaceIds,
@@ -26,6 +28,8 @@ public record SearchUsersProjectRequest(
     string SortBy = nameof(Project.CreatedDate),
     string SortOrder = "desc",
     ProjectStatus[]? Statuses = null,
+    bool ShowAll = false,
     int CurrentPage = 1,
+    ProjectType? ProjectType = null,
     int PageSize = 10
 ) : IRequest<Result<PaginatedList<ProjectResponse>>>;
