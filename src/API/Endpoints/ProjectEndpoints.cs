@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Platform.Application.Extensions;
+using Platform.Application.Features.ProjectMembers.AssignProjectMembers;
 using Platform.Application.Features.Projects.CreateProject;
 using Platform.Application.Features.Projects.DeleteProject;
 using Platform.Application.Features.Projects.GetProjectById;
@@ -103,5 +104,17 @@ public class ProjectEndpoints : IEndpoints
                 }
             )
             .WithSummary("Get the role of the current user in the project.");
+
+        group
+            .MapPost(
+                "/{projectId}/members/assign",
+                async (IMediator mediator, WorkspaceId workspaceId, ProjectId projectId, AssignProjectMembersRequest request) =>
+                {
+                    request = request with { WorkspaceId = workspaceId, ProjectId = projectId };
+                    var result = await mediator.Send(request);
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Assign multiple users to a project");
     }
 }
