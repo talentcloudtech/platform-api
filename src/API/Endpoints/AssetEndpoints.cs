@@ -64,22 +64,16 @@ public class AssetEndpoints : IEndpoints
             )
             .WithSummary("Delete a workspace asset");
 
-        group.MapPatch(
-            "/asset/{assetId}",
-            async (
-                IMediator mediator,
-                WorkspaceId workspaceId,
-                WorkspaceAssetId assetId,
-                UpdateWorkspaceAssetRequest request) =>
-            {
-                request = request with
+        group
+            .MapPatch(
+                "/asset/{assetId}",
+                async (IMediator mediator, WorkspaceId workspaceId, WorkspaceAssetId assetId, UpdateWorkspaceAssetRequest request) =>
                 {
-                    WorkspaceId = workspaceId,
-                    AssetId = assetId
-                };
-                var result = await mediator.Send(request);
-                return result.ToPlatformApiResult();
-            })
+                    request = request with { WorkspaceId = workspaceId, AssetId = assetId };
+                    var result = await mediator.Send(request);
+                    return result.ToPlatformApiResult();
+                }
+            )
             .WithSummary("Update a workspace asset");
     }
 }

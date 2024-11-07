@@ -12,17 +12,18 @@ public class UpdateWorkspaceAssetValidator : AbstractValidator<UpdateWorkspaceAs
     /// </summary>
     public UpdateWorkspaceAssetValidator()
     {
-        RuleFor(x => x.FieldsToUpdate)
-            .NotEmpty()
-            .WithMessage("At least one field must be specified for update");
+        RuleFor(x => x.FieldsToUpdate).NotEmpty().WithMessage("At least one field must be specified for update");
 
-        When(x => x.FieldsToUpdate.Contains("fileName"), () =>
-        {
-            RuleFor(x => x.FileName)
-                .NotEmpty()
-                .WithMessage("File name is required when updating fileName")
-                .MaximumLength(256)
-                .WithMessage("File name cannot exceed 256 characters");
-        });
+        When(
+            x => x.FieldsToUpdate.Contains("fileName"),
+            () =>
+            {
+                RuleFor(x => x.FileName)
+                    .NotEmpty()
+                    .WithMessage("File name is required when updating fileName")
+                    .MaximumLength(256)
+                    .WithMessage("File name cannot exceed 256 characters");
+            }
+        );
     }
 }

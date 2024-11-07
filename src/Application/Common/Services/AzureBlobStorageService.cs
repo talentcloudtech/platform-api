@@ -68,11 +68,7 @@ public class AzureBlobStorageService : IBlobStorageService
                 stream,
                 new BlobUploadOptions
                 {
-                    HttpHeaders = new BlobHttpHeaders
-                    {
-                        CacheControl = "public, max-age=31536000, immutable",
-                        ContentType = file.ContentType,
-                    },
+                    HttpHeaders = new BlobHttpHeaders { CacheControl = "public, max-age=31536000, immutable", ContentType = file.ContentType },
                 },
                 cancellationToken
             );

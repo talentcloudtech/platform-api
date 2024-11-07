@@ -3,13 +3,13 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.Result;
+using FluentValidation;
 using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
 using Platform.Domain.Auth.Interfaces;
 using Platform.Domain.Entities.Enums;
-using FluentValidation;
 
 namespace Platform.Application.Features.WorkspaceAssets.UpdateWorkspaceAsset;
 
@@ -25,10 +25,7 @@ public class UpdateWorkspaceAssetHandler : IRequestHandler<UpdateWorkspaceAssetR
     /// <summary>
     /// Initializes a new instance of the <see cref="UpdateWorkspaceAssetHandler"/> class
     /// </summary>
-    public UpdateWorkspaceAssetHandler(
-        IContext context,
-        ICurrentSession session,
-        IValidator<UpdateWorkspaceAssetRequest> validator)
+    public UpdateWorkspaceAssetHandler(IContext context, ICurrentSession session, IValidator<UpdateWorkspaceAssetRequest> validator)
     {
         _context = context;
         _session = session;
@@ -38,17 +35,15 @@ public class UpdateWorkspaceAssetHandler : IRequestHandler<UpdateWorkspaceAssetR
     /// <summary>
     /// Handles the update request
     /// </summary>
-    public async Task<Result<WorkspaceAssetResponse>> Handle(
-        UpdateWorkspaceAssetRequest request,
-        CancellationToken cancellationToken)
+    public async Task<Result<WorkspaceAssetResponse>> Handle(UpdateWorkspaceAssetRequest request, CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
         if (!validationResult.IsValid)
-            return Result.Invalid(validationResult.Errors.Select(x => new ValidationError(x.PropertyName, x.ErrorMessage, x.ErrorCode, ValidationSeverity.Error)));
+            return Result.Invalid(
+                validationResult.Errors.Select(x => new ValidationError(x.PropertyName, x.ErrorMessage, x.ErrorCode, ValidationSeverity.Error))
+            );
 
-        var workspace = await _context.Workspaces
-            .Include(x => x.WorkspaceMembers)
-            .FirstOrDefaultAsync(x => x.Id == request.WorkspaceId, cancellationToken);
+        var workspace = await _context.Workspaces.Include(x => x.WorkspaceMembers).FirstOrDefaultAsync(x => x.Id == request.WorkspaceId, cancellationToken);
 
         if (workspace == null)
             return Result.NotFound("Workspace not found.");
@@ -58,8 +53,8 @@ public class UpdateWorkspaceAssetHandler : IRequestHandler<UpdateWorkspaceAssetR
         if (member == null || (member.Role != WorkspaceRole.WorkspaceOwner && member.Role != WorkspaceRole.WorkspaceManager))
             return Result.Forbidden("You don't have permission to update assets in this workspace.");
 
-        var asset = await _context.WorkspaceAssets
-            .Include(x => x.Workspace)
+        var asset = await _context
+            .WorkspaceAssets.Include(x => x.Workspace)
             .Include(x => x.Project)
             .Include(x => x.Task)
             .FirstOrDefaultAsync(x => x.Id == request.AssetId && x.WorkspaceId == request.WorkspaceId, cancellationToken);
