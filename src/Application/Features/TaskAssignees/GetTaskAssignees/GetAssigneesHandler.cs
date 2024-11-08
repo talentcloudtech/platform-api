@@ -27,14 +27,7 @@ public class GetTaskAssigneesHandler(IContext context, ICurrentSession session) 
     /// <returns>The result.</returns>
     public async Task<Result<List<CommonUserResponse>>> Handle(GetTaskAssigneesRequest request, CancellationToken cancellationToken)
     {
-
-        var project = await PermissionHelper.GetProjectWithMembersAsync(context, request.ProjectId, cancellationToken);
-
-        if (project == null)
-            return Result.NotFound("Project not found.");
-
-        var currentUserHasAccess = project.Workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId) ||
-                                   project.ProjectMembers.Any(x => x.UserId == session.UserId);
+        var currentUserHasAccess = await PermissionHelper.CheckIfCurrentUserHasTaskAccessAsync(context, request.TaskId, session.UserId, cancellationToken);
 
         if (!currentUserHasAccess)
             return Result.Forbidden("You do not have access to this project.");

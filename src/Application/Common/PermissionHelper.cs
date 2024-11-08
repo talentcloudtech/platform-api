@@ -4,6 +4,7 @@ using Platform.Domain.Entities.Common;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Platform.Application.Common;
 
@@ -13,17 +14,25 @@ namespace Platform.Application.Common;
 public static class PermissionHelper
 {
     /// <summary>
-    /// Gets a project with its members asynchronously.
+    /// Checks if the current user has access to the task.
     /// </summary>
     /// <param name="context">The database context.</param>
-    /// <param name="projectId">The project ID.</param>
+    /// <param name="taskId">The task ID.</param>
+    /// <param name="currentUserId">The current user ID.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>The project.</returns>
-    public static async Task<Project?> GetProjectWithMembersAsync(IContext context, ProjectId projectId, CancellationToken cancellationToken)
+    /// <returns>True if the user has access, otherwise false.</returns>
+    public static async Task<bool> CheckIfCurrentUserHasTaskAccessAsync(IContext context, ProjectTaskId taskId, UserId currentUserId, CancellationToken cancellationToken)
     {
-        return await context.Projects
-            .Include(p => p.Workspace.WorkspaceMembers)
-            .Include(p => p.ProjectMembers)
-            .FirstOrDefaultAsync(p => p.Id == projectId, cancellationToken);
+        var task = await context.ProjectTasks
+            .Include(t => t.Project.Workspace.WorkspaceMembers)
+            .Include(t => t.Project.ProjectMembers)
+            .FirstOrDefaultAsync(t => t.Id == taskId, cancellationToken);
+
+        if (task == null) return false;
+
+        var hasAccess = task.Project.Workspace.WorkspaceMembers.Any(m => m.UserId == currentUserId) ||
+                        task.Project.ProjectMembers.Any(m => m.UserId == currentUserId);
+
+        return hasAccess;
     }
 }

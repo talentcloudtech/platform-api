@@ -109,13 +109,12 @@ public class TaskEndpoints : IEndpoints
 
         group
             .MapPatch(
-                "{taskId}/assign/{assigneeId}",
+                "{taskId}/assign",
                 async (
                     IMediator mediator,
                     WorkspaceId workspaceId,
                     ProjectId projectId,
                     ProjectTaskId taskId,
-                    ProjectTaskAssignmentId assigneeId,
                     UpdateTaskAssigneeRequest request
                 ) =>
                 {
@@ -125,7 +124,6 @@ public class TaskEndpoints : IEndpoints
                             WorkspaceId = workspaceId,
                             ProjectId = projectId,
                             TaskId = taskId,
-                            AssigneeId = assigneeId,
                         }
                     );
                     return result.ToPlatformApiResult();
