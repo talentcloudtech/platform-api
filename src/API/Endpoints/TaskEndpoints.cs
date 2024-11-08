@@ -7,6 +7,7 @@ using Platform.API.Endpoints.TaskAssignees.UpdateTaskAssignee;
 using Platform.Application.Extensions;
 using Platform.Application.Features.Tasks.CreateTask;
 using Platform.Application.Features.Tasks.DeleteTask;
+using Platform.Application.Features.Tasks.GetAssignees;
 using Platform.Application.Features.Tasks.GetTaskById;
 using Platform.Application.Features.Tasks.SearchTasks;
 using Platform.Application.Features.Tasks.SearchUsersTask;
@@ -131,5 +132,19 @@ public class TaskEndpoints : IEndpoints
                 }
             )
             .WithSummary("Updates a task assignee.");
+
+        group.MapGet(
+            "{taskId}/assignees",
+            async (
+                IMediator mediator,
+                WorkspaceId workspaceId,
+                ProjectId projectId,
+                ProjectTaskId taskId) =>
+            {
+                var request = new GetAssigneesRequest(workspaceId, projectId, taskId);
+                var result = await mediator.Send(request);
+                return result.ToPlatformApiResult();
+            })
+            .WithSummary("Get all assignees for a task");
     }
 }
