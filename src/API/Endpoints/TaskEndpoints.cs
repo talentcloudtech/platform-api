@@ -136,9 +136,9 @@ public class TaskEndpoints : IEndpoints
         group
             .MapGet(
                 "{taskId}/assignees",
-                async (IMediator mediator, WorkspaceId workspaceId, ProjectId projectId, ProjectTaskId taskId) =>
+                async (IMediator mediator, ProjectId projectId, ProjectTaskId taskId) =>
                 {
-                    var request = new GetAssigneesRequest(workspaceId, projectId, taskId);
+                    var request = new GetTaskAssigneesRequest(projectId, taskId);
                     var result = await mediator.Send(request);
                     return result.ToPlatformApiResult();
                 }
