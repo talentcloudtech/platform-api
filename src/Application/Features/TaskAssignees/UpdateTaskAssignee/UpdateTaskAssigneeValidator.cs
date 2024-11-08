@@ -12,20 +12,12 @@ public class UpdateTaskAssigneeValidator : AbstractValidator<UpdateTaskAssigneeR
     /// </summary>
     public UpdateTaskAssigneeValidator()
     {
-        RuleFor(x => x.WorkspaceId)
-            .NotEmpty()
-            .WithMessage("Workspace ID is required");
+        RuleFor(x => x.WorkspaceId).NotEmpty().WithMessage("Workspace ID is required");
 
-        RuleFor(x => x.ProjectId)
-            .NotEmpty()
-            .WithMessage("Project ID is required");
+        RuleFor(x => x.ProjectId).NotEmpty().WithMessage("Project ID is required");
 
-        RuleFor(x => x.TaskId)
-            .NotEmpty()
-            .WithMessage("Task ID is required");
+        RuleFor(x => x.TaskId).NotEmpty().WithMessage("Task ID is required");
 
-        RuleFor(x => x.UserIds)
-            .NotNull()
-            .WithMessage("User IDs list is required");
+        RuleFor(x => x.UserIds).NotNull().WithMessage("User IDs list is required");
     }
 }

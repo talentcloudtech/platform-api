@@ -33,8 +33,7 @@ public class GetTaskAssigneesHandler(IContext context, ICurrentSession session) 
             return Result.Forbidden("You do not have access to this project.");
 
         var taskAssignees = await context
-            .ProjectTaskAssignments
-            .Where(x => x.TaskId == request.TaskId)
+            .ProjectTaskAssignments.Where(x => x.TaskId == request.TaskId)
             .Select(x => new CommonUserResponse(x.User, x.User.MemberProfile))
             .ToListAsync(cancellationToken);
 
