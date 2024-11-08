@@ -133,18 +133,16 @@ public class TaskEndpoints : IEndpoints
             )
             .WithSummary("Updates a task assignee.");
 
-        group.MapGet(
-            "{taskId}/assignees",
-            async (
-                IMediator mediator,
-                WorkspaceId workspaceId,
-                ProjectId projectId,
-                ProjectTaskId taskId) =>
-            {
-                var request = new GetAssigneesRequest(workspaceId, projectId, taskId);
-                var result = await mediator.Send(request);
-                return result.ToPlatformApiResult();
-            })
+        group
+            .MapGet(
+                "{taskId}/assignees",
+                async (IMediator mediator, WorkspaceId workspaceId, ProjectId projectId, ProjectTaskId taskId) =>
+                {
+                    var request = new GetAssigneesRequest(workspaceId, projectId, taskId);
+                    var result = await mediator.Send(request);
+                    return result.ToPlatformApiResult();
+                }
+            )
             .WithSummary("Get all assignees for a task");
     }
 }

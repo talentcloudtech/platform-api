@@ -1,6 +1,6 @@
+using System;
 using Platform.Application.Common.Responses;
 using Platform.Domain.Entities.Common;
-using System;
 
 namespace Platform.Application.Features.Tasks.GetAssignees;
 

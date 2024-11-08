@@ -1,7 +1,7 @@
+using System.Collections.Generic;
 using Ardalis.Result;
 using MediatR;
 using Platform.Domain.Entities.Common;
-using System.Collections.Generic;
 
 namespace Platform.Application.Features.Tasks.GetAssignees;
 
@@ -11,5 +11,4 @@ namespace Platform.Application.Features.Tasks.GetAssignees;
 /// <param name="WorkspaceId">The workspace ID.</param>
 /// <param name="ProjectId">The project ID.</param>
 /// <param name="TaskId">The task ID.</param>
-public record GetAssigneesRequest(WorkspaceId WorkspaceId, ProjectId ProjectId, ProjectTaskId TaskId)
-    : IRequest<Result<List<AssigneeResponse>>>;
+public record GetAssigneesRequest(WorkspaceId WorkspaceId, ProjectId ProjectId, ProjectTaskId TaskId) : IRequest<Result<List<AssigneeResponse>>>;
