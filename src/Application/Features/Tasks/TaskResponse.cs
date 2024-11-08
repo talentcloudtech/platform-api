@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using Platform.API.Endpoints.TaskAssignees.UpdateTaskAssignee;
 using Platform.Application.Common.Responses;
 using Platform.Application.Features.Projects;
 using Platform.Application.Features.Workspaces;
@@ -101,4 +103,9 @@ public class TaskResponse
     /// Gets or sets the user who created this task.
     /// </summary>
     public CommonUserResponse? CreatedByUser { get; set; }
+
+    /// <summary>
+    /// Gets or sets the list of assignees for this task.
+    /// </summary>
+    public List<CommonUserResponse> Assignees { get; set; } = new();
 }
