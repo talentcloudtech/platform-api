@@ -1,58 +1,88 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.Result;
-using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
-using Platform.Application.Common.Responses;
 using Platform.Domain.Auth.Interfaces;
+using Platform.Domain.Entities;
 
 namespace Platform.API.Endpoints.TaskAssignees.UpdateTaskAssignee;
 
 /// <summary>
-/// Update task assignee
+/// Update task assignees
 /// </summary>
-/// <param name="context"></param>
-/// <param name="session"></param>
-public class UpdateTaskAssigneeHandler(IContext context, ICurrentSession session) : IRequestHandler<UpdateTaskAssigneeRequest, Result<TaskAssigneeResponse>>
+public class UpdateTaskAssigneeHandler(IContext context, ICurrentSession session)
+    : IRequestHandler<UpdateTaskAssigneeRequest, Result<List<TaskAssigneeResponse>>>
 {
     /// <summary>
-    /// Update task assignee
+    /// Update task assignees
     /// </summary>
-    /// <param name="request"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    public async Task<Result<TaskAssigneeResponse>> Handle(UpdateTaskAssigneeRequest request, CancellationToken cancellationToken)
+    public async Task<Result<List<TaskAssigneeResponse>>> Handle(UpdateTaskAssigneeRequest request, CancellationToken cancellationToken)
     {
-        var taskAssignee = await context.ProjectTaskAssignments.FirstOrDefaultAsync(x => x.Id == request.AssigneeId, cancellationToken);
-        if (taskAssignee == null)
-            return Result.NotFound("Task assignee not found.");
+        var currentUserHasAccess = await PermissionHelper.CheckIfCurrentUserHasTaskAccessAsync(context, request.TaskId, session.UserId, cancellationToken);
 
-        var task = await context
-            .ProjectTasks.Include(x => x.Project.Workspace.WorkspaceMembers)
-            .Include(x => x.Project.ProjectMembers)
-            .Include(x => x.User.MemberProfile)
-            .FirstOrDefaultAsync(x => x.Id == request.TaskId, cancellationToken);
-
-        if (task == null)
-            return Result.NotFound("Task not found.");
-
-        var hasValidRole =
-            task.Project.Workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId) || task.Project.ProjectMembers.Any(x => x.UserId == session.UserId);
-
-        if (!hasValidRole)
+        if (!currentUserHasAccess)
             return Result.Forbidden("You are not allowed to update this task assignee.");
 
-        taskAssignee.TimeSpent = request.TimeSpent;
-        taskAssignee.UpdatedBy = session.UserId;
-        taskAssignee.UpdatedDate = DateTime.UtcNow;
+        // Get existing assignments
+        var existingAssignments = await context.ProjectTaskAssignments.Where(x => x.TaskId == request.TaskId).ToListAsync(cancellationToken);
 
-        await context.SaveChangesAsync(cancellationToken);
-        var response = taskAssignee.Adapt<TaskAssigneeResponse>();
-        response.User = new CommonUserResponse(taskAssignee.User, taskAssignee.User.MemberProfile);
-        return Result.Success(response);
+        var existingUserIds = existingAssignments.Select(x => x.UserId).ToHashSet();
+        var requestedUserIds = request.UserIds.ToHashSet();
+
+        // Find assignments to remove
+        var assignmentsToRemove = existingAssignments.Where(x => !requestedUserIds.Contains(x.UserId)).ToList();
+
+        // Find new users to assign
+        var usersToAdd = requestedUserIds.Where(userId => !existingUserIds.Contains(userId)).ToList();
+
+        var currentTime = DateTime.UtcNow;
+
+        // Remove assignments
+        if (assignmentsToRemove.Any())
+        {
+            context.ProjectTaskAssignments.RemoveRange(assignmentsToRemove);
+        }
+
+        // Add new assignments
+        if (usersToAdd.Any())
+        {
+            var newAssignments = usersToAdd.Select(userId => new ProjectTaskAssignment
+            {
+                TaskId = request.TaskId,
+                UserId = userId,
+                TimeSpent = 0,
+                AssignedBy = session.UserId,
+                AssignedDate = currentTime,
+                CreatedBy = session.UserId,
+                CreatedDate = currentTime,
+                UpdatedBy = session.UserId,
+                UpdatedDate = currentTime,
+            });
+
+            await context.ProjectTaskAssignments.AddRangeAsync(newAssignments, cancellationToken);
+        }
+
+        if (assignmentsToRemove.Any() || usersToAdd.Any())
+        {
+            await context.SaveChangesAsync(cancellationToken);
+        }
+
+        // Get updated assignees
+        var updatedAssignees = await context
+            .ProjectTaskAssignments.Where(x => x.TaskId == request.TaskId)
+            .Select(x => new TaskAssigneeResponse
+            {
+                UserId = x.UserId,
+                TaskId = x.TaskId,
+                TimeSpent = x.TimeSpent,
+            })
+            .ToListAsync(cancellationToken);
+
+        return Result.Success(updatedAssignees);
     }
 }

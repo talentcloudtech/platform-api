@@ -3,19 +3,21 @@ using FluentValidation;
 namespace Platform.API.Endpoints.TaskAssignees.UpdateTaskAssignee;
 
 /// <summary>
-/// Validator for the <see cref="UpdateTaskAssigneeRequest"/> class.
+/// Validator for the UpdateTaskAssigneeRequest
 /// </summary>
 public class UpdateTaskAssigneeValidator : AbstractValidator<UpdateTaskAssigneeRequest>
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="UpdateTaskAssigneeValidator"/> class.
+    /// Initializes a new instance of the UpdateTaskAssigneeValidator class
     /// </summary>
     public UpdateTaskAssigneeValidator()
     {
-        RuleFor(x => x.WorkspaceId).NotNull().NotEmpty();
-        RuleFor(x => x.ProjectId).NotNull().NotEmpty();
-        RuleFor(x => x.TaskId).NotNull().NotEmpty();
-        RuleFor(x => x.AssigneeId).NotNull().NotEmpty();
-        RuleFor(x => x.TimeSpent).NotNull().NotEmpty().GreaterThan(0);
+        RuleFor(x => x.WorkspaceId).NotEmpty().WithMessage("Workspace ID is required");
+
+        RuleFor(x => x.ProjectId).NotEmpty().WithMessage("Project ID is required");
+
+        RuleFor(x => x.TaskId).NotEmpty().WithMessage("Task ID is required");
+
+        RuleFor(x => x.UserIds).NotNull().WithMessage("User IDs list is required");
     }
 }

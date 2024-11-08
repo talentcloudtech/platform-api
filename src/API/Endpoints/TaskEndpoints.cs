@@ -109,25 +109,10 @@ public class TaskEndpoints : IEndpoints
 
         group
             .MapPatch(
-                "{taskId}/assign/{assigneeId}",
-                async (
-                    IMediator mediator,
-                    WorkspaceId workspaceId,
-                    ProjectId projectId,
-                    ProjectTaskId taskId,
-                    ProjectTaskAssignmentId assigneeId,
-                    UpdateTaskAssigneeRequest request
-                ) =>
+                "{taskId}/assign",
+                async (IMediator mediator, WorkspaceId workspaceId, ProjectId projectId, ProjectTaskId taskId, UpdateTaskAssigneeRequest request) =>
                 {
-                    var result = await mediator.Send(
-                        request with
-                        {
-                            WorkspaceId = workspaceId,
-                            ProjectId = projectId,
-                            TaskId = taskId,
-                            AssigneeId = assigneeId,
-                        }
-                    );
+                    var result = await mediator.Send(request with { WorkspaceId = workspaceId, ProjectId = projectId, TaskId = taskId });
                     return result.ToPlatformApiResult();
                 }
             )
@@ -136,9 +121,9 @@ public class TaskEndpoints : IEndpoints
         group
             .MapGet(
                 "{taskId}/assignees",
-                async (IMediator mediator, WorkspaceId workspaceId, ProjectId projectId, ProjectTaskId taskId) =>
+                async (IMediator mediator, ProjectId projectId, ProjectTaskId taskId) =>
                 {
-                    var request = new GetAssigneesRequest(workspaceId, projectId, taskId);
+                    var request = new GetTaskAssigneesRequest(projectId, taskId);
                     var result = await mediator.Send(request);
                     return result.ToPlatformApiResult();
                 }

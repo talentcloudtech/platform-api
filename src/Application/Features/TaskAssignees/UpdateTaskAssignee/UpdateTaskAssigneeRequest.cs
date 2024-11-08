@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Ardalis.Result;
 using MediatR;
@@ -6,9 +7,9 @@ using Platform.Domain.Entities.Common;
 namespace Platform.API.Endpoints.TaskAssignees.UpdateTaskAssignee;
 
 /// <summary>
-/// Represents a request to update an existing task.
+/// Represents a request to update task assignees.
 /// </summary>
-public record UpdateTaskAssigneeRequest : IRequest<Result<TaskAssigneeResponse>>
+public record UpdateTaskAssigneeRequest : IRequest<Result<List<TaskAssigneeResponse>>>
 {
     /// <summary>
     /// Gets or sets the workspace identifier associated with this task.
@@ -29,13 +30,7 @@ public record UpdateTaskAssigneeRequest : IRequest<Result<TaskAssigneeResponse>>
     public ProjectTaskId TaskId { get; init; }
 
     /// <summary>
-    /// Gets or sets the assignee identifier.
+    /// Gets or sets the list of user IDs to be assigned to the task
     /// </summary>
-    [JsonIgnore]
-    public ProjectTaskAssignmentId AssigneeId { get; init; }
-
-    /// <summary>
-    /// Gets or sets the estimated time to complete the task (in minutes).
-    /// </summary>
-    public int TimeSpent { get; set; }
+    public required ICollection<UserId> UserIds { get; init; }
 }
