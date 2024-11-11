@@ -42,8 +42,6 @@ public class DeleteWorkspaceAssetHandler : IRequestHandler<DeleteWorkspaceAssetR
             return Result.NotFound("Workspace not found.");
 
         var member = workspace.WorkspaceMembers.FirstOrDefault(x => x.UserId == _session.UserId);
-        if (member == null || (member.Role != WorkspaceRole.WorkspaceOwner && member.Role != WorkspaceRole.WorkspaceManager))
-            return Result.Forbidden("You don't have permission to delete assets in this workspace.");
 
         var asset = await _context.WorkspaceAssets.FirstOrDefaultAsync(x => x.Id == request.AssetId && x.WorkspaceId == request.WorkspaceId, cancellationToken);
 
