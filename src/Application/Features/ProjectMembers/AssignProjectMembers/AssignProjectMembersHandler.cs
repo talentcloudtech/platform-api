@@ -46,9 +46,10 @@ public class AssignProjectMembersHandler : IRequestHandler<AssignProjectMembersR
         // Check if user has permission to assign members
 
         var workspaceMember = project.Workspace.WorkspaceMembers.FirstOrDefault(x => x.UserId == _session.UserId);
-        if (_session.Role!.Name != UserRole.Admin.Name &&
-        (workspaceMember == null || (workspaceMember.Role != WorkspaceRole.WorkspaceOwner &&
-                                   workspaceMember.Role != WorkspaceRole.WorkspaceManager)))
+        if (
+            _session.Role!.Name != UserRole.Admin.Name
+            && (workspaceMember == null || (workspaceMember.Role != WorkspaceRole.WorkspaceOwner && workspaceMember.Role != WorkspaceRole.WorkspaceManager))
+        )
             return Result.Forbidden("You don't have permission to assign members to this project.");
 
         // Get existing project members
