@@ -38,9 +38,11 @@ public class GetProjectByIdHandler(IContext context, ICurrentSession session) : 
                     x.WorkspaceId == request.WorkspaceId
                     && x.Id == request.Id
                     && (
-                        x.Workspace.WorkspaceMembers.Any(wm =>
+                        session.Role!.Name == UserRole.Admin.Name
+                        || x.Workspace.WorkspaceMembers.Any(wm =>
                             wm.UserId == session.UserId && (wm.Role == WorkspaceRole.WorkspaceOwner || wm.Role == WorkspaceRole.WorkspaceManager)
-                        ) || x.ProjectMembers.Any(pm => pm.UserId == session.UserId)
+                        )
+                        || x.ProjectMembers.Any(pm => pm.UserId == session.UserId)
                     ),
                 cancellationToken: cancellationToken
             );
