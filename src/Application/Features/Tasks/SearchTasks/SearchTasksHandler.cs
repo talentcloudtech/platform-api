@@ -31,8 +31,11 @@ public class SearchTasksHandler(IContext context, ICurrentSession session) : IRe
     /// <returns>The result of the operation.</returns>
     public async Task<Result<PaginatedList<TaskResponse>>> Handle(SearchTasksRequest request, CancellationToken cancellationToken)
     {
-        IQueryable<ProjectTask> query = context.ProjectTasks
-        .Include(x => x.Assignments).Include(i => i.Workspace).Include(i => i.Project).Include(i => i.User.MemberProfile);
+        IQueryable<ProjectTask> query = context
+            .ProjectTasks.Include(x => x.Assignments)
+            .Include(i => i.Workspace)
+            .Include(i => i.Project)
+            .Include(i => i.User.MemberProfile);
 
         query = query.Where(x => x.WorkspaceId == request.WorkspaceId && x.ProjectId == request.ProjectId);
 
