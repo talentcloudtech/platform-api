@@ -34,35 +34,35 @@ public record UpdateProjectRequest : IRequest<Result<ProjectResponse>>
     /// <summary>
     /// Gets or sets the description of the project.
     /// </summary>
-    public string? Description { get; init; }
+    public string? Description { get; set; }
 
     /// <summary>
     /// Gets or sets the start date of the project.
     /// </summary>
-    public DateTime StartDate { get; init; }
+    public DateTime? StartDate { get; set; }
 
     /// <summary>
     /// Gets or sets the end date of the project.
     /// </summary>
-    public DateTime? EndDate { get; init; }
+    public DateTime? EndDate { get; set; }
 
     /// <summary>
     /// Gets or sets the budget for the project.
     /// </summary>
-    public decimal? Budget { get; init; }
+    public decimal? Budget { get; set; }
 
     /// <summary>
     /// Gets the current status of the project.
     /// </summary>
-    public ProjectStatus Status { get; init; }
+    public ProjectStatus Status { get; set; }
 
     /// <summary>
     /// Gets or sets the type of the project.
     /// </summary>
-    public ProjectType Type { get; init; }
+    public ProjectType Type { get; set; }
 
     /// <summary>
     /// Gets or sets the technologies.
     /// </summary>
-    public IList<ProjectTechnology> Technologies { get; init; } = new List<ProjectTechnology>();
+    public IList<ProjectTechnology> Technologies { get; set; } = new List<ProjectTechnology>();
 }
