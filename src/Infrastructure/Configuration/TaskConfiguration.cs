@@ -28,6 +28,7 @@ public class ProjectTaskConfiguration : IEntityTypeConfiguration<ProjectTask>
         builder.Property(x => x.Cost).HasColumnType("decimal(18,2)");
         builder.Property(x => x.Status).HasConversion<string>();
         builder.Property(x => x.Priority).HasConversion<string>();
+        builder.Property(x => x.IsClosed).HasDefaultValue(false);
 
         builder.Property(x => x.CreatedBy).HasMaxLength(25).HasConversion<UserId.EfCoreValueConverter>();
         builder.Property(x => x.CreatedDate).HasConversion<DateTime>();

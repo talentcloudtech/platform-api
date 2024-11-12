@@ -50,6 +50,7 @@ public class UpdateTaskHandler(IContext context, ICurrentSession session) : IReq
         task.Cost = request.Cost;
         task.Status = request.Status;
         task.Priority = request.Priority;
+        task.IsClosed = request.IsClosed;
         task.UpdatedBy = session.UserId;
         task.UpdatedDate = DateTime.UtcNow;
 
