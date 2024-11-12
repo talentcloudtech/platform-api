@@ -4,18 +4,19 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Platform.Application.Extensions;
 using Platform.Application.Features.Finance.GetSummary;
+using Platform.Application.Features.Finance.GetUpcoming;
 
 namespace Platform.API.Endpoints;
 
 /// <summary>
-/// Maps the gig invitation endpoints.
+/// Maps the finance endpoints
 /// </summary>
 public class FinanceEndpoints : IEndpoints
 {
     /// <summary>
-    /// Maps the gig invitation endpoints.
+    /// Maps the finance endpoints
     /// </summary>
-    /// <param name="builder">The endpoint route builder.</param>
+    /// <param name="builder">The endpoint route builder</param>
     public static void MapEndpoints(IEndpointRouteBuilder builder)
     {
         var group = builder.MapGroup("api/{workspaceId}/finance").WithTags("Finance").RequireAuthorization();
@@ -30,5 +31,18 @@ public class FinanceEndpoints : IEndpoints
                 }
             )
             .WithSummary("Get finance summary");
+
+        group
+            .MapGet(
+                "/upcoming",
+                async (
+                    IMediator mediator,
+                    [AsParameters] GetUpcomingFinanceRequest request) =>
+                {
+                    var result = await mediator.Send(request);
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Get upcoming finance details");
     }
 }
