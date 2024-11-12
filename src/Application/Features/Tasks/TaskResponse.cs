@@ -108,4 +108,9 @@ public class TaskResponse
     /// Gets or sets the list of assignees for this task.
     /// </summary>
     public List<CommonUserResponse> Assignees { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the is closed flag.
+    /// </summary>
+    public bool IsClosed { get; set; }
 }

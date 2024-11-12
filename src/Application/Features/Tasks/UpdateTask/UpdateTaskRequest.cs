@@ -69,4 +69,9 @@ public record UpdateTaskRequest : IRequest<Result<TaskResponse>>
     /// Gets or sets the priority of the task.
     /// </summary>
     public TaskPriority Priority { get; set; }
+
+    /// <summary>
+    /// Gets or sets the is closed flag.
+    /// </summary>
+    public bool IsClosed { get; set; }
 }

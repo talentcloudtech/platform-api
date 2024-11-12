@@ -841,6 +841,11 @@ namespace Platform.Migrations
                     b.Property<int?>("Estimate")
                         .HasColumnType("integer");
 
+                    b.Property<bool>("IsClosed")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
                     b.Property<string>("Priority")
                         .IsRequired()
                         .HasColumnType("text");
