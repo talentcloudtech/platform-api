@@ -94,6 +94,4 @@ public class ProjectTask : AuditableEntity<ProjectTaskId>
     /// Gets or sets the is closed flag.
     /// </summary>
     public bool IsClosed { get; set; }
-
-
 }
