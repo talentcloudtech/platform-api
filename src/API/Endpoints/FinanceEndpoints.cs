@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Routing;
 using Platform.Application.Extensions;
 using Platform.Application.Features.Finance.GetSummary;
 using Platform.Application.Features.Finance.GetUpcoming;
+using Platform.Application.Features.Finance.ReleasePayment;
 
 namespace Platform.API.Endpoints;
 
@@ -44,5 +45,18 @@ public class FinanceEndpoints : IEndpoints
                 }
             )
             .WithSummary("Get upcoming finance details");
+
+        group
+            .MapPost(
+                "/release-payment",
+                async (
+                    IMediator mediator,
+                    [AsParameters] ReleasePaymentRequest request) =>
+                {
+                    var result = await mediator.Send(request);
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Release payments for tasks");
     }
 }

@@ -6,20 +6,9 @@ using System.Collections.Generic;
 namespace Platform.Application.Features.Finance.GetUpcoming;
 
 /// <summary>
-/// Response containing upcoming finance details
-/// </summary>
-public class UpcomingFinanceResponse
-{
-    /// <summary>
-    /// Gets or sets the list of upcoming tasks
-    /// </summary>
-    public List<UpcomingTaskFinance> Tasks { get; set; } = new();
-}
-
-/// <summary>
 /// Details of an upcoming task's finance
 /// </summary>
-public class UpcomingTaskFinance
+public class UpcomingFinanceResponse
 {
     /// <summary>
     /// Gets or sets the task identifier

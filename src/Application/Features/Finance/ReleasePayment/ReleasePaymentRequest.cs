@@ -1,0 +1,22 @@
+using System.Collections.Generic;
+using Ardalis.Result;
+using MediatR;
+using Platform.Domain.Entities.Common;
+
+namespace Platform.Application.Features.Finance.ReleasePayment;
+
+/// <summary>
+/// Request to release payments for tasks
+/// </summary>
+public record ReleasePaymentRequest : IRequest<Result>
+{
+    /// <summary>
+    /// Gets or sets the workspace identifier
+    /// </summary>
+    public WorkspaceId WorkspaceId { get; init; }
+
+    /// <summary>
+    /// Gets or sets the list of task IDs to process payment for
+    /// </summary>
+    public List<ProjectTaskId> TaskIds { get; set; } = null!;
+}

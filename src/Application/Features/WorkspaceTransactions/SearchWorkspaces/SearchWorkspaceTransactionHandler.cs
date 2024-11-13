@@ -35,8 +35,13 @@ public class SearchWorkspaceTransactionsHandler(IContext context, ICurrentSessio
     {
         IQueryable<WorkspaceTransaction> query = context.WorkspaceTransactions;
 
-        if (session.Role!.Name != UserRole.Admin.Name && session.Role!.Name != UserRole.Customer.Name)
-            return Result.Forbidden("User does not have permission to create a workspace transaction.");
+        var workspaceMember = await context.WorkspaceMembers
+            .FirstOrDefaultAsync(wm => wm.WorkspaceId == request.WorkspaceId && wm.UserId == session.UserId, cancellationToken);
+
+        if (workspaceMember == null)
+            return Result.Forbidden("You are not a member of this workspace.");
+        if (workspaceMember.Role != WorkspaceRole.WorkspaceOwner && session.Role!.Name != UserRole.Admin.Name)
+            return Result.Forbidden("You don't have permission to access workspace transactions.");
 
         // Apply search filter
         if (!string.IsNullOrEmpty(request.Search))

@@ -75,7 +75,7 @@ public class GetUpcomingFinanceHandler : IRequestHandler<GetUpcomingFinanceReque
             query = query.OrderByDescending(i => EF.Property<object>(i, request.SortBy));
 
         var tasks = await query
-            .Select(t => new UpcomingTaskFinance
+            .Select(t => new UpcomingFinanceResponse
             {
                 TaskId = t.Id,
                 TaskTitle = t.Title,
@@ -90,10 +90,7 @@ public class GetUpcomingFinanceHandler : IRequestHandler<GetUpcomingFinanceReque
             CurrentPage = tasks.CurrentPage,
             TotalPages = tasks.TotalPages,
             TotalItems = tasks.TotalItems,
-            Result = new List<UpcomingFinanceResponse>
-            {
-                new() { Tasks = tasks.Result.ToList() }
-            }
+            Result = tasks.Result
         };
 
         return Result.Success(paginatedResponse);
