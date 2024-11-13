@@ -58,4 +58,9 @@ public class GetAccountDetailsResponse
     /// Gets or sets the completeness score of the member profile.
     /// </summary>
     public int ProfileCompletenessScore { get; set; }
+
+    /// <summary>
+    /// Gets or sets the current balance of the user.
+    /// </summary>
+    public decimal CurrentBalance { get; set; }
 }
