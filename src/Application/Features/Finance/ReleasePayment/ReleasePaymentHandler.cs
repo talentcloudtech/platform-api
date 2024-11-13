@@ -41,8 +41,7 @@ public class ReleasePaymentHandler(IContext context, ICurrentSession session) : 
 
         // Get tasks with their assignments and workspace
         var tasks = await context
-            .ProjectTasks
-            .Include(t => t.Assignments)
+            .ProjectTasks.Include(t => t.Assignments)
             .Include(t => t.Workspace)
             .Where(t => t.WorkspaceId == request.WorkspaceId && request.TaskIds.Contains(t.Id) && !t.IsClosed && t.Cost > 0)
             .ToListAsync(cancellationToken);
@@ -68,12 +67,10 @@ public class ReleasePaymentHandler(IContext context, ICurrentSession session) : 
                 if (assignee == null)
                     continue;
 
-                var member = await context.Users
-                    .FirstOrDefaultAsync(m => m.Id == assignee.Value, cancellationToken);
+                var member = await context.Users.FirstOrDefaultAsync(m => m.Id == assignee.Value, cancellationToken);
 
                 if (member == null)
                     continue;
-
 
                 // Deduct from workspace balance
                 workspace.CurrentBalance -= task.Cost ?? 0;
@@ -126,7 +123,6 @@ public class ReleasePaymentHandler(IContext context, ICurrentSession session) : 
                 context.WorkspaceTransactions.Add(workspaceTransaction);
                 context.MemberTransactions.Add(memberTransaction);
                 await context.SaveChangesAsync(cancellationToken);
-
             }
             await transaction.CommitAsync(cancellationToken);
         }
