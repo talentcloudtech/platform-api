@@ -36,25 +36,22 @@ public class GetUpcomingFinanceHandler : IRequestHandler<GetUpcomingFinanceReque
     /// <param name="request"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<Result<PaginatedList<UpcomingFinanceResponse>>> Handle(
-        GetUpcomingFinanceRequest request,
-        CancellationToken cancellationToken)
+    public async Task<Result<PaginatedList<UpcomingFinanceResponse>>> Handle(GetUpcomingFinanceRequest request, CancellationToken cancellationToken)
     {
         // Verify workspace membership
-        var workspaceMember = await _context.WorkspaceMembers
-            .FirstOrDefaultAsync(wm =>
-                wm.WorkspaceId == request.WorkspaceId &&
-                wm.UserId == _session.UserId,
-                cancellationToken);
+        var workspaceMember = await _context.WorkspaceMembers.FirstOrDefaultAsync(
+            wm => wm.WorkspaceId == request.WorkspaceId && wm.UserId == _session.UserId,
+            cancellationToken
+        );
 
         if (workspaceMember == null)
             return Result.Forbidden("You are not a member of this workspace.");
 
         // Build query with filters
-        var query = _context.ProjectTasks
-            .Where(t => t.WorkspaceId == request.WorkspaceId)
-            .Where(t => !t.IsClosed)           // Only non-closed tasks
-            .Where(t => t.Cost > 0);           // Only tasks with cost > 0
+        var query = _context
+            .ProjectTasks.Where(t => t.WorkspaceId == request.WorkspaceId)
+            .Where(t => !t.IsClosed) // Only non-closed tasks
+            .Where(t => t.Cost > 0); // Only tasks with cost > 0
 
         // Apply project filter if specified
         if (request.ProjectId != null)
@@ -81,7 +78,7 @@ public class GetUpcomingFinanceHandler : IRequestHandler<GetUpcomingFinanceReque
                 TaskTitle = t.Title,
                 Status = t.Status,
                 CompletionDate = t.DueDate,
-                Cost = t.Cost
+                Cost = t.Cost,
             })
             .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
 
@@ -90,7 +87,7 @@ public class GetUpcomingFinanceHandler : IRequestHandler<GetUpcomingFinanceReque
             CurrentPage = tasks.CurrentPage,
             TotalPages = tasks.TotalPages,
             TotalItems = tasks.TotalItems,
-            Result = tasks.Result
+            Result = tasks.Result,
         };
 
         return Result.Success(paginatedResponse);

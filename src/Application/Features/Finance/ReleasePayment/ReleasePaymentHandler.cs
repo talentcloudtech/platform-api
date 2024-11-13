@@ -21,6 +21,7 @@ public class ReleasePaymentHandler : IRequestHandler<ReleasePaymentRequest, Resu
 {
     private readonly IContext _context;
     private readonly ICurrentSession _session;
+
     /// <summary>
     /// Constructor for ReleasePaymentHandler
     /// </summary>
@@ -31,6 +32,7 @@ public class ReleasePaymentHandler : IRequestHandler<ReleasePaymentRequest, Resu
         _context = context;
         _session = session;
     }
+
     /// <summary>
     /// Handles the request to release payments for tasks
     /// </summary>
@@ -40,27 +42,22 @@ public class ReleasePaymentHandler : IRequestHandler<ReleasePaymentRequest, Resu
     public async Task<Result> Handle(ReleasePaymentRequest request, CancellationToken cancellationToken)
     {
         // Verify workspace membership and permissions
-        var workspaceMember = await _context.WorkspaceMembers
-            .FirstOrDefaultAsync(wm =>
-                wm.WorkspaceId == request.WorkspaceId &&
-                wm.UserId == _session.UserId,
-                cancellationToken);
+        var workspaceMember = await _context.WorkspaceMembers.FirstOrDefaultAsync(
+            wm => wm.WorkspaceId == request.WorkspaceId && wm.UserId == _session.UserId,
+            cancellationToken
+        );
 
         if (workspaceMember == null)
             return Result.Forbidden("You are not a member of this workspace.");
 
-        if (workspaceMember.Role != WorkspaceRole.WorkspaceOwner &&
-            workspaceMember.Role != WorkspaceRole.WorkspaceManager)
+        if (workspaceMember.Role != WorkspaceRole.WorkspaceOwner && workspaceMember.Role != WorkspaceRole.WorkspaceManager)
             return Result.Forbidden("You don't have permission to release payments.");
 
         // Get tasks with their assignments and workspace
-        var tasks = await _context.ProjectTasks
-            .Include(t => t.Assignments)
+        var tasks = await _context
+            .ProjectTasks.Include(t => t.Assignments)
             .Include(t => t.Workspace)
-            .Where(t => t.WorkspaceId == request.WorkspaceId &&
-                       request.TaskIds.Contains(t.Id) &&
-                       !t.IsClosed &&
-                       t.Cost > 0)
+            .Where(t => t.WorkspaceId == request.WorkspaceId && request.TaskIds.Contains(t.Id) && !t.IsClosed && t.Cost > 0)
             .ToListAsync(cancellationToken);
 
         if (!tasks.Any())
@@ -75,16 +72,13 @@ public class ReleasePaymentHandler : IRequestHandler<ReleasePaymentRequest, Resu
 
         var currentTime = DateTime.UtcNow;
 
-
-
         foreach (var task in tasks)
         {
             var assignee = task.Assignments.FirstOrDefault()?.UserId;
             if (assignee == null)
                 continue;
 
-            var member = await _context.Users
-                        .FirstOrDefaultAsync(m => m.Id == assignee.Value, cancellationToken);
+            var member = await _context.Users.FirstOrDefaultAsync(m => m.Id == assignee.Value, cancellationToken);
 
             if (member == null)
                 continue;
@@ -102,7 +96,7 @@ public class ReleasePaymentHandler : IRequestHandler<ReleasePaymentRequest, Resu
                 CreatedDate = currentTime,
                 UpdatedBy = _session.UserId,
                 UpdatedDate = currentTime,
-                Status = TransactionStatus.Success
+                Status = TransactionStatus.Success,
             };
 
             var workspaceTransaction = new WorkspaceTransaction
@@ -117,7 +111,7 @@ public class ReleasePaymentHandler : IRequestHandler<ReleasePaymentRequest, Resu
                 CreatedDate = currentTime,
                 UpdatedBy = _session.UserId,
                 UpdatedDate = currentTime,
-                Status = TransactionStatus.Success
+                Status = TransactionStatus.Success,
             };
 
             // Update task status

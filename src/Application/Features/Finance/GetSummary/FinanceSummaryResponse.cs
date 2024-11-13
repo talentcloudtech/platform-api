@@ -1,5 +1,5 @@
-using Platform.Domain.Entities.Common;
 using System.Collections.Generic;
+using Platform.Domain.Entities.Common;
 
 namespace Platform.Application.Features.Finance.GetSummary;
 

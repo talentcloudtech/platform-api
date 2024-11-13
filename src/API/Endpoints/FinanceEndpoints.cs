@@ -37,9 +37,7 @@ public class FinanceEndpoints : IEndpoints
         group
             .MapGet(
                 "/upcoming",
-                async (
-                    IMediator mediator,
-                    [AsParameters] GetUpcomingFinanceRequest request) =>
+                async (IMediator mediator, [AsParameters] GetUpcomingFinanceRequest request) =>
                 {
                     var result = await mediator.Send(request);
                     return result.ToPlatformApiResult();
@@ -50,8 +48,7 @@ public class FinanceEndpoints : IEndpoints
         group
             .MapPost(
                 "/release-payment",
-                async (
-                    IMediator mediator, WorkspaceId workspaceId, ReleasePaymentRequest request) =>
+                async (IMediator mediator, WorkspaceId workspaceId, ReleasePaymentRequest request) =>
                 {
                     var result = await mediator.Send(request with { WorkspaceId = workspaceId });
                     return result.ToPlatformApiResult();

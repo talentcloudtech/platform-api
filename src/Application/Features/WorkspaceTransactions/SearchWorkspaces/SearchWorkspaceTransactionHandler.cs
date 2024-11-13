@@ -35,8 +35,10 @@ public class SearchWorkspaceTransactionsHandler(IContext context, ICurrentSessio
     {
         IQueryable<WorkspaceTransaction> query = context.WorkspaceTransactions;
 
-        var workspaceMember = await context.WorkspaceMembers
-            .FirstOrDefaultAsync(wm => wm.WorkspaceId == request.WorkspaceId && wm.UserId == session.UserId, cancellationToken);
+        var workspaceMember = await context.WorkspaceMembers.FirstOrDefaultAsync(
+            wm => wm.WorkspaceId == request.WorkspaceId && wm.UserId == session.UserId,
+            cancellationToken
+        );
 
         if (workspaceMember == null)
             return Result.Forbidden("You are not a member of this workspace.");

@@ -1,13 +1,13 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Platform.Application.Common;
 using Ardalis.Result;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Platform.Application.Common;
 using Platform.Application.Features.Finance.GetSummary;
 using Platform.Domain.Auth.Interfaces;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace Application.Features.Finance.GetSummary;
 
@@ -18,6 +18,7 @@ public class GetFinanceSummaryHandler : IRequestHandler<GetFinanceSummaryRequest
 {
     private readonly IContext _context;
     private readonly ICurrentSession _session;
+
     /// <summary>
     /// Constructor for GetFinanceSummaryHandler
     /// </summary>
@@ -35,23 +36,19 @@ public class GetFinanceSummaryHandler : IRequestHandler<GetFinanceSummaryRequest
     /// <param name="request">The request containing filter and pagination parameters.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A Result containing a FinanceSummaryResponse object.</returns>
-    public async Task<Result<FinanceSummaryResponse>> Handle(
-        GetFinanceSummaryRequest request,
-        CancellationToken cancellationToken)
+    public async Task<Result<FinanceSummaryResponse>> Handle(GetFinanceSummaryRequest request, CancellationToken cancellationToken)
     {
         // Verify workspace membership
-        var workspaceMember = await _context.WorkspaceMembers
-            .FirstOrDefaultAsync(wm =>
-                wm.WorkspaceId == request.WorkspaceId &&
-                wm.UserId == _session.UserId,
-                cancellationToken);
+        var workspaceMember = await _context.WorkspaceMembers.FirstOrDefaultAsync(
+            wm => wm.WorkspaceId == request.WorkspaceId && wm.UserId == _session.UserId,
+            cancellationToken
+        );
 
         if (workspaceMember == null)
             return Result.Forbidden("You are not a member of this workspace.");
 
         // Build query with filters
-        var query = _context.ProjectTasks
-            .Where(t => t.WorkspaceId == request.WorkspaceId);
+        var query = _context.ProjectTasks.Where(t => t.WorkspaceId == request.WorkspaceId);
 
         // Apply project filter if specified
         if (request.ProjectId != null)
@@ -65,11 +62,7 @@ public class GetFinanceSummaryHandler : IRequestHandler<GetFinanceSummaryRequest
         var totalCost = await query.SumAsync(t => t.Cost ?? 0, cancellationToken);
         var taskCount = await query.CountAsync(cancellationToken);
 
-        var response = new FinanceSummaryResponse
-        {
-            TotalCost = totalCost,
-            TaskCount = taskCount
-        };
+        var response = new FinanceSummaryResponse { TotalCost = totalCost, TaskCount = taskCount };
 
         return Result.Success(response);
     }

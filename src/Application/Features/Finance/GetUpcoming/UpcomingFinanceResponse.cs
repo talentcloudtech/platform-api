@@ -1,7 +1,7 @@
-using Platform.Domain.Entities.Common;
-using Platform.Domain.Entities.Enums;
 using System;
 using System.Collections.Generic;
+using Platform.Domain.Entities.Common;
+using Platform.Domain.Entities.Enums;
 
 namespace Platform.Application.Features.Finance.GetUpcoming;
 
