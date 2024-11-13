@@ -192,6 +192,10 @@ namespace Platform.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<decimal?>("CurrentBalance")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
@@ -1306,6 +1310,10 @@ namespace Platform.Migrations
                     b.Property<string>("PaymentMethod")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<string>("ProjectId")
+                        .HasMaxLength(25)
+                        .HasColumnType("character varying(25)");
 
                     b.Property<string>("Status")
                         .IsRequired()

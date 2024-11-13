@@ -21,7 +21,7 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<Application
 
         builder.Property(x => x.Id).HasMaxLength(25).HasConversion<UserId.EfCoreValueConverter>();
         builder.Property(x => x.CreatedAt).HasConversion<DateTime>().HasDefaultValueSql("CURRENT_TIMESTAMP");
-
+        builder.Property(x => x.CurrentBalance).HasPrecision(18, 2);
         builder.HasOne(x => x.MemberProfile).WithOne(p => p.User).HasForeignKey<MemberProfile>(p => p.Id);
     }
 }

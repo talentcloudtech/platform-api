@@ -28,7 +28,7 @@ public class WorkspaceTransactionConfiguration : IEntityTypeConfiguration<Worksp
         builder.Property(x => x.PaymentMethod).HasConversion<string>();
         builder.Property(x => x.TransactionId).HasMaxLength(StringSizes.Short);
         builder.Property(x => x.Status).HasConversion<string>();
-
+        builder.Property(x => x.ProjectId).HasMaxLength(25).HasConversion<ProjectId.EfCoreValueConverter>();
         builder.OwnsMany(
             x => x.PayeeDetails,
             x =>
