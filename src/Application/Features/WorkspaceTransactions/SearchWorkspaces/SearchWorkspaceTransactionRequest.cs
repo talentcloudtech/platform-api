@@ -15,12 +15,14 @@ namespace Platform.Application.Features.WorkspaceTransactions.SearchWorkspaceTra
 /// <param name="SortOrder">The optional sort order to filter workspaces by. If null, no filtering by sort order is applied.</param>
 /// <param name="CurrentPage">The current page number for pagination. Defaults to 1.</param>
 /// <param name="PageSize">The number of items per page for pagination. Defaults to 10.</param>
+/// <param name="ProjectId">The optional project ID for filtering transactions. If null, no filtering by project is applied.</param>
 public record SearchWorkspaceTransactionRequest(
     string? Search = null,
     string SortBy = nameof(WorkspaceTransaction.CreatedDate),
     string SortOrder = "desc",
     int CurrentPage = 1,
-    int PageSize = 10
+    int PageSize = 10,
+    ProjectId? ProjectId = null
 ) : IRequest<Result<PaginatedList<WorkspaceTransactionResponse>>>
 {
     /// <summary>

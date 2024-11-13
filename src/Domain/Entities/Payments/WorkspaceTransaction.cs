@@ -15,6 +15,11 @@ public class WorkspaceTransaction : AuditableEntity<WorkspaceTransactionId>
     public override WorkspaceTransactionId Id { get; set; } = CustomNewId.GenerateStandardId();
 
     /// <summary>
+    /// Gets or sets the project ID associated with the workspace transaction.
+    /// </summary>
+    public ProjectId? ProjectId { get; set; }
+
+    /// <summary>
     /// Gets or sets the workspace id
     /// </summary>
     public required WorkspaceId WorkspaceId { get; set; }

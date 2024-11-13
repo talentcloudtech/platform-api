@@ -105,6 +105,11 @@ public class ApplicationUser : IdentityUser<UserId>
     /// Gets or sets the list of workspace assets associated with the user.
     /// </summary>
     public List<WorkspaceAsset> WorkspaceAssets { get; set; } = [];
+
+    /// <summary>
+    /// Gets or sets the list of workspace assets created by the user.
+    /// </summary>
+    public decimal? CurrentBalance { get; set; }
 }
 
 /// <summary>

@@ -45,6 +45,10 @@ public class SearchWorkspaceTransactionsHandler(IContext context, ICurrentSessio
         if (workspaceMember.Role != WorkspaceRole.WorkspaceOwner && session.Role!.Name != UserRole.Admin.Name)
             return Result.Forbidden("You don't have permission to access workspace transactions.");
 
+        // Filter by ProjectId if provided
+        if (request.ProjectId != null)
+            query = query.Where(wt => wt.ProjectId == request.ProjectId);
+
         // Apply search filter
         if (!string.IsNullOrEmpty(request.Search))
             query = query.Where(x => EF.Functions.Like(x.Description.ToLower().Trim(), $"%{request.Search!.ToLower().Trim()}%"));
