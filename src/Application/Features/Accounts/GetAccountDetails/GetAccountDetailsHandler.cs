@@ -45,6 +45,7 @@ public class GetAccountDetailsHandler(IContext context, ICurrentSession session)
             UserRole = session.Role!.Name,
             IsProfileComplete = user.MemberProfile?.IsProfileComplete ?? false,
             ProfileCompletenessScore = MemberProfileEvaluator.GetProfileCompletenessScore(user.MemberProfile!),
+            CurrentBalance = user.CurrentBalance ?? 0,
         };
         return Result.Success(accountDetails);
     }
