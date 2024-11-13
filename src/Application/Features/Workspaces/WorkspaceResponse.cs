@@ -60,4 +60,9 @@ public record WorkspaceResponse
     /// Gets or sets the role of the current user in the workspace.
     /// </summary>
     public WorkspaceRole MemberRole { get; set; }
+
+    /// <summary>
+    /// Gets or sets the current balance of the workspace.
+    /// </summary>
+    public decimal CurrentBalance { get; set; }
 }
