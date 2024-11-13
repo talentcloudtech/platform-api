@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using Ardalis.Result;
 using MediatR;
 using Platform.Domain.Entities.Common;
@@ -13,6 +14,7 @@ public record ReleasePaymentRequest : IRequest<Result>
     /// <summary>
     /// Gets or sets the workspace identifier
     /// </summary>
+    [JsonIgnore]
     public WorkspaceId WorkspaceId { get; init; }
 
     /// <summary>

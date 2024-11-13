@@ -6,6 +6,7 @@ using Platform.Application.Extensions;
 using Platform.Application.Features.Finance.GetSummary;
 using Platform.Application.Features.Finance.GetUpcoming;
 using Platform.Application.Features.Finance.ReleasePayment;
+using Platform.Domain.Entities.Common;
 
 namespace Platform.API.Endpoints;
 
@@ -50,10 +51,9 @@ public class FinanceEndpoints : IEndpoints
             .MapPost(
                 "/release-payment",
                 async (
-                    IMediator mediator,
-                    [AsParameters] ReleasePaymentRequest request) =>
+                    IMediator mediator, WorkspaceId workspaceId, ReleasePaymentRequest request) =>
                 {
-                    var result = await mediator.Send(request);
+                    var result = await mediator.Send(request with { WorkspaceId = workspaceId });
                     return result.ToPlatformApiResult();
                 }
             )
