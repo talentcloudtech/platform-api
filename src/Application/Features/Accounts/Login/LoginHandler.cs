@@ -70,7 +70,13 @@ public class LoginHandler(
             {
                 var lockoutEnd = await userManager.GetLockoutEndDateAsync(user);
                 var lockoutTimeRemaining = lockoutEnd?.Subtract(DateTime.UtcNow).TotalMinutes ?? 0;
-                return Result.Invalid(new ValidationError { Identifier = "root", ErrorMessage = $"Account is locked. Please try again in {Math.Ceiling(lockoutTimeRemaining)} minutes." });
+                return Result.Invalid(
+                    new ValidationError
+                    {
+                        Identifier = "root",
+                        ErrorMessage = $"Account is locked. Please try again in {Math.Ceiling(lockoutTimeRemaining)} minutes.",
+                    }
+                );
             }
 
             return Result.Invalid(new ValidationError { Identifier = "root", ErrorMessage = "Invalid credentials." });
