@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Routing;
 using Platform.Application.Extensions;
 using Platform.Application.Features.FileStorages.UploadWorkspaceFile;
 using Platform.Application.Features.WorkspaceAssets.DeleteWorkspaceAsset;
+using Platform.Application.Features.WorkspaceAssets.DownloadAsset;
 using Platform.Application.Features.WorkspaceAssets.SearchWorkspaceAssets;
 using Platform.Application.Features.WorkspaceAssets.UpdateWorkspaceAsset;
 using Platform.Domain.Entities.Common;
@@ -75,5 +76,21 @@ public class AssetEndpoints : IEndpoints
                 }
             )
             .WithSummary("Update a workspace asset");
+
+        group
+            .MapGet(
+                "/asset/{assetId}/download",
+                async (IMediator mediator, WorkspaceId workspaceId, WorkspaceAssetId assetId) =>
+                {
+                    var request = new DownloadAssetRequest { WorkspaceId = workspaceId, AssetId = assetId };
+
+                    var result = await mediator.Send(request);
+                    if (!result.IsSuccess)
+                        return Results.BadRequest(result.Errors);
+
+                    return Results.File(result.Value.Content, result.Value.ContentType, result.Value.FileName);
+                }
+            )
+            .WithSummary("Download a workspace asset");
     }
 }

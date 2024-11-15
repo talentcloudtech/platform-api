@@ -62,6 +62,10 @@ public class UpdateMemberRequestHandler(IContext context, ICurrentSession sessio
                     );
                 memberRequest.Status = request.Status.Value;
             }
+            if (field.Equals("rejectedReason", StringComparison.OrdinalIgnoreCase) && request.RejectedReason != null)
+            {
+                memberRequest.RejectedReason = request.RejectedReason;
+            }
         }
 
         memberRequest.UpdatedBy = session.UserId;

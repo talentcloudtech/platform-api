@@ -34,4 +34,12 @@ public interface IBlobStorageService
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
     Task DeleteFileAsync(string fileUrl, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Downloads a file from the Azure Blob Storage.
+    /// </summary>
+    /// <param name="filePath">The path to the file in the Blob Storage. Can be either a full URL or a relative blob path.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The downloaded file as a byte array.</returns>
+    Task<byte[]?> DownloadAsync(string filePath, CancellationToken cancellationToken);
 }
