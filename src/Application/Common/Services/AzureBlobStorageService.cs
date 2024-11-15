@@ -96,6 +96,13 @@ public class AzureBlobStorageService : IBlobStorageService
         await blobClient.DeleteIfExistsAsync(cancellationToken: cancellationToken);
     }
 
+    /// <summary>
+    /// Builds the container path for the Azure Blob Storage.
+    /// </summary>
+    /// <param name="workspaceId">The workspace ID.</param>
+    /// <param name="projectId">The project ID.</param>
+    /// <param name="taskId">The task ID.</param>
+    /// <returns>The container path.</returns>
     private static string BuildContainerPath(WorkspaceId workspaceId, ProjectId? projectId = null, ProjectTaskId? taskId = null)
     {
         var path = $"{workspaceId}";
@@ -107,5 +114,41 @@ public class AzureBlobStorageService : IBlobStorageService
             path += $"/Tasks/{taskId}";
 
         return path;
+    }
+
+    /// <summary>
+    /// Downloads a file from the Azure Blob Storage.
+    /// </summary>
+    /// <param name="filePath">The path to the file in the Blob Storage.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The downloaded file as a byte array.</returns>
+    public async Task<byte[]?> DownloadAsync(string filePath, CancellationToken cancellationToken)
+    {
+        try
+        {
+            // Extract the blob path from the full URL if a complete URL is provided
+            var blobPath = filePath;
+            if (Uri.TryCreate(filePath, UriKind.Absolute, out var uri))
+            {
+                // Split the path and get everything after the container name
+                var pathParts = uri.LocalPath.TrimStart('/').Split('/', 2);
+                if (pathParts.Length == 2)
+                    blobPath = pathParts[1];
+            }
+
+            var containerClient = new BlobContainerClient(_options.ConnectionString, "workspaceassets");
+            var blobClient = containerClient.GetBlobClient(blobPath);
+
+            if (!await blobClient.ExistsAsync(cancellationToken))
+                return null;
+
+            var response = await blobClient.DownloadContentAsync(cancellationToken);
+            return response.Value.Content.ToArray();
+        }
+        catch (Exception ex)
+        {
+            // Log the error details
+            throw new InvalidOperationException($"Failed to download file: {ex.Message}", ex);
+        }
     }
 }
