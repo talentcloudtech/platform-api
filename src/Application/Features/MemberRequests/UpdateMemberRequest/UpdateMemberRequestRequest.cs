@@ -75,6 +75,11 @@ public record UpdateMemberRequestRequest : IRequest<Result<MemberRequestResponse
     public MemberRequestStatus? Status { get; init; }
 
     /// <summary>
+    /// Gets or sets the reason the request was rejected.
+    /// </summary>
+    public string? RejectedReason { get; init; }
+
+    /// <summary>
     /// Gets or sets the fields to update.
     /// </summary>
     public required string[] FieldsToUpdate { get; set; }

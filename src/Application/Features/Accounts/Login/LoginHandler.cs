@@ -1,3 +1,4 @@
+using System;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -67,7 +68,9 @@ public class LoginHandler(
         {
             if (result.IsLockedOut)
             {
-                return Result.Invalid(new ValidationError { Identifier = "root", ErrorMessage = "User is locked out." });
+                var lockoutEnd = await userManager.GetLockoutEndDateAsync(user);
+                var lockoutTimeRemaining = lockoutEnd?.Subtract(DateTime.UtcNow).TotalMinutes ?? 0;
+                return Result.Invalid(new ValidationError { Identifier = "root", ErrorMessage = $"Account is locked. Please try again in {Math.Ceiling(lockoutTimeRemaining)} minutes." });
             }
 
             return Result.Invalid(new ValidationError { Identifier = "root", ErrorMessage = "Invalid credentials." });

@@ -36,6 +36,11 @@ public class MemberRequest : AuditableEntity<MemberRequestId>
     public required List<MemberRequestSkill> RequiredSkills { get; set; }
 
     /// <summary>
+    /// Gets or sets the reason the request was rejected.
+    /// </summary>
+    public string? RejectedReason { get; set; }
+
+    /// <summary>
     /// Gets or sets the date the request is scheduled to start.
     /// </summary>
     public DateTime StartDate { get; set; }
