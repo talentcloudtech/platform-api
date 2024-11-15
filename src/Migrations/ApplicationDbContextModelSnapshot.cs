@@ -432,6 +432,10 @@ namespace Platform.Migrations
                     b.Property<int>("MinutesPerDay")
                         .HasColumnType("integer");
 
+                    b.Property<string>("RejectedReason")
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("timestamp with time zone");
 

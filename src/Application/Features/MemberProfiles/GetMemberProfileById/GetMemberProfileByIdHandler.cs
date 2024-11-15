@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.Result;
@@ -29,11 +30,14 @@ public class GetMemberProfileByIdHandler(IContext context) : IRequestHandler<Get
             .Include(x => x.Languages)
             .Include(x => x.Skills)
             .Include(x => x.Experiences)
+            .Include(x => x.Educations)
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken: cancellationToken);
 
         if (memberProfile is null)
             return Result.NotFound("Member profile not found.");
 
+        memberProfile.Educations = memberProfile.Educations.OrderByDescending(x => x.StartDate).ToList();
+        memberProfile.Experiences = memberProfile.Experiences.OrderByDescending(x => x.StartDate).ToList();
         var response = memberProfile.Adapt<MemberProfileResponse>();
         response.ProfileCompletenessScore = MemberProfileEvaluator.GetProfileCompletenessScore(memberProfile);
 

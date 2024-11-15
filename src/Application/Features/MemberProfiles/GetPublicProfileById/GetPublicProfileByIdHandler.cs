@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.Result;
@@ -27,6 +28,9 @@ public class GetPublicProfileByIdHandler(IContext context) : IRequestHandler<Get
         var memberProfile = await context.MemberProfiles.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken: cancellationToken);
         if (memberProfile is null)
             return Result.NotFound("Member profile not found.");
+
+        memberProfile.Educations = memberProfile.Educations.OrderByDescending(x => x.StartDate).ToList();
+        memberProfile.Experiences = memberProfile.Experiences.OrderByDescending(x => x.StartDate).ToList();
 
         var nameParts = memberProfile.FullName?.Split(' ');
         var response = memberProfile.Adapt<PublicProfileResponse>();
