@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Ardalis.Result;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Azure;
 using Platform.Application.Common;
 using Platform.Domain.Auth.Interfaces;
 using Platform.Domain.Entities;
@@ -43,14 +44,22 @@ public class AssignProjectMembersHandler : IRequestHandler<AssignProjectMembersR
         if (project == null)
             return Result.NotFound("Project not found.");
 
-        // Check if user has permission to assign members
+        // Check permissions
+        if (_session.Role!.Name != UserRole.Admin.Name)
+        {
+            var workspaceMember = project.Workspace.WorkspaceMembers.FirstOrDefault(x => x.UserId == _session.UserId);
+            if (workspaceMember == null || (workspaceMember.Role != WorkspaceRole.WorkspaceOwner && workspaceMember.Role != WorkspaceRole.WorkspaceManager))
+            {
+                return Result.Forbidden("You don't have permission to assign members to this project.");
+            }
+        }
 
-        var workspaceMember = project.Workspace.WorkspaceMembers.FirstOrDefault(x => x.UserId == _session.UserId);
-        if (
-            _session.Role!.Name != UserRole.Admin.Name
-            && (workspaceMember == null || (workspaceMember.Role != WorkspaceRole.WorkspaceOwner && workspaceMember.Role != WorkspaceRole.WorkspaceManager))
-        )
-            return Result.Forbidden("You don't have permission to assign members to this project.");
+        // For non-admin users, verify all users are workspace members
+        var workspaceMemberIds = project.Workspace.WorkspaceMembers.Select(x => x.UserId).ToHashSet();
+        var nonWorkspaceMembers = request.UserIds.Where(userId => !workspaceMemberIds.Contains(userId)).ToList();
+
+        if (nonWorkspaceMembers.Any())
+            return Result.Error("Some users are not members of the workspace.");
 
         // Get existing project members
         var existingMemberIds = project.ProjectMembers.Select(x => x.UserId).ToHashSet();
@@ -60,13 +69,6 @@ public class AssignProjectMembersHandler : IRequestHandler<AssignProjectMembersR
 
         if (!newUserIds.Any())
             return Result.Success(); // All users are already members
-
-        // Verify all users exist and are workspace members
-        var workspaceMemberIds = project.Workspace.WorkspaceMembers.Select(x => x.UserId).ToHashSet();
-        // var invalidUsers = newUserIds.Where(userId => !workspaceMemberIds.Contains(userId)).ToList();
-
-        // if (invalidUsers.Any())
-        //     return Result.Error("Some users are not members of the workspace.");
 
         var currentTime = DateTime.UtcNow;
 
