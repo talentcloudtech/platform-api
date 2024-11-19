@@ -18,7 +18,8 @@ public partial class MaxSizeUpgrade : Migration
             nullable: false,
             oldClrType: typeof(string),
             oldType: "character varying(4000)",
-            oldMaxLength: 4000);
+            oldMaxLength: 4000
+        );
 
         migrationBuilder.AlterColumn<string>(
             name: "Description",
@@ -29,7 +30,8 @@ public partial class MaxSizeUpgrade : Migration
             oldClrType: typeof(string),
             oldType: "character varying(4000)",
             oldMaxLength: 4000,
-            oldNullable: true);
+            oldNullable: true
+        );
 
         migrationBuilder.AlterColumn<string>(
             name: "Description",
@@ -40,7 +42,8 @@ public partial class MaxSizeUpgrade : Migration
             oldClrType: typeof(string),
             oldType: "character varying(4000)",
             oldMaxLength: 4000,
-            oldNullable: true);
+            oldNullable: true
+        );
 
         migrationBuilder.AlterColumn<string>(
             name: "Body",
@@ -50,7 +53,8 @@ public partial class MaxSizeUpgrade : Migration
             nullable: false,
             oldClrType: typeof(string),
             oldType: "character varying(4000)",
-            oldMaxLength: 4000);
+            oldMaxLength: 4000
+        );
 
         migrationBuilder.AlterColumn<string>(
             name: "Body",
@@ -60,7 +64,8 @@ public partial class MaxSizeUpgrade : Migration
             nullable: false,
             oldClrType: typeof(string),
             oldType: "character varying(4000)",
-            oldMaxLength: 4000);
+            oldMaxLength: 4000
+        );
 
         migrationBuilder.AlterColumn<string>(
             name: "Description",
@@ -71,7 +76,8 @@ public partial class MaxSizeUpgrade : Migration
             oldClrType: typeof(string),
             oldType: "character varying(4000)",
             oldMaxLength: 4000,
-            oldNullable: true);
+            oldNullable: true
+        );
     }
 
     /// <inheritdoc />
@@ -85,7 +91,8 @@ public partial class MaxSizeUpgrade : Migration
             nullable: false,
             oldClrType: typeof(string),
             oldType: "character varying(100000)",
-            oldMaxLength: 100000);
+            oldMaxLength: 100000
+        );
 
         migrationBuilder.AlterColumn<string>(
             name: "Description",
@@ -96,7 +103,8 @@ public partial class MaxSizeUpgrade : Migration
             oldClrType: typeof(string),
             oldType: "character varying(100000)",
             oldMaxLength: 100000,
-            oldNullable: true);
+            oldNullable: true
+        );
 
         migrationBuilder.AlterColumn<string>(
             name: "Description",
@@ -107,7 +115,8 @@ public partial class MaxSizeUpgrade : Migration
             oldClrType: typeof(string),
             oldType: "character varying(100000)",
             oldMaxLength: 100000,
-            oldNullable: true);
+            oldNullable: true
+        );
 
         migrationBuilder.AlterColumn<string>(
             name: "Body",
@@ -117,7 +126,8 @@ public partial class MaxSizeUpgrade : Migration
             nullable: false,
             oldClrType: typeof(string),
             oldType: "character varying(100000)",
-            oldMaxLength: 100000);
+            oldMaxLength: 100000
+        );
 
         migrationBuilder.AlterColumn<string>(
             name: "Body",
@@ -127,7 +137,8 @@ public partial class MaxSizeUpgrade : Migration
             nullable: false,
             oldClrType: typeof(string),
             oldType: "character varying(100000)",
-            oldMaxLength: 100000);
+            oldMaxLength: 100000
+        );
 
         migrationBuilder.AlterColumn<string>(
             name: "Description",
@@ -138,6 +149,7 @@ public partial class MaxSizeUpgrade : Migration
             oldClrType: typeof(string),
             oldType: "character varying(100000)",
             oldMaxLength: 100000,
-            oldNullable: true);
+            oldNullable: true
+        );
     }
 }
