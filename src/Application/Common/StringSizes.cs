@@ -28,7 +28,7 @@ public static class StringSizes
     /// <summary>
     /// The maximum string size.
     /// </summary>
-    public const int Max = 4000;
+    public const int Max = 100000;
 
     /// <summary>
     /// The maximum size for a title.
