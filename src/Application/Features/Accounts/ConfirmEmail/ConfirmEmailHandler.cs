@@ -55,7 +55,7 @@ public class ConfirmEmailHandler : IRequestHandler<ConfirmEmailRequest, Result>
 
         var mailRequest = new MailRequest(
             to: [user.Email!],
-            subject: isCustomer ? "Welcome to TalentCloud - Your Gateway to Top Talent!" : "Welcome to TalentCloud!",
+            subject: isCustomer ? "TalentCloud Welcomes You: Unlocking Access to Top Talent" : "Welcome to TalentCloud!",
             body: emailContent
         );
 
@@ -139,6 +139,8 @@ public class ConfirmEmailHandler : IRequestHandler<ConfirmEmailRequest, Result>
     private static string BuildCustomerWelcomeEmail(string userName)
     {
         var message = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
+
         message.AppendLine("<html>");
         message.AppendLine("<head>");
         message.AppendLine("<style>");
@@ -149,27 +151,67 @@ public class ConfirmEmailHandler : IRequestHandler<ConfirmEmailRequest, Result>
         message.AppendLine("</style>");
         message.AppendLine("</head>");
         message.AppendLine("<body>");
-        message.AppendLine("<h2>Welcome to TalentCloud - Your Gateway to Top Talent!</h2>");
+        message.AppendLine("<h2>TalentCloud Welcomes You: Unlocking Access to Top Talent</h2>");
         message.AppendLine($"<p>Dear {userName},</p>");
         message.AppendLine(
-            "<p>Thank you for choosing TalentCloud as your talent solution partner. We're excited to help you connect with exceptional professionals who can drive your business forward.</p>"
+            "<p>Congratulations on becoming a valued member of the TalentCloud community! We are excited to have you on board and are confident that our platform will revolutionize the way you find and engage with top-tier talent.</p>"
         );
-        message.AppendLine("<p>TalentCloud offers you:</p>");
+        message.AppendLine(
+            "<p>TalentCloud is a leading community platform designed to connect businesses like yours with exceptional designers, developers, and skilled resources from around the globe. Our mission is to streamline the talent acquisition process, ensuring you can focus on what matters most - building your business and bringing your vision to life.</p>"
+        );
+        message.AppendLine("<p>We are focussed towards solving three key problems for enterprises:</p>");
         message.AppendLine("<ul>");
-        message.AppendLine("<li>Access to a curated pool of verified, skilled professionals</li>");
-        message.AppendLine("<li>AI-powered matching to find the perfect talent for your needs</li>");
-        message.AppendLine("<li>Streamlined hiring process with our advanced platform</li>");
-        message.AppendLine("<li>Quality assurance and ongoing support</li>");
-        message.AppendLine("<li>Transparent pricing and efficient project management</li>");
+        message.AppendLine(
+            "<li><strong>Artificial Intelligence based Validated and Verified Talent Pool:</strong> Browse through a diverse range of talented individuals, carefully selected and vetted by our team. Find the perfect match for your specific project needs.</li>"
+        );
+        message.AppendLine(
+            "<li><strong>Developer Productivity:</strong> One of major challenges for enterprises is to measure correctly the productivity of a developer. We are working to provide machine learning-based insights comparing your developer to the best in class in terms of productivity and outcome.</li>"
+        );
+        message.AppendLine(
+            "<li><strong>Artificial Intelligence based Developer Acceleration:</strong> We have built-in tools that combine Human + AI to give you higher productivity, leveraging AI tech available today.</li>"
+        );
         message.AppendLine("</ul>");
-        message.AppendLine("<p>Getting Started:</p>");
+        message.AppendLine(
+            "<p>As a TalentCloud customer, you gain access to an extensive network of highly skilled professionals who are ready to collaborate and contribute to your projects. Here's a glimpse of what you can expect:</p>"
+        );
         message.AppendLine("<ul>");
-        message.AppendLine("<li>Complete your company profile</li>");
-        message.AppendLine("<li>Post your first project or job requirement</li>");
-        message.AppendLine("<li>Browse our talent pool</li>");
-        message.AppendLine("<li>Schedule a consultation with our talent specialists</li>");
+        message.AppendLine(
+            "<li><strong>Curated Talent Pool:</strong> Browse through a diverse range of talented individuals, carefully selected and vetted by our team. Find the perfect match for your specific project needs.</li>"
+        );
+        message.AppendLine(
+            "<li><strong>Efficient Hiring Process:</strong> Our platform simplifies the hiring process, allowing you to connect, interview, and onboard talent seamlessly. Save time and resources by leveraging our efficient system.</li>"
+        );
+        message.AppendLine(
+            "<li><strong>Project Management Tools:</strong> Manage your projects effectively with our integrated project management features. Collaborate, track progress, and ensure successful outcomes.</li>"
+        );
+        message.AppendLine(
+            "<li><strong>Expertise and Support:</strong> Access a wealth of industry insights and support from our community. Tap into the collective knowledge of experienced professionals and seek guidance whenever needed.</li>"
+        );
+        message.AppendLine(
+            "<li><strong>Flexible Engagement Models:</strong> Choose from various engagement models, including freelance, contract, or full-time positions, to align with your business requirements and budget.</li>"
+        );
         message.AppendLine("</ul>");
-        message.AppendLine("<p>Our customer success team is here to help you every step of the way. Feel free to reach out if you need any assistance.</p>");
+        message.AppendLine("<p>To make the most of your TalentCloud experience, we recommend the following:</p>");
+        message.AppendLine("<ul>");
+        message.AppendLine(
+            "<li><strong>Define Your Requirements:</strong> Clearly articulate your project goals, skill sets required, and any specific qualifications. This will help us match you with the most suitable talent.</li>"
+        );
+        message.AppendLine(
+            "<li><strong>Explore Profiles:</strong> Browse through our extensive talent database and connect with individuals who align with your vision. Feel free to reach out and discuss potential collaborations.</li>"
+        );
+        message.AppendLine(
+            "<li><strong>Utilize Our Resources:</strong> Take advantage of our comprehensive resources, including industry reports, case studies, and best practices, to enhance your talent acquisition strategy.</li>"
+        );
+        message.AppendLine(
+            "<li><strong>Engage with the Community:</strong> Participate in community discussions, share your experiences, and build relationships with other like-minded businesses. Collaboration is key to success!</li>"
+        );
+        message.AppendLine("</ul>");
+        message.AppendLine(
+            "<p>Our team is dedicated to ensuring your satisfaction and providing an exceptional talent acquisition journey. If you have any questions or need assistance, our customer success managers are just a click away.</p>"
+        );
+        message.AppendLine(
+            "<p>Welcome once again to the TalentCloud family! We are thrilled to be a part of your growth and success, and we look forward to witnessing the incredible projects you will bring to life.</p>"
+        );
         message.AppendLine("<p>Best regards,</p>");
         message.AppendLine("<p><strong>Minal Kanungo</strong><br>Founder, TalentCloud</p>");
         message.AppendLine("</body>");
