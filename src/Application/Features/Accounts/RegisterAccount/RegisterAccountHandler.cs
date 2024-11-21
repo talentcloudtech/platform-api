@@ -69,7 +69,12 @@ public class RegisterAccountHandler(IContext context, IMediator mediator, UserMa
                 cancellationToken
             );
 
-        var memberProfile = new MemberProfile { Id = user.Id, UserName = user.UserName };
+        var memberProfile = new MemberProfile
+        {
+            Id = user.Id,
+            UserName = user.UserName,
+            FullName = request.FullName?.Trim(),
+        };
 
         await context.MemberProfiles.AddAsync(memberProfile, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
