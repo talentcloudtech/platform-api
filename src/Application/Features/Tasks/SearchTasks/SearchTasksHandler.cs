@@ -78,6 +78,10 @@ public class SearchTasksHandler(IContext context, ICurrentSession session) : IRe
                     taskResponse.CreatedByUser = new CommonUserResponse(x.User, x.User.MemberProfile);
                     taskResponse.Workspace = x.Workspace.Adapt<WorkspaceResponse>();
                     taskResponse.Project = x.Project.Adapt<ProjectResponse>();
+                    taskResponse.Assignees = context
+                        .ProjectTaskAssignments.Where(a => a.TaskId == x.Id)
+                        .Select(a => new CommonUserResponse(a.User, a.User.MemberProfile))
+                        .ToList();
                     return taskResponse;
                 })
                 .ToList(),
