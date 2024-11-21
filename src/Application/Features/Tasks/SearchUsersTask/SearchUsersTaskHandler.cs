@@ -35,10 +35,11 @@ public class SearchUsersTaskHandler(IContext context, ICurrentSession session) :
         IQueryable<ProjectTask> query = context.ProjectTasks.Include(i => i.Workspace).Include(i => i.Project).Include(i => i.User.MemberProfile);
 
         //Apply workspace and project filter
+        // Filter tasks where user is either creator or assignee
         query = query.Where(x =>
-            x.Workspace.WorkspaceMembers.Any(m =>
-                m.UserId == session.UserId && (m.Role == WorkspaceRole.WorkspaceOwner || m.Role == WorkspaceRole.WorkspaceManager)
-            ) || x.Project.ProjectMembers.Any(m => m.UserId == session.UserId)
+            x.User.Id == session.UserId
+            || // Created by user
+            x.Assignments.Any(a => a.User.Id == session.UserId) // Assigned to user
         );
 
         //Apply workspace filter
