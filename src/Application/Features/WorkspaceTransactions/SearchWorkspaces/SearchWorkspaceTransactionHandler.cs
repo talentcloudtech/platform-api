@@ -42,7 +42,7 @@ public class SearchWorkspaceTransactionsHandler(IContext context, ICurrentSessio
 
         if (workspaceMember == null)
             return Result.Forbidden("You are not a member of this workspace.");
-        if (workspaceMember.Role != WorkspaceRole.WorkspaceOwner && session.Role!.Name != UserRole.Admin.Name)
+        if (workspaceMember.Role == WorkspaceRole.WorkspaceMember && session.Role!.Name != UserRole.Admin.Name)
             return Result.Forbidden("You don't have permission to access workspace transactions.");
 
         // Filter by ProjectId if provided

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Platform.Application.Common.Responses;
 using Platform.Domain.Entities.Common;
 using Platform.Domain.Entities.Enums;
 
@@ -34,4 +35,9 @@ public class UpcomingFinanceResponse
     /// Gets or sets the task cost
     /// </summary>
     public decimal? Cost { get; set; }
+
+    /// <summary>
+    /// Gets or sets the task assignee
+    /// </summary>
+    public List<CommonUserResponse> Assignees { get; set; } = new();
 }

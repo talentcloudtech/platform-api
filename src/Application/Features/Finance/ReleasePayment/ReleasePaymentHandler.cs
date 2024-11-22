@@ -63,9 +63,17 @@ public class ReleasePaymentHandler(IContext context, ICurrentSession session) : 
         {
             foreach (var task in tasks)
             {
+
+                if (task.Assignments.Count > 1)
+                    return Result.Error($"Task '{task.Title}' has multiple assignees. Payment release requires exactly one assigned user.");
+
                 var assignee = task.Assignments.FirstOrDefault()?.UserId;
                 if (assignee == null)
-                    continue;
+                    return Result.Error($"Task '{task.Title}' has no assignee. Payment release requires an assigned user.");
+
+
+
+
 
                 var member = await context.Users.FirstOrDefaultAsync(m => m.Id == assignee.Value, cancellationToken);
 
