@@ -49,9 +49,7 @@ public class GetUpcomingFinanceHandler : IRequestHandler<GetUpcomingFinanceReque
 
         // Build query with filters
         var query = _context
-            .ProjectTasks.Where(t => t.WorkspaceId == request.WorkspaceId)
-            .Where(t => !t.IsClosed) // Only non-closed tasks
-            .Where(t => t.Cost > 0); // Only tasks with cost > 0
+            .ProjectTasks.Where(t => t.WorkspaceId == request.WorkspaceId && !t.IsClosed && t.Cost > 0);
 
         // Apply project filter if specified
         if (request.ProjectId != null)
