@@ -63,7 +63,6 @@ public class ReleasePaymentHandler(IContext context, ICurrentSession session) : 
         {
             foreach (var task in tasks)
             {
-
                 if (task.Assignments.Count > 1)
                     return Result.Error($"Task '{task.Title}' has multiple assignees. Payment release requires exactly one assigned user.");
 

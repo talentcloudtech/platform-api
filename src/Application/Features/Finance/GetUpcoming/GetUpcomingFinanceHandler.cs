@@ -48,8 +48,7 @@ public class GetUpcomingFinanceHandler : IRequestHandler<GetUpcomingFinanceReque
             return Result.Forbidden("You are not a member of this workspace.");
 
         // Build query with filters
-        var query = _context
-            .ProjectTasks.Where(t => t.WorkspaceId == request.WorkspaceId && !t.IsClosed && t.Cost > 0);
+        var query = _context.ProjectTasks.Where(t => t.WorkspaceId == request.WorkspaceId && !t.IsClosed && t.Cost > 0);
 
         // Apply project filter if specified
         if (request.ProjectId != null)
