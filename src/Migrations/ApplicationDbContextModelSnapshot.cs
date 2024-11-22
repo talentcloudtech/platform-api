@@ -581,6 +581,8 @@ namespace Platform.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("SenderId");
+
                     b.ToTable("Messages");
                 });
 
@@ -1786,6 +1788,17 @@ namespace Platform.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Platform.Domain.Entities.Message", b =>
+                {
+                    b.HasOne("Platform.Domain.Entities.ApplicationUser", "Sender")
+                        .WithMany("SentMessages")
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Sender");
+                });
+
             modelBuilder.Entity("Platform.Domain.Entities.MessageAttachment", b =>
                 {
                     b.HasOne("Platform.Domain.Entities.Message", "Message")
@@ -2108,6 +2121,8 @@ namespace Platform.Migrations
                     b.Navigation("Projects");
 
                     b.Navigation("RefreshTokens");
+
+                    b.Navigation("SentMessages");
 
                     b.Navigation("TaskAssignments");
 

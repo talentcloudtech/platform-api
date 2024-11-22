@@ -29,7 +29,7 @@ public class SearchMessagesHandler(IContext context, ICurrentSession session)
     {
         IQueryable<Message> query = context.Messages
             .Include(m => m.Recipients)
-            .Include(m => m.SenderId == session.UserId);
+            .Include(m => m.Sender);
 
         // Filter messages where current user is a recipient
         query = query.Where(m => m.Recipients.Any(r => r.RecipientId == session.UserId));
@@ -53,10 +53,10 @@ public class SearchMessagesHandler(IContext context, ICurrentSession session)
                 .Any(r => r.RecipientId == session.UserId && !r.IsRead == request.Unread.Value));
 
         // Apply search filter
-        if (!string.IsNullOrEmpty(request.SearchText))
+        if (!string.IsNullOrEmpty(request.Search))
             query = query.Where(m =>
-                EF.Functions.Like(m.Subject.ToLower(), $"%{request.SearchText.ToLower()}%") ||
-                EF.Functions.Like(m.Body.ToLower(), $"%{request.SearchText.ToLower()}%"));
+                EF.Functions.Like(m.Subject.ToLower(), $"%{request.Search.ToLower()}%") ||
+                EF.Functions.Like(m.Body.ToLower(), $"%{request.Search.ToLower()}%"));
 
         // Apply message type filter
         if (request.MessageTypes?.Any() == true)
@@ -92,7 +92,7 @@ public class SearchMessagesHandler(IContext context, ICurrentSession session)
             Result = messages.Result.Select(m =>
             {
                 var messageResponse = m.Adapt<MessageResponse>();
-                messageResponse.Sender = new CommonUserResponse(senders[m.SenderId], senders[m.SenderId].MemberProfile);
+                messageResponse.Sender = m.Sender != null ? new CommonUserResponse(m.Sender, m.Sender.MemberProfile) : new CommonUserResponse();
                 messageResponse.IsRead = m.Recipients.First(r => r.RecipientId == session.UserId).IsRead;
                 messageResponse.IsArchived = m.Recipients.First(r => r.RecipientId == session.UserId).IsArchived;
                 return messageResponse;

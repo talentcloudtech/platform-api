@@ -12,7 +12,7 @@ using System;
 /// <param name="ProjectId">Optional project ID to filter messages</param>
 /// <param name="Archived">Filter by archived status</param>
 /// <param name="Unread">Filter by unread status</param>
-/// <param name="SearchText">Search text to filter messages by subject or body</param>
+/// <param name="Search">Search text to filter messages by subject or body</param>
 /// <param name="MessageTypes">Filter by message types</param>
 /// <param name="StartDate">Filter messages after this date</param>
 /// <param name="EndDate">Filter messages before this date</param>
@@ -25,7 +25,7 @@ public record SearchMessagesRequest(
     ProjectId? ProjectId = null,
     bool? Archived = false,
     bool? Unread = null,
-    string? SearchText = null,
+    string? Search = null,
     MessageType[]? MessageTypes = null,
     DateTimeOffset? StartDate = null,
     DateTimeOffset? EndDate = null,

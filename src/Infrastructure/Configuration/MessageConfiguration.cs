@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Platform.Application.Common;
 using Platform.Domain.Entities;
 using Platform.Domain.Entities.Common;
+using System;
 
 namespace Platform.Infrastructure.Configuration;
 
@@ -26,7 +27,12 @@ public class MessageConfiguration : IEntityTypeConfiguration<Message>
         builder.Property(x => x.Subject).HasMaxLength(StringSizes.Title).IsRequired();
         builder.Property(x => x.Body).HasMaxLength(StringSizes.Max).IsRequired();
         builder.Property(x => x.MessageType).HasConversion<string>();
+        builder.Property(x => x.ReplyAllowed);
+        builder.Property(x => x.CreatedAt).HasConversion<DateTime>();
+        builder.Property(x => x.RecipientCount);
+        builder.Property(x => x.TotalReplyCount);
 
+        builder.HasOne(m => m.Sender).WithMany(s => s.SentMessages).HasForeignKey(m => m.SenderId).OnDelete(DeleteBehavior.Restrict);
         builder.HasMany(m => m.Recipients).WithOne(r => r.Message).HasForeignKey(r => r.MessageId).OnDelete(DeleteBehavior.Cascade);
     }
 }
