@@ -19,7 +19,7 @@ public class MessageEndpoints : IEndpoints
     /// <param name="app">The application builder</param>
     public static void MapEndpoints(IEndpointRouteBuilder app)
     {
-        var messages = app.MapGroup("/messages").WithTags("Message").RequireAuthorization();
+        var messages = app.MapGroup("api/messages").WithTags("Message").RequireAuthorization();
 
         messages
             .MapGet(
