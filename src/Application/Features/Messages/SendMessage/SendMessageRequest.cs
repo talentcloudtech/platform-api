@@ -1,9 +1,9 @@
+using System.Collections.Generic;
 using Ardalis.Result;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Platform.Domain.Entities.Common;
 using Platform.Domain.Entities.Enums;
-using System.Collections.Generic;
 
 /// <summary>
 /// Request to send a new message

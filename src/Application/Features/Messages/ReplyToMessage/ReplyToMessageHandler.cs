@@ -14,8 +14,7 @@ namespace Platform.Application.Features.Messages.ReplyToMessage;
 /// <summary>
 /// Handles replying to a message
 /// </summary>
-public class ReplyToMessageHandler(IContext context, ICurrentSession session)
-    : IRequestHandler<ReplyToMessageRequest, Result<MessageReplyResponse>>
+public class ReplyToMessageHandler(IContext context, ICurrentSession session) : IRequestHandler<ReplyToMessageRequest, Result<MessageReplyResponse>>
 {
     /// <summary>
     /// Handles the reply to message request
@@ -26,17 +25,15 @@ public class ReplyToMessageHandler(IContext context, ICurrentSession session)
     public async Task<Result<MessageReplyResponse>> Handle(ReplyToMessageRequest request, CancellationToken cancellationToken)
     {
         // Get original message and verify it exists
-        var originalMessage = await context.Messages
-            .FirstOrDefaultAsync(m => m.Id == request.MessageId, cancellationToken);
+        var originalMessage = await context.Messages.FirstOrDefaultAsync(m => m.Id == request.MessageId, cancellationToken);
 
         if (originalMessage == null)
             return Result.NotFound("Original message not found.");
 
         // Verify user can reply (is recipient or sender)
-        var canReply = originalMessage.SenderId == session.UserId ||
-                      await context.MessageRecipients.AnyAsync(
-                          r => r.MessageId == request.MessageId && r.RecipientId == session.UserId,
-                          cancellationToken);
+        var canReply =
+            originalMessage.SenderId == session.UserId
+            || await context.MessageRecipients.AnyAsync(r => r.MessageId == request.MessageId && r.RecipientId == session.UserId, cancellationToken);
 
         if (!canReply)
             return Result.Forbidden("You don't have permission to reply to this message.");
@@ -49,7 +46,7 @@ public class ReplyToMessageHandler(IContext context, ICurrentSession session)
             OriginalMessageId = request.MessageId,
             SenderId = session.UserId,
             Body = request.Body,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
         };
 
         context.MessageReplies.Add(reply);
@@ -59,9 +56,7 @@ public class ReplyToMessageHandler(IContext context, ICurrentSession session)
 
         await context.SaveChangesAsync(cancellationToken);
 
-        var senders = await context.Users
-            .Include(u => u.MemberProfile)
-            .FirstOrDefaultAsync(u => u.Id == session.UserId, cancellationToken);
+        var senders = await context.Users.Include(u => u.MemberProfile).FirstOrDefaultAsync(u => u.Id == session.UserId, cancellationToken);
 
         var replyResponse = reply.Adapt<MessageReplyResponse>();
 

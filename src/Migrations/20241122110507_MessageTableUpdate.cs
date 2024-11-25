@@ -10,10 +10,7 @@ public partial class MessageTableUpdate : Migration
     /// <inheritdoc />
     protected override void Up(MigrationBuilder migrationBuilder)
     {
-        migrationBuilder.CreateIndex(
-            name: "IX_Messages_SenderId",
-            table: "Messages",
-            column: "SenderId");
+        migrationBuilder.CreateIndex(name: "IX_Messages_SenderId", table: "Messages", column: "SenderId");
 
         migrationBuilder.AddForeignKey(
             name: "FK_Messages_AspNetUsers_SenderId",
@@ -21,18 +18,15 @@ public partial class MessageTableUpdate : Migration
             column: "SenderId",
             principalTable: "AspNetUsers",
             principalColumn: "Id",
-            onDelete: ReferentialAction.Restrict);
+            onDelete: ReferentialAction.Restrict
+        );
     }
 
     /// <inheritdoc />
     protected override void Down(MigrationBuilder migrationBuilder)
     {
-        migrationBuilder.DropForeignKey(
-            name: "FK_Messages_AspNetUsers_SenderId",
-            table: "Messages");
+        migrationBuilder.DropForeignKey(name: "FK_Messages_AspNetUsers_SenderId", table: "Messages");
 
-        migrationBuilder.DropIndex(
-            name: "IX_Messages_SenderId",
-            table: "Messages");
+        migrationBuilder.DropIndex(name: "IX_Messages_SenderId", table: "Messages");
     }
 }

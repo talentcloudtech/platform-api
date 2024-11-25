@@ -26,9 +26,7 @@ public class SearchSentMessagesHandler(IContext context, ICurrentSession session
     /// <returns>A paginated list of messages.</returns>
     public async Task<Result<PaginatedList<MessageResponse>>> Handle(SearchSentMessagesRequest request, CancellationToken cancellationToken)
     {
-        IQueryable<Message> query = context.Messages
-            .Include(m => m.Recipients)
-            .Include(m => m.SenderId == session.UserId);
+        IQueryable<Message> query = context.Messages.Include(m => m.Recipients).Include(m => m.SenderId == session.UserId);
 
         // Filter messages sent by current user
         query = query.Where(m => m.SenderId == session.UserId);
@@ -44,8 +42,9 @@ public class SearchSentMessagesHandler(IContext context, ICurrentSession session
         // Apply search filter
         if (!string.IsNullOrEmpty(request.SearchText))
             query = query.Where(m =>
-                EF.Functions.Like(m.Subject.ToLower(), $"%{request.SearchText.ToLower()}%") ||
-                EF.Functions.Like(m.Body.ToLower(), $"%{request.SearchText.ToLower()}%"));
+                EF.Functions.Like(m.Subject.ToLower(), $"%{request.SearchText.ToLower()}%")
+                || EF.Functions.Like(m.Body.ToLower(), $"%{request.SearchText.ToLower()}%")
+            );
 
         // Apply message type filter
         if (request.MessageTypes?.Any() == true)
@@ -66,8 +65,8 @@ public class SearchSentMessagesHandler(IContext context, ICurrentSession session
 
         var messages = await query.ToPaginatedListAsync(request.CurrentPage, request.PageSize);
 
-        var senders = await context.Users
-            .Include(u => u.MemberProfile)
+        var senders = await context
+            .Users.Include(u => u.MemberProfile)
             .Where(u => messages.Result.Select(m => m.SenderId).Contains(u.Id))
             .ToDictionaryAsync(u => u.Id, u => u, cancellationToken);
 
@@ -76,12 +75,14 @@ public class SearchSentMessagesHandler(IContext context, ICurrentSession session
             CurrentPage = messages.CurrentPage,
             TotalPages = messages.TotalPages,
             TotalItems = messages.TotalItems,
-            Result = messages.Result.Select(m =>
-            {
-                var messageResponse = m.Adapt<MessageResponse>();
-                messageResponse.Sender = new CommonUserResponse(senders[m.SenderId], senders[m.SenderId].MemberProfile);
-                return messageResponse;
-            }).ToList()
+            Result = messages
+                .Result.Select(m =>
+                {
+                    var messageResponse = m.Adapt<MessageResponse>();
+                    messageResponse.Sender = new CommonUserResponse(senders[m.SenderId], senders[m.SenderId].MemberProfile);
+                    return messageResponse;
+                })
+                .ToList(),
         };
 
         return Result.Success(paginatedResponse);

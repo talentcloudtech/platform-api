@@ -1,9 +1,9 @@
-using MediatR;
+using System;
 using Ardalis.Result;
+using MediatR;
+using Platform.Application.Common.Responses;
 using Platform.Domain.Entities.Common;
 using Platform.Domain.Entities.Enums;
-using Platform.Application.Common.Responses;
-using System;
 
 /// <summary>
 /// Request to search for messages in user's inbox with filters

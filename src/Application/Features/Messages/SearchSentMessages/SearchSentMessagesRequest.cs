@@ -1,9 +1,9 @@
+using System;
 using Ardalis.Result;
 using MediatR;
 using Platform.Application.Common.Responses;
 using Platform.Domain.Entities.Common;
 using Platform.Domain.Entities.Enums;
-using System;
 
 /// <summary>
 /// Request to search for messages sent by the current user

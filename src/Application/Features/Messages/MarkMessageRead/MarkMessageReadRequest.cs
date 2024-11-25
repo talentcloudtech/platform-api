@@ -1,5 +1,5 @@
-using MediatR;
 using Ardalis.Result;
+using MediatR;
 using Platform.Domain.Entities.Common;
 
 /// <summary>

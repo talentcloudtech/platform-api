@@ -13,8 +13,7 @@ namespace Platform.Application.Features.Messages.SendMessage;
 /// <summary>
 /// Handles sending a new message
 /// </summary>
-public class SendMessageHandler(IContext context, ICurrentSession session)
-    : IRequestHandler<SendMessageRequest, Result<MessageResponse>>
+public class SendMessageHandler(IContext context, ICurrentSession session) : IRequestHandler<SendMessageRequest, Result<MessageResponse>>
 {
     /// <summary>
     /// Handles the send message request
@@ -34,19 +33,21 @@ public class SendMessageHandler(IContext context, ICurrentSession session)
             ProjectId = request.ProjectId,
             ReplyAllowed = request.ReplyAllowed,
             CreatedAt = DateTime.UtcNow,
-            RecipientCount = request.RecipientIds.Count
+            RecipientCount = request.RecipientIds.Count,
         };
 
         // Create message recipients
         foreach (var recipientId in request.RecipientIds)
         {
-            message.Recipients.Add(new MessageRecipient
-            {
-                RecipientId = recipientId,
-                IsRead = false,
-                IsArchived = false,
-                ReceivedAt = DateTime.UtcNow
-            });
+            message.Recipients.Add(
+                new MessageRecipient
+                {
+                    RecipientId = recipientId,
+                    IsRead = false,
+                    IsArchived = false,
+                    ReceivedAt = DateTime.UtcNow,
+                }
+            );
         }
 
         context.Messages.Add(message);

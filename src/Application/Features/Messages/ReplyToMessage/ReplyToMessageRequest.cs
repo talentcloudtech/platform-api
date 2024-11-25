@@ -1,8 +1,8 @@
-using MediatR;
-using Ardalis.Result;
-using Platform.Domain.Entities.Common;
 using System.Collections.Generic;
+using Ardalis.Result;
+using MediatR;
 using Microsoft.AspNetCore.Http;
+using Platform.Domain.Entities.Common;
 
 /// <summary>
 /// Request to reply to an existing message

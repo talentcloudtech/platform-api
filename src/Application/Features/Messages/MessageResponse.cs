@@ -1,9 +1,8 @@
-using Platform.Domain.Entities.Enums;
-using Platform.Domain.Entities.Common;
 using System;
-using Platform.Application.Common.Responses;
 using System.Collections.Generic;
-
+using Platform.Application.Common.Responses;
+using Platform.Domain.Entities.Common;
+using Platform.Domain.Entities.Enums;
 
 /// <summary>
 /// Represents the response model for a message.
