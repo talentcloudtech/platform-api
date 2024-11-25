@@ -66,6 +66,11 @@ public class Message : Entity<MessageId>
     public int TotalReplyCount { get; set; }
 
     /// <summary>
+    /// Gets or sets the sender of the message.
+    /// </summary>
+    public ApplicationUser? Sender { get; set; }
+
+    /// <summary>
     /// Gets or sets the collection of message recipients.
     /// </summary>
     public ICollection<MessageRecipient> Recipients { get; set; } = new List<MessageRecipient>();
