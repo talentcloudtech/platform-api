@@ -69,6 +69,28 @@ public class UpdateGigOpportunityCandidateHandler(IContext context, ICurrentSess
             );
 
         gigInvitation.Status = request.Status;
+
+        if (request.Status == GigApplicantInvitationStatus.Hired)
+        {
+            var existingMember = await context.WorkspaceMembers
+                .FirstOrDefaultAsync(x => x.WorkspaceId == memberRequest.WorkspaceId && x.UserId == request.UserId,
+                    cancellationToken);
+
+            if (existingMember == null)
+            {
+                var workspaceMember = new WorkspaceMember
+                {
+                    WorkspaceId = memberRequest.WorkspaceId,
+                    UserId = request.UserId,
+                    Role = WorkspaceRole.WorkspaceMember,
+                    CreatedDate = DateTime.UtcNow,
+                    CreatedBy = session.UserId,
+                };
+
+                context.WorkspaceMembers.Add(workspaceMember);
+            }
+        }
+
         await context.SaveChangesAsync(cancellationToken);
 
         return Result.Success(gigInvitation.Adapt<GigInvitationResponse>());
