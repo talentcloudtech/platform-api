@@ -69,6 +69,7 @@ public static class GigApplicantInvitationStatusValidator
         {
             (GigApplicantInvitationStatus.Pending, GigApplicantInvitationStatus.Accepted) => true,
             (GigApplicantInvitationStatus.Pending, GigApplicantInvitationStatus.Rejected) => true,
+            (GigApplicantInvitationStatus.Pending, GigApplicantInvitationStatus.Declined) => true,
             (GigApplicantInvitationStatus.Accepted, GigApplicantInvitationStatus.Withdrawn) => true,
             (GigApplicantInvitationStatus.OfferExtended, GigApplicantInvitationStatus.OfferAccepted) => true,
             (GigApplicantInvitationStatus.OfferExtended, GigApplicantInvitationStatus.OfferDeclined) => true,
