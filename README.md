@@ -7,6 +7,7 @@ The rest APIs are the talent cloud platform.
 1. .NET 8
 2. PostgreSQL
 3. Restore dotnet tools `dotnet tool restore`
+4. Azure
 
 ## Configuration
 
