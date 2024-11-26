@@ -72,9 +72,10 @@ public class UpdateGigOpportunityCandidateHandler(IContext context, ICurrentSess
 
         if (request.Status == GigApplicantInvitationStatus.Hired)
         {
-            var existingMember = await context.WorkspaceMembers
-                .FirstOrDefaultAsync(x => x.WorkspaceId == memberRequest.WorkspaceId && x.UserId == request.UserId,
-                    cancellationToken);
+            var existingMember = await context.WorkspaceMembers.FirstOrDefaultAsync(
+                x => x.WorkspaceId == memberRequest.WorkspaceId && x.UserId == request.UserId,
+                cancellationToken
+            );
 
             if (existingMember == null)
             {
