@@ -72,9 +72,9 @@ public class MessageEndpoints : IEndpoints
         messages
             .MapGet(
                 "/{messageId}/replies",
-                async (MessageId messageId, int pageSize, int page, ISender sender, CancellationToken cancellationToken) =>
+                async (MessageId messageId, [AsParameters] GetMessageRepliesRequest request, ISender sender, CancellationToken cancellationToken) =>
                 {
-                    var request = new GetMessageRepliesRequest(messageId, page, pageSize);
+                    request = request with { MessageId = messageId };
                     var result = await sender.Send(request, cancellationToken);
                     return result.ToPlatformApiResult();
                 }
