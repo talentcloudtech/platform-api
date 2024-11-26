@@ -97,7 +97,7 @@ public class EmailSender : IEmailSender<ApplicationUser>, IEmailSender
     private static void SendWorkspaceInvitationAsync(string workspaceName, List<MailRequest> mailRequests, WorkspaceMemberInvitation invitation)
     {
         var invitationLink = $"{EnvironmentVariables.FrontendUrl}/workspaces/invitations/{invitation.Id}";
-        var signupLink = $"{EnvironmentVariables.FrontendUrl}/signup";
+        var signupLink = $"{EnvironmentVariables.FrontendUrl}/register";
         var body =
             $@"
                 You've been invited to join {workspaceName} by the workspace admin. This workspace provides a platform for seamless collaboration and efficient teamwork.
