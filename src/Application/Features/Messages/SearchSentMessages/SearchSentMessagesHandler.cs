@@ -26,7 +26,7 @@ public class SearchSentMessagesHandler(IContext context, ICurrentSession session
     /// <returns>A paginated list of messages.</returns>
     public async Task<Result<PaginatedList<MessageResponse>>> Handle(SearchSentMessagesRequest request, CancellationToken cancellationToken)
     {
-        IQueryable<Message> query = context.Messages.Include(m => m.Recipients).Include(m => m.SenderId == session.UserId);
+        IQueryable<Message> query = context.Messages.Include(m => m.Recipients);
 
         // Filter messages sent by current user
         query = query.Where(m => m.SenderId == session.UserId);

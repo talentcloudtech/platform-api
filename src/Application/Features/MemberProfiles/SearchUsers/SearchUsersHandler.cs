@@ -19,9 +19,8 @@ namespace Platform.Application.Features.MemberProfiles.SearchUsers;
 /// Handles the request to search for member profiles with optional filtering and pagination.
 /// </summary>
 /// <param name="context">The database context.</param>
-/// <param name="session">The current session information.</param>
 /// <returns>The result of the operation.</returns>
-public class SearchUsersHandler(IContext context, ICurrentSession session) : IRequestHandler<SearchUsersRequest, Result<PaginatedList<CommonUserResponse>>>
+public class SearchUsersHandler(IContext context) : IRequestHandler<SearchUsersRequest, Result<PaginatedList<CommonUserResponse>>>
 {
     /// <summary>
     /// Handles the request to search for member profiles based on the provided filtering and pagination options.
@@ -31,9 +30,6 @@ public class SearchUsersHandler(IContext context, ICurrentSession session) : IRe
     /// <returns>A paginated list of <see cref="MemberProfileResponse"/> matching the search criteria.</returns>
     public async Task<Result<PaginatedList<CommonUserResponse>>> Handle(SearchUsersRequest request, CancellationToken cancellationToken)
     {
-        if (session.Role!.Name != UserRole.Admin.Name)
-            return Result.Forbidden("You are not authorized to access this resource.");
-
         var lowercaseSearch = request.Search?.ToLower().Trim();
         IQueryable<MemberProfile> query = context.MemberProfiles.Include(x => x.User);
 
