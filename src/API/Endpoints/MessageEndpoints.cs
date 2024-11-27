@@ -56,7 +56,7 @@ public class MessageEndpoints : IEndpoints
             )
             .WithSummary("Send a message");
 
-        // POST /messages/read - Mark message as read
+        // POST /messages/read - Mark messages as read
         messages
             .MapPost(
                 "/read",
@@ -93,5 +93,30 @@ public class MessageEndpoints : IEndpoints
                 }
             )
             .WithSummary("Reply to a message");
+
+        // POST /messages/archive - Archive messages
+        messages
+            .MapPost(
+                "/archive",
+                async (ArchiveMessagesRequest request, ISender sender, CancellationToken cancellationToken) =>
+                {
+                    var result = await sender.Send(request, cancellationToken);
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Archive messages");
+
+        // POST /messages/unarchive - Unarchive messages
+        messages
+            .MapPost(
+                "/unarchive",
+                async (UnarchiveMessagesRequest request, ISender sender, CancellationToken cancellationToken) =>
+                {
+                    var result = await sender.Send(request, cancellationToken);
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Unarchive messages");
+
     }
 }
