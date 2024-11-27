@@ -1,9 +1,7 @@
-
+using System.Collections.Generic;
 using Ardalis.Result;
 using MediatR;
 using Platform.Domain.Entities.Common;
-using System.Collections.Generic;
-
 
 /// <summary>
 /// Request to archive messages

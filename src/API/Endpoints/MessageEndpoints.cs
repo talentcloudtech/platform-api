@@ -117,6 +117,5 @@ public class MessageEndpoints : IEndpoints
                 }
             )
             .WithSummary("Unarchive messages");
-
     }
 }

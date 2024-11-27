@@ -12,17 +12,15 @@ using Platform.Domain.Auth.Interfaces;
 /// </summary>
 /// <param name="context">The database context</param>
 /// <param name="session">The current session</param>
-public class UnarchiveMessagesHandler(IContext context, ICurrentSession session)
-    : IRequestHandler<UnarchiveMessagesRequest, Result>
+public class UnarchiveMessagesHandler(IContext context, ICurrentSession session) : IRequestHandler<UnarchiveMessagesRequest, Result>
 {
     /// <summary>
     /// Handles the request to unarchive messages
     /// </summary>
     public async Task<Result> Handle(UnarchiveMessagesRequest request, CancellationToken cancellationToken)
     {
-        var messageRecipients = await context.MessageRecipients
-            .Where(mr => request.MessageIds.Contains(mr.MessageId) &&
-                        mr.RecipientId == session.UserId)
+        var messageRecipients = await context
+            .MessageRecipients.Where(mr => request.MessageIds.Contains(mr.MessageId) && mr.RecipientId == session.UserId)
             .ToListAsync(cancellationToken);
 
         if (!messageRecipients.Any())

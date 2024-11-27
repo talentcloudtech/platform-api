@@ -75,7 +75,6 @@ public class Message : Entity<MessageId>
     /// </summary>
     public bool IsArchived { get; set; }
 
-
     /// <summary>
     /// Gets or sets the collection of message recipients.
     /// </summary>
