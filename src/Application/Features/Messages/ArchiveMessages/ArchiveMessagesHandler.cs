@@ -23,17 +23,31 @@ public class ArchiveMessagesHandler(IContext context, ICurrentSession session)
     /// </summary>
     public async Task<Result> Handle(ArchiveMessagesRequest request, CancellationToken cancellationToken)
     {
-        var messageRecipients = await context.MessageRecipients
+        // Get messages where user is recipient
+        var recipientMessages = await context.MessageRecipients
             .Where(mr => request.MessageIds.Contains(mr.MessageId) &&
                         mr.RecipientId == session.UserId)
             .ToListAsync(cancellationToken);
 
-        if (!messageRecipients.Any())
+        // Get messages where user is sender
+        var sentMessages = await context.Messages
+            .Where(m => request.MessageIds.Contains(m.Id) &&
+                        m.SenderId == session.UserId)
+            .ToListAsync(cancellationToken);
+
+        if (!recipientMessages.Any() && !sentMessages.Any())
             return Result.NotFound("No messages found or you don't have access to them.");
 
-        foreach (var recipient in messageRecipients)
+        // Archive received messages
+        foreach (var message in recipientMessages)
         {
-            recipient.IsArchived = true;
+            message.IsArchived = true;
+        }
+
+        // Archive sent messages
+        foreach (var message in sentMessages)
+        {
+            message.IsArchived = true; // Assuming you have this field in your Message entity
         }
 
         await context.SaveChangesAsync(cancellationToken);

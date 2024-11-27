@@ -27,6 +27,7 @@ public class MessageConfiguration : IEntityTypeConfiguration<Message>
         builder.Property(x => x.Subject).HasMaxLength(StringSizes.Title).IsRequired();
         builder.Property(x => x.Body).HasMaxLength(StringSizes.Max).IsRequired();
         builder.Property(x => x.MessageType).HasConversion<string>();
+        builder.Property(x => x.IsArchived);
         builder.Property(x => x.ReplyAllowed);
         builder.Property(x => x.CreatedAt).HasConversion<DateTime>();
         builder.Property(x => x.RecipientCount);
