@@ -174,7 +174,7 @@ public class UpdateMemberRequestHandler(IContext context, ICurrentSession sessio
             MemberRequestStatus.Hired => new[] { MemberRequestStatus.Closed, MemberRequestStatus.Cancelled },
             MemberRequestStatus.Rejected => new[] { MemberRequestStatus.PendingReview, MemberRequestStatus.Closed, MemberRequestStatus.Cancelled },
             MemberRequestStatus.Closed => Array.Empty<MemberRequestStatus>(),
-            MemberRequestStatus.Cancelled => Array.Empty<MemberRequestStatus>(),
+            MemberRequestStatus.Cancelled => new[] { MemberRequestStatus.PendingReview },
             _ => Array.Empty<MemberRequestStatus>(),
         };
     }
