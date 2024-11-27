@@ -29,7 +29,7 @@ public class SearchSentMessagesHandler(IContext context, ICurrentSession session
         IQueryable<Message> query = context.Messages.Include(m => m.Recipients);
 
         // Filter messages sent by current user
-        query = query.Where(m => m.SenderId == session.UserId);
+        query = query.Where(m => m.SenderId == session.UserId && !m.IsArchived);
 
         // Apply workspace filter
         if (request.WorkspaceId != null)
