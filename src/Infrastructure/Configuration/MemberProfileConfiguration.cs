@@ -22,7 +22,7 @@ public class MemberProfileConfiguration : IEntityTypeConfiguration<MemberProfile
 
         builder.Property(x => x.Id).HasMaxLength(25).HasConversion<UserId.EfCoreValueConverter>();
         builder.Property(x => x.FullName).HasMaxLength(StringSizes.Title);
-        builder.Property(x => x.UserName).HasMaxLength(25);
+        builder.Property(x => x.UserName).HasMaxLength(32);
         builder.Property(x => x.ShortBio).HasMaxLength(StringSizes.Bio);
         builder.Property(x => x.Subtitle).HasMaxLength(StringSizes.Title);
         builder.Property(x => x.ProfilePictureUrl).HasMaxLength(StringSizes.Url);

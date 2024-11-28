@@ -70,6 +70,17 @@ public class SearchSentMessagesHandler(IContext context, ICurrentSession session
             .Where(u => messages.Result.Select(m => m.SenderId).Contains(u.Id))
             .ToDictionaryAsync(u => u.Id, u => u, cancellationToken);
 
+        var recipientIds = await context
+            .MessageRecipients.Where(mr => messages.Result.Select(m => m.Id).Contains(mr.MessageId))
+            .Select(mr => mr.RecipientId)
+            .Distinct()
+            .ToListAsync(cancellationToken);
+
+        var recipients = await context
+            .Users.Include(u => u.MemberProfile)
+            .Where(u => recipientIds.Contains(u.Id))
+            .ToDictionaryAsync(u => u.Id, u => u, cancellationToken);
+
         var paginatedResponse = new PaginatedList<MessageResponse>
         {
             CurrentPage = messages.CurrentPage,
@@ -80,6 +91,9 @@ public class SearchSentMessagesHandler(IContext context, ICurrentSession session
                 {
                     var messageResponse = m.Adapt<MessageResponse>();
                     messageResponse.Sender = new CommonUserResponse(senders[m.SenderId], senders[m.SenderId].MemberProfile);
+                    messageResponse.Recipients = m
+                        .Recipients.Select(r => new CommonUserResponse(recipients[r.RecipientId], recipients[r.RecipientId].MemberProfile))
+                        .ToList();
                     return messageResponse;
                 })
                 .ToList(),

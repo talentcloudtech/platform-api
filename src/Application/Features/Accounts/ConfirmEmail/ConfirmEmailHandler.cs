@@ -45,6 +45,9 @@ public class ConfirmEmailHandler : IRequestHandler<ConfirmEmailRequest, Result>
         if (!result.Succeeded)
             return Result.Invalid(new ValidationError("Invalid confirmation code."));
 
+        if (user.EmailConfirmed)
+            return Result.Success();
+
         // Determine user type and send appropriate email
         var roles = await _userManager.GetRolesAsync(user);
         var isCustomer = roles.Contains("Customer");
