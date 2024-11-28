@@ -397,8 +397,8 @@ namespace Platform.Migrations
                         .HasColumnType("character varying(50)");
 
                     b.Property<string>("UserName")
-                        .HasMaxLength(25)
-                        .HasColumnType("character varying(25)");
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
 
                     b.HasKey("Id");
 

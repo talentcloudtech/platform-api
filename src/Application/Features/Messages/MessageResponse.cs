@@ -40,6 +40,11 @@ public class MessageResponse
     public required CommonUserResponse Sender { get; set; }
 
     /// <summary>
+    /// Gets or sets the recipients of the message.
+    /// </summary>
+    public List<CommonUserResponse> Recipients { get; set; } = [];
+
+    /// <summary>
     /// Gets or sets whether the message has been read.
     /// </summary>
     public required bool IsRead { get; set; }
