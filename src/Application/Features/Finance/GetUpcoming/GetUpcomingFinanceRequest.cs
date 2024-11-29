@@ -18,5 +18,5 @@ public record GetUpcomingFinanceRequest(
     int CurrentPage = 1,
     int PageSize = 10,
     ProjectId? ProjectId = null,
-    TaskStatus? Status = null
+    TaskStatus[]? Statuses = null
 ) : IRequest<Result<PaginatedList<UpcomingFinanceResponse>>>;

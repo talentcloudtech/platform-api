@@ -55,8 +55,8 @@ public class GetUpcomingFinanceHandler : IRequestHandler<GetUpcomingFinanceReque
             query = query.Where(t => t.ProjectId == request.ProjectId);
 
         // Apply status filter if specified
-        if (request.Status.HasValue)
-            query = query.Where(t => t.Status == request.Status.Value);
+        if (request.Statuses != null && request.Statuses.Any())
+            query = query.Where(t => request.Statuses.Contains(t.Status));
 
         // Apply search filter if specified
         if (!string.IsNullOrEmpty(request.Search))
