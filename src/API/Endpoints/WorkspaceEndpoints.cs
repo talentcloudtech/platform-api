@@ -9,6 +9,7 @@ using Platform.Application.Features.Workspaces.GetUserWorkspaceRole;
 using Platform.Application.Features.Workspaces.GetWorkspaceById;
 using Platform.Application.Features.Workspaces.SearchWorkspaces;
 using Platform.Application.Features.Workspaces.UpdateWorkspace;
+using Platform.Application.Features.Workspaces.UpdateWorkspaceCreditBalance;
 using Platform.Application.Features.Workspaces.UploadWorkspaceAvatar;
 using Platform.Domain.Auth.Interfaces;
 using Platform.Domain.Entities.Common;
@@ -113,5 +114,16 @@ public class WorkspaceEndpoints : IEndpoints
                 }
             )
             .WithSummary("Get the role of the current user in the workspace.");
+
+        group
+            .MapPost(
+                "{workSpaceId}/credit-balance",
+                async (IMediator mediator, WorkspaceId workspaceId, UpdateWorkspaceCreditBalanceRequest request) =>
+                {
+                    var result = await mediator.Send(request with { WorkspaceId = workspaceId });
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Update workspace credit balance.");
     }
 }
