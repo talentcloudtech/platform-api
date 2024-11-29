@@ -37,6 +37,8 @@ public class SearchMemberTransactionsHandler(IContext context, ICurrentSession s
         if (session.Role!.Name != UserRole.User.Name)
             return Result.Forbidden("Admin and Customer does not have permission to search member transactions.");
 
+        query = query.Where(x => x.UserId == session.UserId);
+
         // Apply search filter
         if (!string.IsNullOrEmpty(request.Search))
             query = query.Where(x => EF.Functions.Like(x.Description.ToLower().Trim(), $"%{request.Search!.ToLower().Trim()}%"));
