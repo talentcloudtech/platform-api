@@ -15,8 +15,7 @@ namespace Platform.Application.Features.Workspaces.UpdateWorkspaceCreditBalance;
 /// <summary>
 /// Handles updating workspace credit balance
 /// </summary>
-public class UpdateWorkspaceCreditBalanceHandler(IContext context, ICurrentSession session)
-    : IRequestHandler<UpdateWorkspaceCreditBalanceRequest, Result>
+public class UpdateWorkspaceCreditBalanceHandler(IContext context, ICurrentSession session) : IRequestHandler<UpdateWorkspaceCreditBalanceRequest, Result>
 {
     /// <summary>
     /// Handles the request to update workspace credit balance
@@ -27,12 +26,10 @@ public class UpdateWorkspaceCreditBalanceHandler(IContext context, ICurrentSessi
         if (session.Role!.Name != UserRole.Admin.Name)
             return Result.Forbidden("Only administrators can update workspace credit balance.");
 
-        var workspace = await context.Workspaces
-            .FirstOrDefaultAsync(w => w.Id == request.WorkspaceId, cancellationToken);
+        var workspace = await context.Workspaces.FirstOrDefaultAsync(w => w.Id == request.WorkspaceId, cancellationToken);
 
         if (workspace == null)
             return Result.NotFound("Workspace not found.");
-
 
         using var transaction = await context.Database.BeginTransactionAsync(cancellationToken);
 
@@ -54,19 +51,16 @@ public class UpdateWorkspaceCreditBalanceHandler(IContext context, ICurrentSessi
                 TransactionId = CustomNewId.GenerateStandardId(),
             };
 
-
             context.WorkspaceTransactions.Add(workspaceTransaction);
             context.Workspaces.Update(workspace);
             await context.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
-
         }
         catch
         {
             await transaction.RollbackAsync(cancellationToken);
             throw;
         }
-
 
         return Result.Success();
     }

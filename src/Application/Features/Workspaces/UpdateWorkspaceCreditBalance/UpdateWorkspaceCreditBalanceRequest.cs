@@ -1,7 +1,7 @@
+using System.Text.Json.Serialization;
 using Ardalis.Result;
 using MediatR;
 using Platform.Domain.Entities.Common;
-using System.Text.Json.Serialization;
 
 namespace Platform.Application.Features.Workspaces.UpdateWorkspaceCreditBalance;
 
