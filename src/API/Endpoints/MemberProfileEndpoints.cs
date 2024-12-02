@@ -52,6 +52,18 @@ public class MemberProfileEndpoints : IEndpoints
             .WithSummary("Searches for users.")
             .RequireAuthorization();
 
+        builder
+            .MapGet(
+                "api/users/balances",
+                async (IMediator mediator, ICurrentSession currentUser, [AsParameters] SearchMemberBalancesRequest request) =>
+                {
+                    var result = await mediator.Send(request);
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Searches for users balances.")
+            .RequireAuthorization();
+
         var group = builder.MapGroup("api/memberProfiles").WithTags("MemberProfile").RequireAuthorization();
 
         group
