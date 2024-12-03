@@ -44,51 +44,83 @@ public class AssignProjectMembersHandler : IRequestHandler<AssignProjectMembersR
         if (project == null)
             return Result.NotFound("Project not found.");
 
-        // Check permissions
-        if (_session.Role!.Name != UserRole.Admin.Name)
-        {
-            var workspaceMember = project.Workspace.WorkspaceMembers.FirstOrDefault(x => x.UserId == _session.UserId);
-            if (workspaceMember == null || (workspaceMember.Role != WorkspaceRole.WorkspaceOwner && workspaceMember.Role != WorkspaceRole.WorkspaceManager))
-            {
-                return Result.Forbidden("You don't have permission to assign members to this project.");
-            }
-        }
-
-        // For non-admin users, verify all users are workspace members
         var workspaceMemberIds = project.Workspace.WorkspaceMembers.Select(x => x.UserId).ToHashSet();
         var nonWorkspaceMembers = request.UserIds.Where(userId => !workspaceMemberIds.Contains(userId)).ToList();
 
-        if (nonWorkspaceMembers.Any())
-            return Result.Error("Some users are not members of the workspace.");
+        var currentUserRoleInWorkspaceMember = project.Workspace.WorkspaceMembers.FirstOrDefault(x => x.UserId == _session.UserId);
 
-        // Get existing project members
-        var existingMemberIds = project.ProjectMembers.Select(x => x.UserId).ToHashSet();
+        // Check permissions
+        if (
+            _session.Role!.Name != UserRole.Admin.Name
+            && (
+                currentUserRoleInWorkspaceMember == null
+                || (
+                    currentUserRoleInWorkspaceMember.Role != WorkspaceRole.WorkspaceOwner
+                    && currentUserRoleInWorkspaceMember.Role != WorkspaceRole.WorkspaceManager
+                )
+            )
+        )
+        {
+            return Result.Forbidden("You don't have permission to assign members to this project.");
+        }
 
-        // Filter out users who are already members
-        var newUserIds = request.UserIds.Where(userId => !existingMemberIds.Contains(userId)).ToList();
+        using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
 
-        if (!newUserIds.Any())
-            return Result.Success(); // All users are already members
-
-        var currentTime = DateTime.UtcNow;
-
-        // Create new project members
-        var newProjectMembers = newUserIds
-            .Select(userId => new ProjectMember
+        try
+        {
+            if (_session.Role!.Name == UserRole.Admin.Name && nonWorkspaceMembers.Any())
             {
-                ProjectId = request.ProjectId,
-                UserId = userId,
-                Role = request.Role,
-                CreatedBy = _session.UserId,
-                CreatedDate = currentTime,
-                UpdatedBy = _session.UserId,
-                UpdatedDate = currentTime,
-            })
-            .ToList();
+                // Admin user: First add non-workspace members to the workspace
+                var newWorkspaceMembers = nonWorkspaceMembers
+                    .Select(userId => new WorkspaceMember
+                    {
+                        WorkspaceId = request.WorkspaceId,
+                        UserId = userId,
+                        Role = WorkspaceRole.WorkspaceMember, // Default role for auto-added members
+                        CreatedBy = _session.UserId,
+                        CreatedDate = DateTime.UtcNow,
+                        UpdatedBy = _session.UserId,
+                        UpdatedDate = DateTime.UtcNow,
+                    })
+                    .ToList();
 
-        _context.ProjectMembers.AddRange(newProjectMembers);
-        await _context.SaveChangesAsync(cancellationToken);
+                _context.WorkspaceMembers.AddRange(newWorkspaceMembers);
+                await _context.SaveChangesAsync(cancellationToken);
+            }
+            // Get existing project members
+            var existingMemberIds = project.ProjectMembers.Select(x => x.UserId).ToHashSet();
 
-        return Result.Success();
+            // Filter out users who are already members
+            var newUserIds = request.UserIds.Where(userId => !existingMemberIds.Contains(userId)).ToList();
+
+            if (!newUserIds.Any())
+                return Result.Success(); // All users are already members
+
+            var currentTime = DateTime.UtcNow;
+
+            // Create new project members
+            var newProjectMembers = newUserIds
+                .Select(userId => new ProjectMember
+                {
+                    ProjectId = request.ProjectId,
+                    UserId = userId,
+                    Role = request.Role,
+                    CreatedBy = _session.UserId,
+                    CreatedDate = currentTime,
+                    UpdatedBy = _session.UserId,
+                    UpdatedDate = currentTime,
+                })
+                .ToList();
+
+            _context.ProjectMembers.AddRange(newProjectMembers);
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return Result.Success();
+        }
+        catch
+        {
+            await transaction.RollbackAsync(cancellationToken);
+            throw;
+        }
     }
 }

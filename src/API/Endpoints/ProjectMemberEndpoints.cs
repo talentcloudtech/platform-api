@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Routing;
 using Platform.Application.Extensions;
 using Platform.Application.Features.ProjectMembers.CreateProjectMember;
 using Platform.Application.Features.ProjectMembers.DeleteProjectMember;
+using Platform.Application.Features.ProjectMembers.GetAvailableMembers;
 using Platform.Application.Features.ProjectMembers.GetProjectMemberById;
 using Platform.Application.Features.ProjectMembers.SearchProjectMembers;
 using Platform.Application.Features.ProjectMembers.UpdateProjectMember;
 using Platform.Domain.Entities.Common;
-using Platform.Application.Features.ProjectMembers.GetAvailableMembers;
 
 namespace Platform.API.Endpoints;
 
@@ -81,11 +81,13 @@ public class ProjectMemberEndpoints : IEndpoints
             )
             .WithSummary("Deletes a project member.");
 
-
-        group.MapGet("/available", async (IMediator mediator, WorkspaceId workspaceId, ProjectId projectId, [AsParameters] GetAvailableMembersRequest request) =>
-        {
-            var result = await mediator.Send(request with { WorkspaceId = workspaceId, ProjectId = projectId });
-            return result.ToPlatformApiResult();
-        });
+        group.MapGet(
+            "/available",
+            async (IMediator mediator, WorkspaceId workspaceId, ProjectId projectId, [AsParameters] GetAvailableMembersRequest request) =>
+            {
+                var result = await mediator.Send(request with { WorkspaceId = workspaceId, ProjectId = projectId });
+                return result.ToPlatformApiResult();
+            }
+        );
     }
 }
