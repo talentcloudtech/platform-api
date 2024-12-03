@@ -62,7 +62,7 @@ public class SearchMemberBalancesHandler(IContext context, ICurrentSession sessi
             Result = memberProfilesResponse
                 .Result.Select(x =>
                 {
-                    return new SearchMemberBalanceResponse { User = new CommonUserResponse(x.User!, x), CurrentBalance = x.User!.CurrentBalance };
+                    return new SearchMemberBalanceResponse { User = new CommonUserResponse(x.User!, x), CurrentBalance = x.User!.CurrentBalance ?? 0 };
                 })
                 .ToList(),
         };
