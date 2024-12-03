@@ -15,5 +15,5 @@ public record SearchMemberBalanceResponse
     /// <summary>
     /// Gets or sets the current balance of the member.
     /// </summary>
-    public decimal? CurrentBalance { get; set; }
+    public decimal CurrentBalance { get; set; }
 }

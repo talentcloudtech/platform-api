@@ -18,6 +18,7 @@ using Platform.Application.Features.MemberProfiles.SearchMemberProfiles;
 using Platform.Application.Features.MemberProfiles.SearchUsers;
 using Platform.Application.Features.MemberProfiles.UpdateAvatar;
 using Platform.Application.Features.MemberProfiles.UpdateMemberProfile;
+using Platform.Application.Features.Members.UpdateMemberBalance;
 using Platform.Application.Features.MemberSkills.CreateMemberSkill;
 using Platform.Application.Features.MemberSkills.DeleteMemberSkill;
 using Platform.Application.Features.MemberSkills.UpdateMemberSkill;
@@ -62,6 +63,18 @@ public class MemberProfileEndpoints : IEndpoints
                 }
             )
             .WithSummary("Searches for users balances.")
+            .RequireAuthorization();
+
+        builder
+            .MapPost(
+                "api/member/{userId}/balance",
+                async (IMediator mediator, UserId userId, UpdateMemberBalanceRequest request) =>
+                {
+                    var result = await mediator.Send(request with { UserId = userId });
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Update user balance.")
             .RequireAuthorization();
 
         var group = builder.MapGroup("api/memberProfiles").WithTags("MemberProfile").RequireAuthorization();
