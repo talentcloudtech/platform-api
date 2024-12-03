@@ -39,6 +39,9 @@ public class SearchWorkspaceAssetsHandler(IContext context, ICurrentSession sess
             .WhereIf(request.ProjectId != null, x => x.ProjectId == request.ProjectId)
             .WhereIf(request.TaskId != null, x => x.TaskId == request.TaskId);
 
+        if (!string.IsNullOrEmpty(request.Search))
+            query = query.Where(x => x.FileName.Contains(request.Search));
+
         // Apply sorting
         query =
             request.SortOrder.ToLower() == "asc"
