@@ -15,7 +15,8 @@ public record SearchWorkspaceAssetsRequest(
     int CurrentPage = 1,
     int PageSize = 10,
     string SortBy = "CreatedDate",
-    string SortOrder = "desc"
+    string SortOrder = "desc",
+    string? Search = null
 ) : IRequest<Result<PaginatedList<WorkspaceAssetResponse>>>
 {
     /// <summary>
