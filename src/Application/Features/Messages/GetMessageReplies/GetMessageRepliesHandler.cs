@@ -42,7 +42,7 @@ public class GetMessageRepliesHandler(IContext context, ICurrentSession session)
         var query = context.MessageReplies.Where(r => r.OriginalMessageId == request.MessageId);
 
         // Apply sorting by creation date
-        query = query.OrderByDescending(r => r.CreatedAt);
+        query = query.OrderBy(r => r.CreatedAt);
 
         var replies = await query.ToPaginatedListAsync(request.CurrentPage, request.PageSize);
 

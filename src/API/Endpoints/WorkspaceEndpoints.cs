@@ -8,6 +8,7 @@ using Platform.Application.Features.Workspaces.DeleteWorkspace;
 using Platform.Application.Features.Workspaces.GetUserWorkspaceRole;
 using Platform.Application.Features.Workspaces.GetWorkspaceById;
 using Platform.Application.Features.Workspaces.SearchWorkspaces;
+using Platform.Application.Features.Workspaces.SearchWorkspacesList;
 using Platform.Application.Features.Workspaces.UpdateWorkspace;
 using Platform.Application.Features.Workspaces.UpdateWorkspaceCreditBalance;
 using Platform.Application.Features.Workspaces.UploadWorkspaceAvatar;
@@ -33,6 +34,16 @@ public class WorkspaceEndpoints : IEndpoints
             .MapGet(
                 "/",
                 async (IMediator mediator, [AsParameters] SearchWorkspacesRequest request) =>
+                {
+                    var result = await mediator.Send(request);
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Searches for workspaces.");
+        group
+            .MapGet(
+                "/list",
+                async (IMediator mediator, [AsParameters] SearchWorkspacesListRequest request) =>
                 {
                     var result = await mediator.Send(request);
                     return result.ToPlatformApiResult();
