@@ -42,4 +42,13 @@ public interface IBlobStorageService
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The downloaded file as a byte array.</returns>
     Task<byte[]?> DownloadAsync(string filePath, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Generate the sas token for presigned URL
+    /// </summary>
+    /// <param name="filePath">The file path</param>
+    /// <param name="fileName">The file name if it needs to be downloaded.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The downloaded file as a byte array.</returns>
+    Task<string?> GenerateSasUrl(string filePath, string? fileName, CancellationToken cancellationToken);
 }

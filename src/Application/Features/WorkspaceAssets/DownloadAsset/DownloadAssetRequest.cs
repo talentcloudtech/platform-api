@@ -18,4 +18,9 @@ public record DownloadAssetRequest : IRequest<Result<DownloadAssetResponse>>
     /// Gets or sets the asset identifier
     /// </summary>
     public WorkspaceAssetId AssetId { get; init; }
+
+    /// <summary>
+    /// Gets or sets weather the download URL should be forced to download or for preview
+    /// </summary>
+    public bool IsPreview { get; set; }
 }

@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Platform.Application.Extensions;
 using Platform.Application.Features.FileStorages.UploadWorkspaceFile;
@@ -80,15 +81,20 @@ public class AssetEndpoints : IEndpoints
         group
             .MapGet(
                 "/asset/{assetId}/download",
-                async (IMediator mediator, WorkspaceId workspaceId, WorkspaceAssetId assetId) =>
+                async (IMediator mediator, WorkspaceId workspaceId, WorkspaceAssetId assetId, [FromQuery] bool isPreview = true) =>
                 {
-                    var request = new DownloadAssetRequest { WorkspaceId = workspaceId, AssetId = assetId };
+                    var request = new DownloadAssetRequest
+                    {
+                        WorkspaceId = workspaceId,
+                        AssetId = assetId,
+                        IsPreview = isPreview,
+                    };
 
                     var result = await mediator.Send(request);
                     if (!result.IsSuccess)
                         return Results.BadRequest(result.Errors);
 
-                    return Results.File(result.Value.Content, result.Value.ContentType, result.Value.FileName);
+                    return result.ToPlatformApiResult();
                 }
             )
             .WithSummary("Download a workspace asset");

@@ -8,7 +8,7 @@ public class DownloadAssetResponse
     /// <summary>
     /// Gets or sets the file content as a byte array
     /// </summary>
-    public byte[] Content { get; set; } = null!;
+    public string PresignedUrl { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets the content type of the file

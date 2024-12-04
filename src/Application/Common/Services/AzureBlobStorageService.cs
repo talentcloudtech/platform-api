@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Azure.Storage.Sas;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Platform.API.Configurations.OptionSetups;
@@ -56,7 +57,7 @@ public class AzureBlobStorageService : IBlobStorageService
         var fileName = $"{CustomNewId.GenerateShortId()}{fileExt}";
         var containerPath = BuildContainerPath(workspaceId, projectId, taskId);
 
-        var containerClient = new BlobContainerClient(_options.ConnectionString, "workspaceassets");
+        var containerClient = new BlobContainerClient(_options.ConnectionString, _options.WorkspaceAssets);
         await containerClient.CreateIfNotExistsAsync(PublicAccessType.Blob, cancellationToken: cancellationToken);
 
         var blobPath = $"{containerPath}/{fileName}";
@@ -89,7 +90,7 @@ public class AzureBlobStorageService : IBlobStorageService
             return;
 
         var uri = new Uri(fileUrl);
-        var containerClient = new BlobContainerClient(_options.ConnectionString, "workspaceassets");
+        var containerClient = new BlobContainerClient(_options.ConnectionString, _options.WorkspaceAssets);
         var blobPath = uri.LocalPath.TrimStart('/').Split('/', 2)[1];
         var blobClient = containerClient.GetBlobClient(blobPath);
 
@@ -108,10 +109,10 @@ public class AzureBlobStorageService : IBlobStorageService
         var path = $"{workspaceId}";
 
         if (projectId != null)
-            path += $"/Projects/{projectId}";
+            path += $"/projects/{projectId}";
 
         if (taskId != null)
-            path += $"/Tasks/{taskId}";
+            path += $"/tasks/{taskId}";
 
         return path;
     }
@@ -127,16 +128,9 @@ public class AzureBlobStorageService : IBlobStorageService
         try
         {
             // Extract the blob path from the full URL if a complete URL is provided
-            var blobPath = filePath;
-            if (Uri.TryCreate(filePath, UriKind.Absolute, out var uri))
-            {
-                // Split the path and get everything after the container name
-                var pathParts = uri.LocalPath.TrimStart('/').Split('/', 2);
-                if (pathParts.Length == 2)
-                    blobPath = pathParts[1];
-            }
+            var blobPath = ExtractBlobPath(filePath);
 
-            var containerClient = new BlobContainerClient(_options.ConnectionString, "workspaceassets");
+            var containerClient = new BlobContainerClient(_options.ConnectionString, _options.WorkspaceAssets);
             var blobClient = containerClient.GetBlobClient(blobPath);
 
             if (!await blobClient.ExistsAsync(cancellationToken))
@@ -150,5 +144,69 @@ public class AzureBlobStorageService : IBlobStorageService
             // Log the error details
             throw new InvalidOperationException($"Failed to download file: {ex.Message}", ex);
         }
+    }
+
+    /// <summary>
+    /// Generate the sas token for presigned URL
+    /// </summary>
+    /// <param name="filePath">The file path</param>
+    /// <param name="fileName">The file name if it needs to be downloaded.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>The downloaded file as a byte array.</returns>
+    public async Task<string?> GenerateSasUrl(string filePath, string? fileName, CancellationToken cancellationToken)
+    {
+        try
+        {
+            // Extract the blob path from the full URL if a complete URL is provided
+            var blobPath = ExtractBlobPath(filePath);
+            var containerName = _options.WorkspaceAssets;
+
+            var blobClient = new BlobClient(_options.ConnectionString, containerName, blobPath);
+
+            if (!await blobClient.ExistsAsync(cancellationToken))
+                return null;
+
+            var builder = new BlobSasBuilder
+            {
+                Resource = "b",
+                BlobContainerName = containerName,
+                ExpiresOn = DateTimeOffset.UtcNow.AddHours(2),
+                BlobName = blobPath,
+            };
+
+            builder.SetPermissions(BlobAccountSasPermissions.Read);
+            if (!string.IsNullOrWhiteSpace(fileName))
+            {
+                builder.ContentDisposition = $"attachment; filename=\"{fileName}\"";
+            }
+
+            var uri = blobClient.GenerateSasUri(builder);
+            return uri.ToString();
+        }
+        catch (Exception ex)
+        {
+            // Log the error details
+            throw new InvalidOperationException($"Failed to download file: {ex.Message}", ex);
+        }
+    }
+
+    /// <summary>
+    /// Extract the blob path from the file path
+    /// </summary>
+    /// <param name="filePath">The file path</param>
+    /// <returns>The blob path</returns>
+    /// <exception cref="InvalidOperationException"></exception>
+    private string ExtractBlobPath(string filePath)
+    {
+        var blobPath = filePath;
+        if (Uri.TryCreate(filePath, UriKind.Absolute, out var uri))
+        {
+            // Split the path and get everything after the container name
+            var pathParts = uri.LocalPath.TrimStart('/').Split('/', 2);
+            if (pathParts.Length == 2)
+                blobPath = pathParts[1];
+        }
+
+        return blobPath;
     }
 }

@@ -52,15 +52,15 @@ public class DownloadAssetHandler : IRequestHandler<DownloadAssetRequest, Result
             return Result.NotFound("Asset not found.");
 
         // Download file from blob storage
-        var content = await _blobStorage.DownloadAsync(asset.FileUrl, cancellationToken);
+        var presignedUrl = await _blobStorage.GenerateSasUrl(asset.FileUrl, request.IsPreview ? null : asset.FileName, cancellationToken);
 
-        if (content == null)
+        if (presignedUrl == null)
             return Result.Error("Failed to download asset.");
 
         return Result.Success(
             new DownloadAssetResponse
             {
-                Content = content,
+                PresignedUrl = presignedUrl,
                 ContentType = asset.FileType,
                 FileName = asset.FileName,
             }
