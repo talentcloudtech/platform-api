@@ -95,10 +95,30 @@ public static class GigApplicantInvitationStatusValidator
     {
         return currentStatus switch
         {
-            GigApplicantInvitationStatus.Pending => new[] { GigApplicantInvitationStatus.Accepted, GigApplicantInvitationStatus.Declined, GigApplicantInvitationStatus.Rejected },
-            GigApplicantInvitationStatus.Accepted => new[] { GigApplicantInvitationStatus.Shortlisted, GigApplicantInvitationStatus.Withdrawn, GigApplicantInvitationStatus.Rejected },
-            GigApplicantInvitationStatus.Shortlisted => new[] { GigApplicantInvitationStatus.InterviewScheduled, GigApplicantInvitationStatus.NotSelected, GigApplicantInvitationStatus.Rejected },
-            GigApplicantInvitationStatus.InterviewScheduled => new[] { GigApplicantInvitationStatus.InInterview, GigApplicantInvitationStatus.Hired, GigApplicantInvitationStatus.Rejected },
+            GigApplicantInvitationStatus.Pending => new[]
+            {
+                GigApplicantInvitationStatus.Accepted,
+                GigApplicantInvitationStatus.Declined,
+                GigApplicantInvitationStatus.Rejected,
+            },
+            GigApplicantInvitationStatus.Accepted => new[]
+            {
+                GigApplicantInvitationStatus.Shortlisted,
+                GigApplicantInvitationStatus.Withdrawn,
+                GigApplicantInvitationStatus.Rejected,
+            },
+            GigApplicantInvitationStatus.Shortlisted => new[]
+            {
+                GigApplicantInvitationStatus.InterviewScheduled,
+                GigApplicantInvitationStatus.NotSelected,
+                GigApplicantInvitationStatus.Rejected,
+            },
+            GigApplicantInvitationStatus.InterviewScheduled => new[]
+            {
+                GigApplicantInvitationStatus.InInterview,
+                GigApplicantInvitationStatus.Hired,
+                GigApplicantInvitationStatus.Rejected,
+            },
             GigApplicantInvitationStatus.InInterview => new[] { GigApplicantInvitationStatus.OfferExtended, GigApplicantInvitationStatus.Rejected },
             GigApplicantInvitationStatus.OfferExtended => new[] { GigApplicantInvitationStatus.OfferAccepted, GigApplicantInvitationStatus.OfferDeclined },
             GigApplicantInvitationStatus.OfferAccepted => new[] { GigApplicantInvitationStatus.Hired },

@@ -6,6 +6,7 @@ using Platform.Application.Extensions;
 using Platform.Application.Features.Finance.GetSummary;
 using Platform.Application.Features.Finance.GetUpcoming;
 using Platform.Application.Features.Finance.ReleasePayment;
+using Platform.Application.Features.Finance.RequestPayment;
 using Platform.Domain.Entities.Common;
 
 namespace Platform.API.Endpoints;
@@ -55,5 +56,14 @@ public class FinanceEndpoints : IEndpoints
                 }
             )
             .WithSummary("Release payments for tasks");
+
+        group.MapPost(
+            "/request-payment",
+            async (IMediator mediator, WorkspaceId workspaceId, RequestPaymentRequest request) =>
+            {
+                var result = await mediator.Send(request with { WorkspaceId = workspaceId });
+                return result.ToPlatformApiResult();
+            }
+        );
     }
 }

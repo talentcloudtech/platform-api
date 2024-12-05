@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Domain.Entities.Enums;
 using Platform.Application.Common.Responses;
 using Platform.Domain.Entities.Common;
 using Platform.Domain.Entities.Enums;
@@ -40,4 +41,9 @@ public class UpcomingFinanceResponse
     /// Gets or sets the task assignee
     /// </summary>
     public List<CommonUserResponse> Assignees { get; set; } = new();
+
+    /// <summary>
+    /// Gets or sets the payment status
+    /// </summary>
+    public TransactionStatus? PaymentStatus { get; set; }
 }
