@@ -859,6 +859,9 @@ namespace Platform.Migrations
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
+                    b.Property<string>("PaymentStatus")
+                        .HasColumnType("text");
+
                     b.Property<string>("Priority")
                         .IsRequired()
                         .HasColumnType("text");

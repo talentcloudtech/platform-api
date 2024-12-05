@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Domain.Entities.Enums;
 using Platform.Domain.Entities.Common;
 using Platform.Domain.Entities.Enums;
 
@@ -94,4 +95,9 @@ public class ProjectTask : AuditableEntity<ProjectTaskId>
     /// Gets or sets the is closed flag.
     /// </summary>
     public bool IsClosed { get; set; }
+
+    /// <summary>
+    /// Gets or sets the payment status of the task.
+    /// </summary>
+    public TransactionStatus? PaymentStatus { get; set; }
 }

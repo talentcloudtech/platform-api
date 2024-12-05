@@ -77,6 +77,7 @@ public class GetUpcomingFinanceHandler : IRequestHandler<GetUpcomingFinanceReque
                 CompletionDate = t.DueDate,
                 Cost = t.Cost,
                 Assignees = t.Assignments.Select(a => new CommonUserResponse(a.User, a.User.MemberProfile)).ToList(),
+                PaymentStatus = t.PaymentStatus,
             })
             .ToPaginatedListAsync(request.CurrentPage, request.PageSize);
 
