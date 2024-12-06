@@ -126,6 +126,40 @@ public class ReleasePaymentHandler(IContext context, ICurrentSession session) : 
                 context.WorkspaceTransactions.Add(workspaceTransaction);
                 context.MemberTransactions.Add(memberTransaction);
                 await context.SaveChangesAsync(cancellationToken);
+
+                // Get task assignees
+                var assignees = await context.ProjectTaskAssignments.Where(a => a.TaskId == task.Id).Select(a => a.UserId).ToListAsync(cancellationToken);
+
+                // Create notification message for assignees
+                var message = new Message
+                {
+                    Subject = "Payment Released",
+                    Body = $"Hi, Payment of {task.Cost:C} has been released for task: {task.Title}",
+                    MessageType = MessageType.Notification,
+                    SenderId = session.UserId,
+                    WorkspaceId = request.WorkspaceId,
+                    ProjectId = task.ProjectId,
+                    CreatedAt = DateTime.UtcNow,
+                    RecipientCount = 1,
+                    ReplyAllowed = false,
+                };
+
+                // Add recipients
+                foreach (var assigneeId in assignees)
+                {
+                    message.Recipients.Add(
+                        new MessageRecipient
+                        {
+                            RecipientId = assigneeId,
+                            IsRead = false,
+                            IsArchived = false,
+                            ReceivedAt = DateTime.UtcNow,
+                        }
+                    );
+                }
+
+                context.Messages.Add(message);
+                await context.SaveChangesAsync(cancellationToken);
             }
             await transaction.CommitAsync(cancellationToken);
         }
