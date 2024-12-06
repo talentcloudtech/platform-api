@@ -26,6 +26,17 @@ public class FinanceEndpoints : IEndpoints
 
         group
             .MapGet(
+                "/",
+                async (IMediator mediator, [AsParameters] GetUpcomingFinanceRequest request) =>
+                {
+                    var result = await mediator.Send(request);
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Get upcoming finance details");
+
+        group
+            .MapGet(
                 "/summary",
                 async (IMediator mediator, [AsParameters] GetFinanceSummaryRequest request) =>
                 {
