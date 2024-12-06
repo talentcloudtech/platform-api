@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Platform.Application.Extensions;
+using Platform.Application.Features.FileStorages.UploadFileLink;
 using Platform.Application.Features.FileStorages.UploadWorkspaceFile;
 using Platform.Application.Features.WorkspaceAssets.DeleteWorkspaceAsset;
 using Platform.Application.Features.WorkspaceAssets.DownloadAsset;
@@ -44,6 +45,18 @@ public class AssetEndpoints : IEndpoints
             )
             .WithSummary("Upload file and generate download url.")
             .DisableAntiforgery();
+
+        group
+            .MapPost(
+                "/link",
+                async (IMediator mediator, WorkspaceId workspaceId, ProjectId? projectId, ProjectTaskId? taskId, UploadFileLinkRequest request) =>
+                {
+                    request = request with { WorkspaceId = workspaceId, ProjectId = projectId, TaskId = taskId };
+                    var result = await mediator.Send(request);
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Upload file and generate download url.");
 
         group.MapGet(
             "/",

@@ -50,7 +50,10 @@ public class DeleteWorkspaceAssetHandler : IRequestHandler<DeleteWorkspaceAssetR
 
         try
         {
-            await _blobStorageService.DeleteFileAsync(asset.FileUrl, cancellationToken);
+            if (asset.FileType != "link")
+            {
+                await _blobStorageService.DeleteFileAsync(asset.FileUrl, cancellationToken);
+            }
 
             _context.WorkspaceAssets.Remove(asset);
             await _context.SaveChangesAsync(cancellationToken);
