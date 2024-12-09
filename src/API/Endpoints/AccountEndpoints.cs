@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Routing;
 using Platform.API.Configurations;
 using Platform.Application.Extensions;
 using Platform.Application.Features.Accounts.ChangeEmail;
+using Platform.Application.Features.Accounts.ChangePassword;
 using Platform.Application.Features.Accounts.ConfirmEmail;
 using Platform.Application.Features.Accounts.DeleteAccount;
 using Platform.Application.Features.Accounts.ForgotPassword;
@@ -197,6 +198,18 @@ public class AccountEndpoints : IEndpoints
                 }
             )
             .WithSummary("Change email.")
+            .RequireAuthorization();
+
+        group
+            .MapPut(
+                "/change-password",
+                async (IMediator mediator, ICurrentSession currentUser, ChangePasswordRequest request) =>
+                {
+                    var result = await mediator.Send(request);
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Change password.")
             .RequireAuthorization();
     }
 }
