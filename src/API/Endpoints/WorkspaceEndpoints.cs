@@ -7,6 +7,7 @@ using Platform.Application.Features.Workspaces.CreateWorkspace;
 using Platform.Application.Features.Workspaces.DeleteWorkspace;
 using Platform.Application.Features.Workspaces.GetUserWorkspaceRole;
 using Platform.Application.Features.Workspaces.GetWorkspaceById;
+using Platform.Application.Features.Workspaces.LeaveWorkspace;
 using Platform.Application.Features.Workspaces.SearchWorkspaces;
 using Platform.Application.Features.Workspaces.SearchWorkspacesList;
 using Platform.Application.Features.Workspaces.UpdateWorkspace;
@@ -136,5 +137,16 @@ public class WorkspaceEndpoints : IEndpoints
                 }
             )
             .WithSummary("Update workspace credit balance.");
+
+        group
+            .MapDelete(
+                "{workSpaceId}/leave",
+                async (IMediator mediator, ICurrentSession currentSession, WorkspaceId workspaceId) =>
+                {
+                    var result = await mediator.Send(new LeaveWorkspaceRequest(workspaceId));
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Leave a workspace.");
     }
 }
