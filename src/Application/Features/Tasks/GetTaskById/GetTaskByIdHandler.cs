@@ -10,6 +10,7 @@ using Platform.Application.Common.Responses;
 using Platform.Application.Features.Projects;
 using Platform.Application.Features.Workspaces;
 using Platform.Domain.Auth.Interfaces;
+using Platform.Domain.Entities.Enums;
 
 namespace Platform.Application.Features.Tasks.GetTaskById;
 
@@ -37,8 +38,13 @@ public class GetTaskByIdHandler(IContext context, ICurrentSession session) : IRe
 
         if (task == null)
             return Result.NotFound("Task not found.");
+        var isAdmin = session.Role!.Name == UserRole.Admin.Name;
 
-        if (!task.Project.ProjectMembers.Any(x => x.UserId == session.UserId) && !task.Project.Workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId))
+        if (
+            !isAdmin
+            && !task.Project.ProjectMembers.Any(x => x.UserId == session.UserId)
+            && !task.Project.Workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId)
+        )
             return Result.Forbidden("You don't have permission to view this task.");
 
         var response = task.Adapt<TaskResponse>();

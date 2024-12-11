@@ -42,7 +42,7 @@ public class TaskEndpoints : IEndpoints
 
         builder
             .MapGet(
-                "api/open-tasks",
+                "api/tasks/open",
                 async (IMediator mediator, [AsParameters] SearchOpenTasksRequest request) =>
                 {
                     var result = await mediator.Send(request);
