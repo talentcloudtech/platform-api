@@ -30,7 +30,8 @@ public class ProjectTaskConfiguration : IEntityTypeConfiguration<ProjectTask>
         builder.Property(x => x.Priority).HasConversion<string>();
         builder.Property(x => x.IsClosed).HasDefaultValue(false);
         builder.Property(x => x.PaymentStatus).HasConversion<string>();
-
+        builder.Property(x => x.IsPublished).HasDefaultValue(false);
+        builder.Property(x => x.Type).HasConversion<string>();
         builder.Property(x => x.CreatedBy).HasMaxLength(25).HasConversion<UserId.EfCoreValueConverter>();
         builder.Property(x => x.CreatedDate).HasConversion<DateTime>();
         builder.Property(x => x.UpdatedBy).HasMaxLength(25).HasConversion<UserId.EfCoreValueConverter>();

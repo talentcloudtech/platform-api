@@ -9,6 +9,7 @@ using Platform.Application.Features.Tasks.CreateTask;
 using Platform.Application.Features.Tasks.DeleteTask;
 using Platform.Application.Features.Tasks.GetAssignees;
 using Platform.Application.Features.Tasks.GetTaskById;
+using Platform.Application.Features.Tasks.SearchOpenTasks;
 using Platform.Application.Features.Tasks.SearchTasks;
 using Platform.Application.Features.Tasks.SearchUsersTask;
 using Platform.Application.Features.Tasks.UpdateTask;
@@ -31,6 +32,18 @@ public class TaskEndpoints : IEndpoints
             .MapGet(
                 "api/tasks",
                 async (IMediator mediator, [AsParameters] SearchUsersTaskRequest request) =>
+                {
+                    var result = await mediator.Send(request);
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Searches for user's tasks.")
+            .RequireAuthorization();
+
+        builder
+            .MapGet(
+                "api/tasks/open",
+                async (IMediator mediator, [AsParameters] SearchOpenTasksRequest request) =>
                 {
                     var result = await mediator.Send(request);
                     return result.ToPlatformApiResult();

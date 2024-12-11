@@ -113,4 +113,14 @@ public class TaskResponse
     /// Gets or sets the is closed flag.
     /// </summary>
     public bool IsClosed { get; set; }
+
+    /// <summary>
+    /// Gets or sets the type of the task.
+    /// </summary>
+    public TaskType Type { get; set; }
+
+    /// <summary>
+    /// Gets or sets the is published flag.
+    /// </summary>
+    public bool IsPublished { get; set; }
 }
