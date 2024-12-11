@@ -38,6 +38,7 @@ public class CreateTaskHandler(IContext context, ICurrentSession session) : IReq
             return Result.Forbidden("You don't have permission to create tasks in this project.");
 
         var newTask = request.Adapt<ProjectTask>();
+        newTask.Type = TaskType.Internal;
         newTask.CreatedBy = session.UserId;
         newTask.CreatedDate = DateTime.UtcNow;
 
