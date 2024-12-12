@@ -9,6 +9,7 @@ using Platform.API.Endpoints.TaskAssignees.UpdateTaskAssignee;
 using Platform.Application.Common;
 using Platform.Application.Common.Responses;
 using Platform.Domain.Auth.Interfaces;
+using Platform.Domain.Entities.Enums;
 
 namespace Platform.Application.Features.Tasks.GetAssignees;
 
@@ -29,7 +30,9 @@ public class GetTaskAssigneesHandler(IContext context, ICurrentSession session) 
     {
         var currentUserHasAccess = await PermissionHelper.CheckIfCurrentUserHasTaskAccessAsync(context, request.TaskId, session.UserId, cancellationToken);
 
-        if (!currentUserHasAccess)
+        var isAdmin = session.Role!.Name == UserRole.Admin.Name;
+
+        if (!currentUserHasAccess && !isAdmin)
             return Result.Forbidden("You do not have access to this project.");
 
         var taskAssignees = await context

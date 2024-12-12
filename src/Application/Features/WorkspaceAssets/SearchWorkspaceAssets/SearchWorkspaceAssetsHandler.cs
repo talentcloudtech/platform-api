@@ -9,6 +9,7 @@ using Platform.Application.Common.Responses;
 using Platform.Application.Extensions;
 using Platform.Domain.Auth.Interfaces;
 using Platform.Domain.Entities;
+using Platform.Domain.Entities.Enums;
 
 namespace Platform.Application.Features.WorkspaceAssets.SearchWorkspaceAssets;
 
@@ -28,7 +29,9 @@ public class SearchWorkspaceAssetsHandler(IContext context, ICurrentSession sess
         if (workspace == null)
             return Result.NotFound("Workspace not found.");
 
-        if (!workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId))
+        var isAdmin = session.Role!.Name == UserRole.Admin.Name;
+
+        if (!isAdmin && !workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId))
             return Result.Forbidden("You are not a member of this workspace.");
 
         var query = context
