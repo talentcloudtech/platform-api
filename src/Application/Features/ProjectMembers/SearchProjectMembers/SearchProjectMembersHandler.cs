@@ -9,6 +9,7 @@ using Platform.Application.Common;
 using Platform.Application.Common.Responses;
 using Platform.Application.Extensions;
 using Platform.Domain.Auth.Interfaces;
+using Platform.Domain.Entities.Enums;
 
 namespace Platform.Application.Features.ProjectMembers.SearchProjectMembers;
 
@@ -38,7 +39,13 @@ public class SearchProjectMembersHandler(IContext context, ICurrentSession sessi
         if (project == null)
             return Result.NotFound("Project not found.");
 
-        if (!project.ProjectMembers.Any(x => x.UserId == session.UserId) && !project.Workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId))
+        var isAdmin = session.Role!.Name == UserRole.Admin.Name;
+
+        if (
+            !isAdmin
+            && !project.ProjectMembers.Any(x => x.UserId == session.UserId)
+            && !project.Workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId)
+        )
             return Result.Forbidden("You are not a member of this project.");
 
         var projectMembers = context

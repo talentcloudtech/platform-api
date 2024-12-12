@@ -9,7 +9,6 @@ using Platform.Application.Common;
 using Platform.Application.Common.Responses;
 using Platform.Application.Features.Projects;
 using Platform.Application.Features.Workspaces;
-using Platform.Domain.Auth.Interfaces;
 using Platform.Domain.Entities.Enums;
 
 namespace Platform.Application.Features.Tasks.SearchOpenTasks;
@@ -39,8 +38,8 @@ public class SearchOpenTasksHandler(IContext context) : IRequestHandler<SearchOp
         if (!string.IsNullOrEmpty(request.Search))
             query = query.Where(x => EF.Functions.Like(x.Title.ToLower().Trim(), $"%{request.Search.ToLower().Trim()}%"));
 
-        if (request.IsPublished)
-            query = query.Where(x => x.IsPublished);
+        // Modified IsPublished filter
+        query = query.Where(x => x.IsPublished == request.IsPublished);
 
         // Apply priority filter
         if (request.Priorities?.Any() == true)
