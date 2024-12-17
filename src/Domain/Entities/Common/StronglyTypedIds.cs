@@ -501,3 +501,20 @@ public partial struct WorkspaceAssetId : IStringId
         return new WorkspaceAssetId(id);
     }
 }
+
+/// <summary>
+/// Represents a strongly typed identifier for a task proposal.
+/// </summary>
+[StronglyTypedId]
+public partial struct ProposalId : IStringId
+{
+    /// <summary>
+    /// Implicitly converts a id to a ProposalId.
+    /// </summary>
+    /// <param name="id">The id value.</param>
+    /// <returns>A new instance of ProposalId.</returns>
+    public static implicit operator ProposalId(string id)
+    {
+        return new ProposalId(id);
+    }
+}

@@ -102,6 +102,11 @@ public class ProjectTask : AuditableEntity<ProjectTaskId>
     public ICollection<WorkspaceAsset> WorkspaceAssets { get; set; } = new List<WorkspaceAsset>();
 
     /// <summary>
+    /// Gets or sets the collection of proposals.
+    /// </summary>
+    public ICollection<Proposal> Proposals { get; set; } = new List<Proposal>();
+
+    /// <summary>
     /// Gets or sets the is closed flag.
     /// </summary>
     public bool IsClosed { get; set; }

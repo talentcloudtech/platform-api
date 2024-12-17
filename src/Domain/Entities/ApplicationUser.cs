@@ -107,6 +107,11 @@ public class ApplicationUser : IdentityUser<UserId>
     public List<WorkspaceAsset> WorkspaceAssets { get; set; } = [];
 
     /// <summary>
+    /// Gets or sets the list of proposals associated with the user.
+    /// </summary>
+    public List<Proposal> Proposals { get; set; } = [];
+
+    /// <summary>
     /// Gets or sets the list of workspace assets created by the user.
     /// </summary>
     public decimal? CurrentBalance { get; set; }
