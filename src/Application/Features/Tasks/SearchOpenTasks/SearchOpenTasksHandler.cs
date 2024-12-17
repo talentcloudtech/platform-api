@@ -29,6 +29,7 @@ public class SearchOpenTasksHandler(IContext context) : IRequestHandler<SearchOp
     {
         var query = context
             .ProjectTasks.Include(x => x.Assignments)
+            .ThenInclude(x => x.User.MemberProfile)
             .Include(i => i.Workspace)
             .Include(i => i.Project)
             .Include(i => i.User.MemberProfile)
@@ -39,7 +40,8 @@ public class SearchOpenTasksHandler(IContext context) : IRequestHandler<SearchOp
             query = query.Where(x => EF.Functions.Like(x.Title.ToLower().Trim(), $"%{request.Search.ToLower().Trim()}%"));
 
         // Modified IsPublished filter
-        query = query.Where(x => x.IsPublished == request.IsPublished);
+        if (request.IsPublished.HasValue)
+            query = query.Where(x => x.IsPublished == request.IsPublished.Value);
 
         // Apply priority filter
         if (request.Priorities?.Any() == true)

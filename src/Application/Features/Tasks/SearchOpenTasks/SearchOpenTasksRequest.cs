@@ -28,5 +28,5 @@ public record SearchOpenTasksRequest(
     string SortOrder = "desc",
     int CurrentPage = 1,
     int PageSize = 10,
-    bool IsPublished = false
+    bool? IsPublished = null
 ) : IRequest<Result<PaginatedList<TaskResponse>>>;
