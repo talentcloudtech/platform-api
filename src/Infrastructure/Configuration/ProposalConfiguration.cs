@@ -26,7 +26,7 @@ public class ProposalConfiguration : IEntityTypeConfiguration<Proposal>
         builder.Property(x => x.StartDate).HasConversion<DateTime>();
         builder.Property(x => x.EndDate).HasConversion<DateTime>();
         builder.Property(x => x.CostEstimation).HasConversion<decimal>();
-        builder.Property(x => x.Status).HasConversion<ProposalStatus>();
+        builder.Property(x => x.Status).HasConversion<string>();
 
         builder.Property(x => x.CreatedBy).HasMaxLength(25).HasConversion<UserId.EfCoreValueConverter>();
         builder.Property(x => x.CreatedDate).HasConversion<DateTime>();
