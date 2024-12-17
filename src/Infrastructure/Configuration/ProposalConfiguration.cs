@@ -1,6 +1,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Platform.Application.Common;
 using Platform.Domain.Entities;
 using Platform.Domain.Entities.Common;
 using Platform.Domain.Entities.Enums;
@@ -27,6 +28,7 @@ public class ProposalConfiguration : IEntityTypeConfiguration<Proposal>
         builder.Property(x => x.EndDate).HasConversion<DateTime>();
         builder.Property(x => x.CostEstimation).HasConversion<decimal>();
         builder.Property(x => x.Status).HasConversion<string>();
+        builder.Property(x => x.Description).HasMaxLength(StringSizes.Max);
 
         builder.Property(x => x.CreatedBy).HasMaxLength(25).HasConversion<UserId.EfCoreValueConverter>();
         builder.Property(x => x.CreatedDate).HasConversion<DateTime>();

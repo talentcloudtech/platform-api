@@ -45,6 +45,11 @@ public class Proposal : AuditableEntity<ProposalId>
     public ProposalStatus Status { get; set; }
 
     /// <summary>
+    /// Gets or sets the description of the proposal.
+    /// </summary>
+    public string Description { get; set; } = null!;
+
+    /// <summary>
     /// Gets or sets the task associated with this proposal.
     /// </summary>
     public ProjectTask ProjectTask { get; set; } = null!;
