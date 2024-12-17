@@ -129,6 +129,11 @@ public interface IContext : IDataProtectionKeyContext, IAsyncDisposable, IDispos
     public DbSet<WorkspaceAsset> WorkspaceAssets { get; }
 
     /// <summary>
+    /// Gets or sets the DbSet of Proposal entities.
+    /// </summary>
+    public DbSet<Proposal> Proposals { get; }
+
+    /// <summary>
     /// Asynchronously saves all changes made in this context to the underlying database.
     /// </summary>
     /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
