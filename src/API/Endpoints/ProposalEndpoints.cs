@@ -28,9 +28,9 @@ public class ProposalEndpoints : IEndpoints
         group
             .MapGet(
                 "/",
-                async (IMediator mediator, [AsParameters] SearchProposalsRequest request) =>
+                async (IMediator mediator, ProjectTaskId taskId, [AsParameters] SearchProposalsRequest request) =>
                 {
-                    var result = await mediator.Send(request with { TaskId = request.TaskId });
+                    var result = await mediator.Send(request with { TaskId = taskId });
                     return result.ToPlatformApiResult();
                 }
             )
