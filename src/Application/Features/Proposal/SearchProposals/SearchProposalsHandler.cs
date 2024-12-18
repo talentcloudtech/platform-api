@@ -42,7 +42,7 @@ public class SearchProposalsHandler(IContext context) : IRequestHandler<SearchPr
                 .Result.Select(x =>
                 {
                     var proposalResponse = x.Adapt<ProposalResponse>();
-                    proposalResponse.CreatedByUser = new CommonUserResponse(x.User, x.User.MemberProfile);
+                    proposalResponse.Applicant = new CommonUserResponse(x.User, x.User.MemberProfile);
                     return proposalResponse;
                 })
                 .ToList(),

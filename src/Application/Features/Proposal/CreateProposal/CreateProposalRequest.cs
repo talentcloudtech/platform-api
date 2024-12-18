@@ -27,7 +27,7 @@ public record CreateProposalRequest : IRequest<Result<ProposalResponse>>
     /// <summary>
     /// Gets or sets the estimated time to complete the proposal (in minutes).
     /// </summary>
-    public int CostEstimate { get; set; }
+    public int CostEstimation { get; set; }
 
     /// <summary>
     /// Gets or sets the start date of the proposal.

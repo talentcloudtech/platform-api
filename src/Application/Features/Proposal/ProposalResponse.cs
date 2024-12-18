@@ -27,12 +27,17 @@ public class ProposalResponse
     /// <summary>
     /// Gets or sets the cost associated with the task.
     /// </summary>
-    public decimal? CostEstimate { get; set; }
+    public decimal? CostEstimation { get; set; }
 
     /// <summary>
     /// Gets or sets the start date of the task.
     /// </summary>
     public DateTime? StartDate { get; set; }
+
+    /// <summary>
+    /// Gets or sets the start date of the task.
+    /// </summary>
+    public DateTime? EndDate { get; set; }
 
     /// <summary>
     /// Gets or sets the due date of the task.
@@ -65,7 +70,7 @@ public class ProposalResponse
     public UserId? UpdatedBy { get; init; }
 
     /// <summary>
-    /// Gets or sets the user who created this task.
+    /// Gets or sets the applicant.
     /// </summary>
-    public CommonUserResponse? CreatedByUser { get; set; }
+    public CommonUserResponse? Applicant { get; set; }
 }

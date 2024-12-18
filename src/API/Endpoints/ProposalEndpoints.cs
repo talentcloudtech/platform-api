@@ -1,3 +1,4 @@
+using JobBoard.Application.Features.Proposal.GetProposal;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -8,6 +9,7 @@ using Platform.Application.Extensions;
 using Platform.Application.Features.Proposal;
 using Platform.Application.Features.Proposal.CreateProposal;
 using Platform.Application.Features.Proposal.SearchProposals;
+using Platform.Application.Features.Proposal.UpdateProposal;
 using Platform.Domain.Entities.Common;
 
 namespace Platform.API.Endpoints;
@@ -23,14 +25,25 @@ public class ProposalEndpoints : IEndpoints
     /// <param name="builder">The endpoint route builder.</param>
     public static void MapEndpoints(IEndpointRouteBuilder builder)
     {
-        var group = builder.MapGroup("api/proposals/tasks/{taskId}").WithTags("Proposal").RequireAuthorization();
+        var group = builder.MapGroup("api/proposals").WithTags("Proposal").RequireAuthorization();
 
         group
             .MapGet(
-                "/",
-                async (IMediator mediator, [AsParameters] SearchProposalsRequest request) =>
+                "/{proposalId}",
+                async (IMediator mediator, ProposalId proposalId) =>
                 {
-                    var result = await mediator.Send(request with { TaskId = request.TaskId });
+                    var result = await mediator.Send(new GetProposalRequest(proposalId));
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Gets a proposal.");
+
+        group
+            .MapGet(
+                "/tasks/{taskId}",
+                async (IMediator mediator, ProjectTaskId taskId, [AsParameters] SearchProposalsRequest request) =>
+                {
+                    var result = await mediator.Send(request with { TaskId = taskId });
                     return result.ToPlatformApiResult();
                 }
             )
@@ -38,7 +51,7 @@ public class ProposalEndpoints : IEndpoints
 
         group
             .MapPost(
-                "/",
+                "/tasks/{taskId}",
                 async (IMediator mediator, ProjectTaskId taskId, CreateProposalRequest request) =>
                 {
                     var result = await mediator.Send(request with { TaskId = taskId });
@@ -46,5 +59,16 @@ public class ProposalEndpoints : IEndpoints
                 }
             )
             .WithSummary("Creates a new proposal.");
+
+        group
+            .MapPatch(
+                "/{proposalId}",
+                async (IMediator mediator, ProposalId proposalId, UpdateProposalRequest request) =>
+                {
+                    var result = await mediator.Send(request with { Id = proposalId });
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Updates a proposal.");
     }
 }
