@@ -40,8 +40,8 @@ public class SearchOpenTasksHandler(IContext context) : IRequestHandler<SearchOp
             query = query.Where(x => EF.Functions.Like(x.Title.ToLower().Trim(), $"%{request.Search.ToLower().Trim()}%"));
 
         // Modified OpenTaskStatus filter
-        if (request.OpenTaskStatus.HasValue)
-            query = query.Where(x => x.OpenTaskStatus == request.OpenTaskStatus.Value);
+        if (request.OpenTaskStatuses?.Any() == true)
+            query = query.Where(x => request.OpenTaskStatuses.Contains(x.OpenTaskStatus));
 
         // Apply priority filter
         if (request.Priorities?.Any() == true)

@@ -57,11 +57,11 @@ public class PublishRejectTaskHandler(IContext context, ICurrentSession session)
         try
         {
             // Check if task is already published
-            if (request.Status == OpenTaskStatus.Approved)
+            if (request.Status == OpenTaskStatus.Published)
             {
                 message.Subject = "Task Published";
                 message.Body = $"The task {task.Title} has been published!";
-                task.OpenTaskStatus = OpenTaskStatus.Approved;
+                task.OpenTaskStatus = OpenTaskStatus.Published;
             }
             else if (request.Status == OpenTaskStatus.Rejected)
             {
