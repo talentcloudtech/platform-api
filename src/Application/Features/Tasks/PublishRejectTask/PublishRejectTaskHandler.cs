@@ -38,8 +38,6 @@ public class PublishRejectTaskHandler(IContext context, ICurrentSession session)
         var message = new Message();
         message.MessageType = MessageType.Notification;
         message.SenderId = session.UserId;
-        message.WorkspaceId = task.Project.WorkspaceId;
-        message.ProjectId = task.ProjectId;
         message.CreatedAt = DateTime.UtcNow;
         message.RecipientCount = 1;
         message.ReplyAllowed = false;
