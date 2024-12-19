@@ -39,9 +39,9 @@ public class SearchOpenTasksHandler(IContext context) : IRequestHandler<SearchOp
         if (!string.IsNullOrEmpty(request.Search))
             query = query.Where(x => EF.Functions.Like(x.Title.ToLower().Trim(), $"%{request.Search.ToLower().Trim()}%"));
 
-        // Modified IsPublished filter
-        if (request.IsPublished.HasValue)
-            query = query.Where(x => x.IsPublished == request.IsPublished.Value);
+        // Modified OpenTaskStatus filter
+        if (request.OpenTaskStatus.HasValue)
+            query = query.Where(x => x.OpenTaskStatus == request.OpenTaskStatus.Value);
 
         // Apply priority filter
         if (request.Priorities?.Any() == true)

@@ -18,7 +18,7 @@ namespace Platform.Application.Features.Tasks.SearchOpenTasks;
 /// <param name="SortOrder">The optional sort order to filter tasks by. If null, no filtering by sort order is applied.</param>
 /// <param name="CurrentPage">The current page number for pagination. Defaults to 1.</param>
 /// <param name="PageSize">The number of items per page for pagination. Defaults to 10.</param>
-/// <param name="IsPublished">Whether to include published tasks. Defaults to false.</param>
+/// <param name="OpenTaskStatus">The optional open task status to filter tasks by. If null, no filtering by open task status is applied.</param>
 public record SearchOpenTasksRequest(
     WorkspaceId[]? WorkspaceIds,
     ProjectId[]? ProjectIds,
@@ -28,5 +28,5 @@ public record SearchOpenTasksRequest(
     string SortOrder = "desc",
     int CurrentPage = 1,
     int PageSize = 10,
-    bool? IsPublished = null
+    OpenTaskStatus? OpenTaskStatus = null
 ) : IRequest<Result<PaginatedList<TaskResponse>>>;

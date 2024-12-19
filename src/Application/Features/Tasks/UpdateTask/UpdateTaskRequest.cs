@@ -81,7 +81,7 @@ public record UpdateTaskRequest : IRequest<Result<TaskResponse>>
     public TaskType Type { get; set; }
 
     /// <summary>
-    /// Gets or sets the is published flag.
+    /// Gets or sets the open task status.
     /// </summary>
-    public bool IsPublished { get; set; }
+    public OpenTaskStatus OpenTaskStatus { get; set; }
 }
