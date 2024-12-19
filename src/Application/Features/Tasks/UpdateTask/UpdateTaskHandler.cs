@@ -57,9 +57,11 @@ public class UpdateTaskHandler(IContext context, ICurrentSession session) : IReq
         task.Priority = request.Priority;
         task.IsClosed = request.IsClosed;
         task.Type = request.Type;
-        task.OpenTaskStatus = request.OpenTaskStatus;
         task.UpdatedBy = session.UserId;
         task.UpdatedDate = DateTime.UtcNow;
+
+        if (request.Type == TaskType.Open)
+            task.OpenTaskStatus = OpenTaskStatus.Pending;
 
         await context.SaveChangesAsync(cancellationToken);
 

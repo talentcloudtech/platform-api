@@ -6,17 +6,17 @@ namespace Platform.Domain.Entities.Enums;
 public enum OpenTaskStatus
 {
     /// <summary>
-    /// Represents the status of an open task
+    /// Represents the status of an pending task
     /// </summary>
     Pending = 1,
 
     /// <summary>
-    /// Represents the status of an open task
+    /// Represents the status of an rejected task
     /// </summary>
     Rejected = 2,
 
     /// <summary>
-    /// Represents the status of an open task
+    /// Represents the status of an published task
     /// </summary>
-    Approved = 3,
+    Published = 3,
 }

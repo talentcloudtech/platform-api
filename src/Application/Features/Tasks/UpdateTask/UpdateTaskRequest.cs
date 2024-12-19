@@ -79,9 +79,4 @@ public record UpdateTaskRequest : IRequest<Result<TaskResponse>>
     /// Gets or sets the type of the task.
     /// </summary>
     public TaskType Type { get; set; }
-
-    /// <summary>
-    /// Gets or sets the open task status.
-    /// </summary>
-    public OpenTaskStatus OpenTaskStatus { get; set; }
 }

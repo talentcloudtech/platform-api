@@ -147,15 +147,9 @@ public class TaskEndpoints : IEndpoints
         group
             .MapPost(
                 "{taskId}/publish-reject",
-                async (IMediator mediator, WorkspaceId workspaceId, ProjectId projectId, ProjectTaskId taskId) =>
+                async (IMediator mediator, WorkspaceId workspaceId, ProjectId projectId, ProjectTaskId taskId, PublishRejectTaskRequest request) =>
                 {
-                    var request = new PublishRejectTaskRequest
-                    {
-                        WorkspaceId = workspaceId,
-                        ProjectId = projectId,
-                        TaskId = taskId,
-                    };
-                    var result = await mediator.Send(request);
+                    var result = await mediator.Send(request with { WorkspaceId = workspaceId, ProjectId = projectId, TaskId = taskId });
                     return result.ToPlatformApiResult();
                 }
             )
