@@ -2,13 +2,14 @@ using System.Text.Json.Serialization;
 using Ardalis.Result;
 using MediatR;
 using Platform.Domain.Entities.Common;
+using Platform.Domain.Entities.Enums;
 
-namespace Platform.Application.Features.Tasks.PublishTask;
+namespace Platform.Application.Features.Tasks.PublishRejectTask;
 
 /// <summary>
 /// Request to publish a task
 /// </summary>
-public record PublishTaskRequest : IRequest<Result>
+public record PublishRejectTaskRequest : IRequest<Result>
 {
     /// <summary>
     /// Gets or sets the workspace ID
@@ -27,4 +28,14 @@ public record PublishTaskRequest : IRequest<Result>
     /// </summary>
     [JsonIgnore]
     public ProjectTaskId TaskId { get; init; }
+
+    /// <summary>
+    /// Gets or sets the reason for rejection
+    /// </summary>
+    public OpenTaskStatus? Status { get; init; }
+
+    /// <summary>
+    /// Gets or sets the reason for rejection
+    /// </summary>
+    public string? Reason { get; init; }
 }

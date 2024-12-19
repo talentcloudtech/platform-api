@@ -67,9 +67,9 @@ public class ProjectTask : AuditableEntity<ProjectTaskId>
     public TaskType Type { get; set; }
 
     /// <summary>
-    /// Gets or sets the priority of the task.
+    /// Gets or sets the status of the task.
     /// </summary>
-    public bool IsPublished { get; set; }
+    public OpenTaskStatus OpenTaskStatus { get; set; }
 
     /// <summary>
     /// Gets or sets the priority of the task.

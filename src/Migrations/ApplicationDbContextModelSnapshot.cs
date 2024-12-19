@@ -859,10 +859,9 @@ namespace Platform.Migrations
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
-                    b.Property<bool>("IsPublished")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
+                    b.Property<string>("OpenTaskStatus")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("PaymentStatus")
                         .HasColumnType("text");

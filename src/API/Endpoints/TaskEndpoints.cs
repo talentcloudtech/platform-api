@@ -9,7 +9,7 @@ using Platform.Application.Features.Tasks.CreateTask;
 using Platform.Application.Features.Tasks.DeleteTask;
 using Platform.Application.Features.Tasks.GetAssignees;
 using Platform.Application.Features.Tasks.GetTaskById;
-using Platform.Application.Features.Tasks.PublishTask;
+using Platform.Application.Features.Tasks.PublishRejectTask;
 using Platform.Application.Features.Tasks.SearchOpenTasks;
 using Platform.Application.Features.Tasks.SearchTasks;
 using Platform.Application.Features.Tasks.SearchUsersTask;
@@ -146,10 +146,10 @@ public class TaskEndpoints : IEndpoints
 
         group
             .MapPost(
-                "{taskId}/publish",
+                "{taskId}/publish-reject",
                 async (IMediator mediator, WorkspaceId workspaceId, ProjectId projectId, ProjectTaskId taskId) =>
                 {
-                    var request = new PublishTaskRequest
+                    var request = new PublishRejectTaskRequest
                     {
                         WorkspaceId = workspaceId,
                         ProjectId = projectId,

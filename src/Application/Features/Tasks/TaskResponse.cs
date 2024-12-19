@@ -122,5 +122,5 @@ public class TaskResponse
     /// <summary>
     /// Gets or sets the is published flag.
     /// </summary>
-    public bool IsPublished { get; set; }
+    public OpenTaskStatus OpenTaskStatus { get; set; }
 }
