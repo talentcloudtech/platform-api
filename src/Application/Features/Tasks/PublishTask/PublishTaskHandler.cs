@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.Result;
@@ -6,6 +7,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
 using Platform.Domain.Auth.Interfaces;
+using Platform.Domain.Entities;
 using Platform.Domain.Entities.Enums;
 
 namespace Platform.Application.Features.Tasks.PublishTask;
@@ -31,17 +33,53 @@ public class PublishTaskHandler(IContext context, ICurrentSession session) : IRe
         if (task == null)
             return Result.NotFound("Task not found.");
 
-        // Check if task is already published
-        if (task.IsPublished)
-            return Result.Error("Task is already published.");
+        var transaction = await context.Database.BeginTransactionAsync(cancellationToken);
 
-        // Publish task
-        task.IsPublished = true;
-        task.UpdatedBy = session.UserId;
-        task.UpdatedDate = DateTime.UtcNow;
+        try
+        {
+            var message = new Message
+            {
+                Subject = "Task Published",
+                Body = $"The task {task.Title} has been published!",
+                MessageType = MessageType.Notification,
+                SenderId = session.UserId,
+                WorkspaceId = task.Project.WorkspaceId,
+                ProjectId = task.ProjectId,
+                CreatedAt = DateTime.UtcNow,
+                RecipientCount = 1,
+                ReplyAllowed = false,
+                Recipients = new List<MessageRecipient>
+                {
+                    new MessageRecipient
+                    {
+                        RecipientId = task.CreatedBy,
+                        IsRead = false,
+                        IsArchived = false,
+                        ReceivedAt = DateTime.UtcNow,
+                    },
+                },
+            };
 
-        await context.SaveChangesAsync(cancellationToken);
+            context.Messages.Add(message);
 
-        return Result.Success();
+            // Check if task is already published
+            if (task.IsPublished)
+                return Result.Error("Task is already published.");
+
+            // Publish task
+            task.IsPublished = true;
+            task.UpdatedBy = session.UserId;
+            task.UpdatedDate = DateTime.UtcNow;
+
+            await context.SaveChangesAsync(cancellationToken);
+
+            await transaction.CommitAsync(cancellationToken);
+            return Result.Success();
+        }
+        catch (Exception ex)
+        {
+            await transaction.RollbackAsync(cancellationToken);
+            return Result.Error(ex.Message);
+        }
     }
 }
