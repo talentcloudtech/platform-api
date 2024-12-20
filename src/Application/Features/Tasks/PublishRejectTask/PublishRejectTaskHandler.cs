@@ -52,24 +52,23 @@ public class PublishRejectTaskHandler(IContext context, ICurrentSession session)
             },
         };
 
+        if (request.Status == OpenTaskStatus.Published)
+        {
+            message.Subject = "Task Published";
+            message.Body = $"The task {task.Title} has been published!";
+            task.OpenTaskStatus = OpenTaskStatus.Published;
+        }
+        else if (request.Status == OpenTaskStatus.Rejected)
+        {
+            message.Subject = "Task Rejected";
+            message.Body = $"The task {task.Title} has been rejected! Reason: {request.Reason}";
+            task.OpenTaskStatus = OpenTaskStatus.Rejected;
+        }
+        task.UpdatedBy = session.UserId;
+        task.UpdatedDate = DateTime.UtcNow;
+
         try
         {
-            // Check if task is already published
-            if (request.Status == OpenTaskStatus.Published)
-            {
-                message.Subject = "Task Published";
-                message.Body = $"The task {task.Title} has been published!";
-                task.OpenTaskStatus = OpenTaskStatus.Published;
-            }
-            else if (request.Status == OpenTaskStatus.Rejected)
-            {
-                message.Subject = "Task Rejected";
-                message.Body = $"The task {task.Title} has been rejected! Reason: {request.Reason}";
-                task.OpenTaskStatus = OpenTaskStatus.Rejected;
-            }
-
-            task.UpdatedBy = session.UserId;
-            task.UpdatedDate = DateTime.UtcNow;
             context.Messages.Add(message);
             await context.SaveChangesAsync(cancellationToken);
 
