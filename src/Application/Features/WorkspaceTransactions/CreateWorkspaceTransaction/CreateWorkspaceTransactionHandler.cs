@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.Result;
@@ -32,13 +33,17 @@ public class CreateWorkspaceTransactionHandler(IContext context, ICurrentSession
     {
         var currentTimeStamp = DateTime.UtcNow;
 
-        if (session.Role!.Name != UserRole.Admin.Name && session.Role!.Name != UserRole.Customer.Name)
-            return Result.Forbidden("User does not have permission to create a workspace transaction.");
-
         var workspace = await context.Workspaces.Include(x => x.WorkspaceMembers).FirstOrDefaultAsync(x => x.Id == request.WorkspaceId, cancellationToken);
 
         if (workspace == null)
             return Result.NotFound("Workspace not found.");
+
+        var isWorkspaceOwnerOrManager = workspace.WorkspaceMembers.Any(x =>
+            x.UserId == session.UserId && (x.Role == WorkspaceRole.WorkspaceOwner || x.Role == WorkspaceRole.WorkspaceManager)
+        );
+
+        if (session.Role!.Name != UserRole.Admin.Name && session.Role!.Name != UserRole.Customer.Name && !isWorkspaceOwnerOrManager)
+            return Result.Forbidden("User does not have permission to create a workspace transaction.");
 
         var newTransaction = new WorkspaceTransaction
         {
@@ -54,9 +59,6 @@ public class CreateWorkspaceTransactionHandler(IContext context, ICurrentSession
         };
 
         context.WorkspaceTransactions.Add(newTransaction);
-
-        // Update the workspace's current balance
-        workspace.CurrentBalance += request.Amount;
 
         await context.SaveChangesAsync(cancellationToken);
 
