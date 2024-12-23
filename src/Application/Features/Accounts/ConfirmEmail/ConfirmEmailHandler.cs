@@ -43,7 +43,7 @@ public class ConfirmEmailHandler : IRequestHandler<ConfirmEmailRequest, Result>
 
         var result = await _userManager.ConfirmEmailAsync(user, request.Code);
         if (!result.Succeeded)
-            return Result.Invalid(new ValidationError("Invalid confirmation code."));
+            return Result.Error("This verification link is no longer valid.");
 
         if (user.EmailConfirmed)
             return Result.Success();

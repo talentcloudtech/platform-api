@@ -60,7 +60,7 @@ public class AccountEndpoints : IEndpoints
                     }
                     else
                     {
-                        return Results.BadRequest(result.Errors.Select(x => x).ToArray());
+                        return Results.UnprocessableEntity(result.Errors.Select(x => x).ToArray());
                     }
                 }
             )

@@ -42,6 +42,7 @@ public class GetTaskByIdHandler(IContext context, ICurrentSession session) : IRe
 
         if (
             !isAdmin
+            && task.Type == TaskType.Internal
             && !task.Project.ProjectMembers.Any(x => x.UserId == session.UserId)
             && !task.Project.Workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId)
         )
