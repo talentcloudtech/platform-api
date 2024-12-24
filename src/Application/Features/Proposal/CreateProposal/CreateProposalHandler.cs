@@ -35,8 +35,8 @@ public class CreateProposalHandler(IContext context, ICurrentSession session) : 
         if (task == null)
             return Result.NotFound("Task not found.");
 
-        if (!task.Project.ProjectMembers.Any(x => x.UserId == session.UserId))
-            return Result.Forbidden("You don't have permission to create proposals in this project.");
+        if (session.Role!.Name == UserRole.Admin.Name)
+            return Result.Forbidden("You don't have permission to create proposals.");
 
         var proposal = request.Adapt<Domain.Entities.Proposal>();
         proposal.TaskId = task.Id;
