@@ -3,11 +3,13 @@ using System.Threading.Tasks;
 using Ardalis.Result;
 using Mapster;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
 using Platform.Application.Common.Responses;
 using Platform.Application.Features.Workspaces;
 using Platform.Domain.Auth.Interfaces;
+using Platform.Domain.Entities;
 
 namespace Platform.Application.Features.WorkspaceMemberInvitations.GetWorkspaceMemberInvitationById;
 
@@ -15,8 +17,10 @@ namespace Platform.Application.Features.WorkspaceMemberInvitations.GetWorkspaceM
 /// Handler for getting a workspace member invitation by its ID.
 /// </summary>
 /// <param name="context">The database context.</param>
+/// <param name="session">The current session.</param>
+/// <param name="userManager">The user manager.</param>
 /// <returns>The project member.</returns>
-public class GetWorkspaceMemberInvitationByIdHandler(IContext context)
+public class GetWorkspaceMemberInvitationByIdHandler(IContext context, ICurrentSession session, UserManager<ApplicationUser> userManager)
     : IRequestHandler<GetWorkspaceMemberInvitationByIdRequest, Result<WorkspaceMemberInvitationResponse>>
 {
     /// <summary>
@@ -35,6 +39,14 @@ public class GetWorkspaceMemberInvitationByIdHandler(IContext context)
 
         if (workspaceMemberInvitation == null)
             return Result.NotFound("Workspace member invitation not found.");
+
+        var user = await userManager.FindByEmailAsync(workspaceMemberInvitation.Email);
+
+        if (user == null)
+            return Result.NotFound("Workspace member invitation not found.");
+
+        if (user.Id != session.UserId)
+            return Result.Forbidden("You don't have permission to view this invitation.");
 
         var response = workspaceMemberInvitation.Adapt<WorkspaceMemberInvitationResponse>();
 
