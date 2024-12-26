@@ -41,11 +41,12 @@ public class ConfirmEmailHandler : IRequestHandler<ConfirmEmailRequest, Result>
         if (user == null)
             return Result.Error("User not found");
 
+        var isEmailConfirmed = user.EmailConfirmed;
         var result = await _userManager.ConfirmEmailAsync(user, request.Code);
         if (!result.Succeeded)
             return Result.Error("This verification link is no longer valid.");
 
-        if (user.EmailConfirmed)
+        if (isEmailConfirmed)
             return Result.Success();
 
         // Determine user type and send appropriate email

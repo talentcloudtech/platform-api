@@ -43,6 +43,12 @@ public class SearchOpenTasksHandler(IContext context) : IRequestHandler<SearchOp
         if (request.OpenTaskStatuses?.Any() == true)
             query = query.Where(x => request.OpenTaskStatuses.Contains(x.OpenTaskStatus));
 
+        if (request.WorkspaceIds?.Any() == true)
+            query = query.Where(x => request.WorkspaceIds.Contains(x.WorkspaceId));
+
+        if (request.ProjectIds?.Any() == true)
+            query = query.Where(x => request.ProjectIds.Contains(x.ProjectId));
+
         // Apply priority filter
         if (request.Priorities?.Any() == true)
             query = query.Where(x => request.Priorities.Contains(x.Priority));
