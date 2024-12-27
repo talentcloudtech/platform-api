@@ -34,6 +34,7 @@ public class GetTaskByIdHandler(IContext context, ICurrentSession session) : IRe
             .ProjectTasks.Include(x => x.Project.ProjectMembers)
             .Include(x => x.Workspace.WorkspaceMembers)
             .Include(x => x.User.MemberProfile)
+            .Include(x => x.Proposals)
             .FirstOrDefaultAsync(x => x.Id == request.Id && x.ProjectId == request.ProjectId && x.WorkspaceId == request.WorkspaceId, cancellationToken);
 
         if (task == null)
@@ -53,6 +54,12 @@ public class GetTaskByIdHandler(IContext context, ICurrentSession session) : IRe
         response.CreatedByUser = new CommonUserResponse(task.User, task.User.MemberProfile);
         response.Workspace = task.Workspace.Adapt<WorkspaceResponse>();
         response.Project = task.Project.Adapt<ProjectResponse>();
+        var proposal = task.Proposals.FirstOrDefault(x => x.UserId == session.UserId);
+        if (task.Type == TaskType.Open && proposal != null)
+        {
+            response.Applied = true;
+            response.ProposalId = proposal.Id;
+        }
 
         return Result.Success(response);
     }

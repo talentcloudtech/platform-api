@@ -48,7 +48,7 @@ public class ApproveRejectProposalHandler(IContext context, ICurrentSession sess
                     Body = $"Hi, The proposal for {proposal.ProjectTask.Title} has been approved.",
                     MessageType = MessageType.Notification,
                     SenderId = session.UserId,
-                    WorkspaceId = proposal.ProjectTask.Project.WorkspaceId,
+                    WorkspaceId = proposal.ProjectTask.WorkspaceId,
                     ProjectId = proposal.ProjectTask.ProjectId,
                     CreatedAt = DateTime.UtcNow,
                     RecipientCount = 1,
