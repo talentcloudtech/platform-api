@@ -7,6 +7,7 @@ using Platform.API.Endpoints.TaskAssignees.CreateTaskAssignee;
 using Platform.API.Endpoints.TaskAssignees.UpdateTaskAssignee;
 using Platform.Application.Extensions;
 using Platform.Application.Features.Proposal;
+using Platform.Application.Features.Proposal.ApproveRejectProposal;
 using Platform.Application.Features.Proposal.CreateProposal;
 using Platform.Application.Features.Proposal.SearchProposals;
 using Platform.Application.Features.Proposal.UpdateProposal;
@@ -70,5 +71,16 @@ public class ProposalEndpoints : IEndpoints
                 }
             )
             .WithSummary("Updates a proposal.");
+
+        group
+            .MapPost(
+                "/{proposalId}/accept-reject",
+                async (IMediator mediator, ProposalId proposalId, ApproveRejectProposalRequest request) =>
+                {
+                    var result = await mediator.Send(request with { Id = proposalId });
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Deletes a proposal.");
     }
 }

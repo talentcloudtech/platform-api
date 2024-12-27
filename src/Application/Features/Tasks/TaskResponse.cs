@@ -4,6 +4,7 @@ using Platform.API.Endpoints.TaskAssignees.UpdateTaskAssignee;
 using Platform.Application.Common.Responses;
 using Platform.Application.Features.Projects;
 using Platform.Application.Features.Workspaces;
+using Platform.Domain.Entities;
 using Platform.Domain.Entities.Common;
 using Platform.Domain.Entities.Enums;
 
@@ -123,4 +124,14 @@ public class TaskResponse
     /// Gets or sets the is published flag.
     /// </summary>
     public OpenTaskStatus OpenTaskStatus { get; set; }
+
+    /// <summary>
+    /// Gets or sets the is published flag.
+    /// </summary>
+    public bool Applied { get; set; }
+
+    /// <summary>
+    /// Gets or sets the is published flag.
+    /// </summary>
+    public ProposalId? ProposalId { get; set; }
 }
