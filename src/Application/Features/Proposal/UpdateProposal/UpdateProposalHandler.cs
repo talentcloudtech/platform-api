@@ -18,8 +18,7 @@ namespace Platform.Application.Features.Proposal.UpdateProposal;
 /// Handles the request to update a proposal.
 /// </summary>
 /// <param name="context">The database context.</param>
-/// <param name="session">The current session.</param>
-public class UpdateProposalHandler(IContext context, ICurrentSession session) : IRequestHandler<UpdateProposalRequest, Result<ProposalResponse>>
+public class UpdateProposalHandler(IContext context) : IRequestHandler<UpdateProposalRequest, Result<ProposalResponse>>
 {
     /// <summary>
     /// Handles the update proposal request.
@@ -47,55 +46,14 @@ public class UpdateProposalHandler(IContext context, ICurrentSession session) : 
         if (request.EndDate.HasValue)
             proposal.EndDate = request.EndDate.Value;
 
-        var transaction = await context.Database.BeginTransactionAsync(cancellationToken);
+        if (request.Status.HasValue)
+            proposal.Status = request.Status.Value;
 
-        try
-        {
-            if (request.Status.HasValue)
-            {
-                proposal.Status = request.Status.Value;
+        await context.SaveChangesAsync(cancellationToken);
 
-                // Send message if proposal is approved
-                if (request.Status.Value == ProposalStatus.Approved)
-                {
-                    var message = new Message
-                    {
-                        Subject = "Proposal Approved",
-                        Body = $"Your proposal for the task {proposal.ProjectTask.Title} has been approved!",
-                        MessageType = MessageType.Notification,
-                        SenderId = session.UserId,
-                        WorkspaceId = proposal.ProjectTask.Project.WorkspaceId,
-                        ProjectId = proposal.ProjectTask.ProjectId,
-                        CreatedAt = DateTime.UtcNow,
-                        RecipientCount = 1,
-                        ReplyAllowed = false,
-                        Recipients = new List<MessageRecipient>
-                        {
-                            new MessageRecipient
-                            {
-                                RecipientId = proposal.User.Id,
-                                IsRead = false,
-                                IsArchived = false,
-                                ReceivedAt = DateTime.UtcNow,
-                            },
-                        },
-                    };
+        var response = proposal.Adapt<ProposalResponse>();
+        response.Applicant = new CommonUserResponse(proposal.User, proposal.User.MemberProfile);
 
-                    context.Messages.Add(message);
-                }
-            }
-
-            await context.SaveChangesAsync(cancellationToken);
-
-            var response = proposal.Adapt<ProposalResponse>();
-            response.Applicant = new CommonUserResponse(proposal.User, proposal.User.MemberProfile);
-
-            return Result.Success(response);
-        }
-        catch (Exception ex)
-        {
-            await transaction.RollbackAsync(cancellationToken);
-            return Result.Error(ex.Message);
-        }
+        return Result.Success(response);
     }
 }
