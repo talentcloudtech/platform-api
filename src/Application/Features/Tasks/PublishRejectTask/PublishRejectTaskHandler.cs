@@ -58,10 +58,16 @@ public class PublishRejectTaskHandler(IContext context, ICurrentSession session)
             message.Body = $"The task {task.Title} has been published!";
             task.OpenTaskStatus = OpenTaskStatus.Published;
         }
+        else if (request.Status == OpenTaskStatus.Clarification)
+        {
+            message.Subject = "Task Clarification";
+            message.Body = $"The task {task.Title} has been rejected! Reason: {request.Reason}";
+            task.OpenTaskStatus = OpenTaskStatus.Clarification;
+        }
         else if (request.Status == OpenTaskStatus.Rejected)
         {
             message.Subject = "Task Rejected";
-            message.Body = $"The task {task.Title} has been rejected! Reason: {request.Reason}";
+            message.Body = $"The task {task.Title} has been rejected!";
             task.OpenTaskStatus = OpenTaskStatus.Rejected;
         }
         task.UpdatedBy = session.UserId;

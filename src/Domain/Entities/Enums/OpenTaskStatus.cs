@@ -19,4 +19,14 @@ public enum OpenTaskStatus
     /// Represents the status of an published task
     /// </summary>
     Published = 3,
+
+    /// <summary>
+    /// Represents the status of an applied task
+    /// </summary>
+    Clarification = 4,
+
+    /// <summary>
+    /// Represents the status of an selected task
+    /// </summary>
+    Selected = 5,
 }
