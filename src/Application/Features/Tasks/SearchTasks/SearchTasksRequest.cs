@@ -20,7 +20,7 @@ namespace Platform.Application.Features.Tasks.SearchTasks;
 /// <param name="PageSize">The number of items per page for pagination. Defaults to 10.</param>
 public record SearchTasksRequest(
     string? Search = null,
-    TaskStatus[]? Statuses = null,
+    ProjectTaskStatus[]? Statuses = null,
     TaskPriority[]? Priorities = null,
     string SortBy = nameof(ProjectTask.CreatedDate),
     string SortOrder = "desc",

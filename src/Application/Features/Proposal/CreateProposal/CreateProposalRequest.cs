@@ -32,10 +32,10 @@ public record CreateProposalRequest : IRequest<Result<ProposalResponse>>
     /// <summary>
     /// Gets or sets the start date of the proposal.
     /// </summary>
-    public DateTime? StartDate { get; set; }
+    public DateTime StartDate { get; set; }
 
     /// <summary>
     /// Gets or sets the end date of the proposal.
     /// </summary>
-    public DateTime? EndDate { get; set; }
+    public DateTime EndDate { get; set; }
 };

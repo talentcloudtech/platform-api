@@ -63,7 +63,7 @@ public record UpdateTaskRequest : IRequest<Result<TaskResponse>>
     /// <summary>
     /// Gets or sets the status of the task.
     /// </summary>
-    public TaskStatus Status { get; set; }
+    public ProjectTaskStatus Status { get; set; }
 
     /// <summary>
     /// Gets or sets the priority of the task.

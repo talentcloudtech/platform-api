@@ -3,7 +3,7 @@ namespace Platform.Domain.Entities.Enums;
 /// <summary>
 /// Enum representing the different statuses of a task.
 /// </summary>
-public enum TaskStatus
+public enum ProjectTaskStatus
 {
     /// <summary>
     /// Represents a task that needs to be done.

@@ -16,8 +16,10 @@ public class CreateProposalValidator : AbstractValidator<CreateProposalRequest>
         RuleFor(x => x.Description).NotEmpty().WithMessage("Description is required");
         RuleFor(x => x.CostEstimation).NotEmpty().WithMessage("Cost estimation is required");
         RuleFor(x => x.StartDate).NotEmpty().WithMessage("Start date is required.");
+        RuleFor(x => x.EndDate).NotEmpty().WithMessage("End date is required.");
+        RuleFor(x => x.StartDate).NotEmpty().WithMessage("Start date is required.");
         RuleFor(x => x.EndDate)
-            .Must((request, endDate) => !endDate.HasValue || endDate.Value >= request.StartDate)
+            .Must((request, endDate) => endDate >= request.StartDate)
             .WithMessage("End date must be greater than or equal to the start date.");
     }
 }

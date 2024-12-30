@@ -25,7 +25,7 @@ public class UpcomingFinanceResponse
     /// <summary>
     /// Gets or sets the task status
     /// </summary>
-    public TaskStatus Status { get; set; }
+    public ProjectTaskStatus Status { get; set; }
 
     /// <summary>
     /// Gets or sets the task completion date

@@ -3,6 +3,7 @@ using Ardalis.Result;
 using MediatR;
 using Platform.Application.Common.Responses;
 using Platform.Domain.Entities.Common;
+using Platform.Domain.Entities.Enums;
 
 namespace Platform.Application.Features.Finance.GetWorkspaceFinance;
 
@@ -17,5 +18,5 @@ public record GetWorkspaceFinanceRequest(
     int CurrentPage = 1,
     int PageSize = 10,
     ProjectId? ProjectId = null,
-    TaskStatus[]? Statuses = null
+    ProjectTaskStatus[]? Statuses = null
 ) : IRequest<Result<PaginatedList<WorkspaceFinanceResponse>>>;

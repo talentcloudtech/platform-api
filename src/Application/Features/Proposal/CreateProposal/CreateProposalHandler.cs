@@ -41,6 +41,9 @@ public class CreateProposalHandler(IContext context, ICurrentSession session) : 
         var proposal = request.Adapt<Domain.Entities.Proposal>();
         proposal.TaskId = task.Id;
         proposal.UserId = session.UserId;
+        proposal.StartDate = request.StartDate;
+        proposal.EndDate = request.EndDate;
+        proposal.CostEstimation = request.CostEstimation;
         proposal.CreatedBy = session.UserId;
         proposal.CreatedDate = DateTime.UtcNow;
         proposal.Status = ProposalStatus.Pending;

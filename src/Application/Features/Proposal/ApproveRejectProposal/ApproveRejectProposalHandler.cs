@@ -42,10 +42,36 @@ public class ApproveRejectProposalHandler(IContext context, ICurrentSession sess
         {
             if (request.Status == ProposalStatus.Approved)
             {
+                var task = await context.ProjectTasks.FirstOrDefaultAsync(t => t.Id == proposal.ProjectTask.Id, cancellationToken);
+
+                if (task == null)
+                    return Result.NotFound("Task not found.");
+
+                task.OpenTaskStatus = OpenTaskStatus.Selected;
+                task.StartDate = proposal.StartDate;
+                task.DueDate = proposal.EndDate;
+                task.Cost = proposal.CostEstimation;
+                task.Status = ProjectTaskStatus.InProgress;
+                var assignment = new ProjectTaskAssignment
+                {
+                    TaskId = task.Id,
+                    UserId = proposal.User.Id,
+                    TimeSpent = 0,
+                    AssignedBy = session.UserId,
+                    AssignedDate = DateTime.UtcNow,
+                    CreatedBy = session.UserId,
+                    CreatedDate = DateTime.UtcNow,
+                    UpdatedBy = session.UserId,
+                    UpdatedDate = DateTime.UtcNow,
+                };
+
+                context.ProjectTaskAssignments.Add(assignment);
+
                 var message = new Message
                 {
                     Subject = "Proposal Approved",
-                    Body = $"Hi, The proposal for {proposal.ProjectTask.Title} has been approved.",
+                    Body =
+                        $"Hi, you are selected for the task {proposal.ProjectTask.Title}.<p>You have assigned for the task {proposal.ProjectTask.Title}.</p><p>Please start working on the task.</p>",
                     MessageType = MessageType.Notification,
                     SenderId = session.UserId,
                     WorkspaceId = proposal.ProjectTask.WorkspaceId,
@@ -66,6 +92,7 @@ public class ApproveRejectProposalHandler(IContext context, ICurrentSession sess
                 );
 
                 context.Messages.Add(message);
+                context.ProjectTaskAssignments.Add(assignment);
             }
 
             await context.SaveChangesAsync(cancellationToken);

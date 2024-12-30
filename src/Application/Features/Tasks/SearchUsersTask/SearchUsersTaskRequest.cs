@@ -23,7 +23,7 @@ public record SearchUsersTaskRequest(
     WorkspaceId[]? WorkspaceIds,
     ProjectId[]? ProjectIds,
     string? Search = null,
-    TaskStatus[]? Statuses = null,
+    ProjectTaskStatus[]? Statuses = null,
     TaskPriority[]? Priorities = null,
     string SortBy = nameof(ProjectTask.CreatedDate),
     string SortOrder = "desc",
