@@ -53,10 +53,6 @@ public class RequestPaymentHandler(IContext context, ICurrentSession session) : 
         var totalCost = tasks.Sum(t => t.Cost ?? 0);
         var workspace = tasks.First().Workspace;
 
-        // Check workspace balance
-        if (workspace.CurrentBalance < totalCost)
-            return Result.Error("Insufficient workspace balance for payment release.");
-
         var currentTime = DateTime.UtcNow;
 
         foreach (var task in tasks)
