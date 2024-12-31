@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.Result;
@@ -42,6 +43,13 @@ public class ApproveRejectProposalHandler(IContext context, ICurrentSession sess
         {
             if (request.Status == ProposalStatus.Approved)
             {
+                var otherProposals = await context.Proposals.Where(p => p.TaskId == proposal.TaskId && p.Id != proposal.Id).ToListAsync(cancellationToken);
+
+                foreach (var otherProposal in otherProposals)
+                {
+                    otherProposal.Status = ProposalStatus.Rejected;
+                }
+
                 var task = await context.ProjectTasks.FirstOrDefaultAsync(t => t.Id == proposal.ProjectTask.Id, cancellationToken);
 
                 if (task == null)
