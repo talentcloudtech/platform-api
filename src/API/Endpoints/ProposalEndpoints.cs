@@ -9,8 +9,10 @@ using Platform.Application.Extensions;
 using Platform.Application.Features.Proposal;
 using Platform.Application.Features.Proposal.ApproveRejectProposal;
 using Platform.Application.Features.Proposal.CreateProposal;
+using Platform.Application.Features.Proposal.GetProposalAppliedTasks;
 using Platform.Application.Features.Proposal.SearchProposals;
 using Platform.Application.Features.Proposal.UpdateProposal;
+using Platform.Domain.Auth.Interfaces;
 using Platform.Domain.Entities.Common;
 
 namespace Platform.API.Endpoints;
@@ -78,6 +80,17 @@ public class ProposalEndpoints : IEndpoints
                 async (IMediator mediator, ProposalId proposalId, ApproveRejectProposalRequest request) =>
                 {
                     var result = await mediator.Send(request with { Id = proposalId });
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Deletes a proposal.");
+
+        group
+            .MapPost(
+                "/applied",
+                async (IMediator mediator, ICurrentSession currentUser) =>
+                {
+                    var result = await mediator.Send(new GetProposalAppliedTasksRequest());
                     return result.ToPlatformApiResult();
                 }
             )
