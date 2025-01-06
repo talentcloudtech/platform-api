@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.Result;
@@ -22,6 +23,8 @@ public class UpdateWorkspaceCreditBalanceHandler(IContext context, ICurrentSessi
     /// </summary>
     public async Task<Result> Handle(UpdateWorkspaceCreditBalanceRequest request, CancellationToken cancellationToken)
     {
+        var currentTimeStamp = DateTime.UtcNow;
+
         // Verify user has permission
         if (session.Role!.Name != UserRole.Admin.Name)
             return Result.Forbidden("Only administrators can update workspace credit balance.");
@@ -45,9 +48,10 @@ public class UpdateWorkspaceCreditBalanceHandler(IContext context, ICurrentSessi
                 Amount = request.Amount,
                 Type = TransactionType.Credit,
                 Status = TransactionStatus.Success,
-                Description = $"Balance credit of {request.Amount:C}",
+                Description = $"Balance credited by Admin.",
                 PaymentMethod = PaymentMethod.Transfer,
                 CreatedBy = session.UserId,
+                CreatedDate = currentTimeStamp,
                 TransactionId = CustomNewId.GenerateStandardId(),
             };
 

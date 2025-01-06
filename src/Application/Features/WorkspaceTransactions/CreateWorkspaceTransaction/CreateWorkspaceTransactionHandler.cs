@@ -51,7 +51,7 @@ public class CreateWorkspaceTransactionHandler(IContext context, ICurrentSession
             Amount = request.Amount,
             PaymentMethod = request.PaymentMethod,
             Type = TransactionType.Credit,
-            Description = $"Transaction created at {currentTimeStamp:yyyy-MM-dd}",
+            Description = $"Payment requested at {currentTimeStamp:yyyy-MM-dd}",
             TransactionId = Guid.NewGuid().ToString(),
             Status = TransactionStatus.Pending,
             CreatedBy = session.UserId,

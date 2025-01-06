@@ -35,7 +35,12 @@ public class SearchUsersTaskHandler(IContext context, ICurrentSession session) :
         IQueryable<ProjectTask> query = context.ProjectTasks.Include(i => i.Workspace).Include(i => i.Project).Include(i => i.User.MemberProfile);
 
         // First filter by project membership
-        query = query.Where(x => x.Project.ProjectMembers.Any(pm => pm.UserId == session.UserId));
+        // Allow access to open tasks or tasks where user is a project member
+        query = query.Where(x =>
+            x.Type == TaskType.Open
+            || // Allow access to open tasks
+            x.Project.ProjectMembers.Any(pm => pm.UserId == session.UserId)
+        );
 
         //Apply workspace and project filter
         // Filter tasks where user is either creator or assignee
