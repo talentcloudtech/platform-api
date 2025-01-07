@@ -76,8 +76,6 @@ public class UpdateTaskHandler(IContext context, ICurrentSession session, UserMa
         {
             if ((previousTaskTotalCost / task.Project.Budget).GetValueOrDefault() < 0.8m && (totalCost / task.Project.Budget).GetValueOrDefault() > 0.8m)
             {
-                // TODO: Get admin user where userRole is Admin from userManager and get first or default admin user
-
                 var adminUsers = await userManager.GetUsersInRoleAsync(UserRole.Admin.Name).ConfigureAwait(false);
                 var adminUser = adminUsers.FirstOrDefault();
 
