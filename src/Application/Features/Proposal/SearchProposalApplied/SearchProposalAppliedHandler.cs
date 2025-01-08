@@ -34,6 +34,9 @@ public class SearchProposalAppliedHandler(IContext context, ICurrentSession curr
     {
         var query = context.Proposals.Include(i => i.ProjectTask).Include(i => i.User.MemberProfile).Where(x => x.CreatedBy == currentUser.UserId); // Filter for open tasks only
 
+        if (request.Statuses!.Any())
+            query = query.Where(x => request.Statuses!.Contains(x.Status));
+
         var proposals = await query.ToPaginatedListAsync(request.CurrentPage, request.PageSize);
 
         var paginatedResponse = new PaginatedList<ProposalResponse>
