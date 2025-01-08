@@ -7,28 +7,35 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
 using Platform.Application.Common.Responses;
+using Platform.Application.Features.Projects;
+using Platform.Application.Features.Proposal;
+using Platform.Application.Features.Proposal.SearchProposals;
+using Platform.Application.Features.Workspaces;
 using Platform.Domain.Auth.Interfaces;
+using Platform.Domain.Entities.Enums;
 
-namespace Platform.Application.Features.Proposal.GetProposalAppliedTasks;
+namespace Platform.Application.Features.Tasks.SearchOpenTasks;
 
 /// <summary>
-/// Handles the search for open tasks.
+/// Handles the search for proposals.
 /// </summary>
 /// <param name="context"></param>
 /// <param name="currentUser"></param>
-
-public class GetProposalAppliedTasksHandler(IContext context, ICurrentSession currentUser)
-    : IRequestHandler<GetProposalAppliedTasksRequest, Result<PaginatedList<ProposalResponse>>>
+public class SearchProposalAppliedHandler(IContext context, ICurrentSession currentUser)
+    : IRequestHandler<SearchProposalAppliedRequest, Result<PaginatedList<ProposalResponse>>>
 {
     /// <summary>
-    /// Handles the search for open tasks.
+    /// Handles the search for proposals.
     /// </summary>
     /// <param name="request"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<Result<PaginatedList<ProposalResponse>>> Handle(GetProposalAppliedTasksRequest request, CancellationToken cancellationToken)
+    public async Task<Result<PaginatedList<ProposalResponse>>> Handle(SearchProposalAppliedRequest request, CancellationToken cancellationToken)
     {
-        var query = context.Proposals.Include(x => x.User.MemberProfile).Where(x => x.UserId == currentUser.UserId);
+        var query = context.Proposals.Include(i => i.ProjectTask).Include(i => i.User.MemberProfile).Where(x => x.CreatedBy == currentUser.UserId); // Filter for open tasks only
+
+        if (request.Statuses!.Any())
+            query = query.Where(x => request.Statuses!.Contains(x.Status));
 
         var proposals = await query.ToPaginatedListAsync(request.CurrentPage, request.PageSize);
 
@@ -42,6 +49,7 @@ public class GetProposalAppliedTasksHandler(IContext context, ICurrentSession cu
                 {
                     var proposalResponse = x.Adapt<ProposalResponse>();
                     proposalResponse.Applicant = new CommonUserResponse(x.User, x.User.MemberProfile);
+                    proposalResponse.Task = x.ProjectTask.Adapt<TaskResponse>();
                     return proposalResponse;
                 })
                 .ToList(),
