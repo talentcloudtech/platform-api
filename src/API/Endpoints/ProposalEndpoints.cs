@@ -9,7 +9,6 @@ using Platform.Application.Extensions;
 using Platform.Application.Features.Proposal;
 using Platform.Application.Features.Proposal.ApproveRejectProposal;
 using Platform.Application.Features.Proposal.CreateProposal;
-using Platform.Application.Features.Proposal.GetProposalAppliedTasks;
 using Platform.Application.Features.Proposal.SearchProposals;
 using Platform.Application.Features.Proposal.UpdateProposal;
 using Platform.Domain.Auth.Interfaces;
@@ -86,14 +85,14 @@ public class ProposalEndpoints : IEndpoints
             .WithSummary("Deletes a proposal.");
 
         group
-            .MapPost(
+            .MapGet(
                 "/applied",
-                async (IMediator mediator, ICurrentSession currentUser) =>
+                async (IMediator mediator, [AsParameters] SearchProposalAppliedRequest request) =>
                 {
-                    var result = await mediator.Send(new GetProposalAppliedTasksRequest());
+                    var result = await mediator.Send(request);
                     return result.ToPlatformApiResult();
                 }
             )
-            .WithSummary("Deletes a proposal.");
+            .WithSummary("Searches for proposals applied by the current user.");
     }
 }

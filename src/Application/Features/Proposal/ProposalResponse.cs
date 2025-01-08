@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Platform.API.Endpoints.TaskAssignees.UpdateTaskAssignee;
 using Platform.Application.Common.Responses;
 using Platform.Application.Features.Projects;
+using Platform.Application.Features.Tasks;
 using Platform.Application.Features.Workspaces;
 using Platform.Domain.Entities.Common;
 using Platform.Domain.Entities.Enums;
@@ -73,4 +74,9 @@ public class ProposalResponse
     /// Gets or sets the applicant.
     /// </summary>
     public CommonUserResponse? Applicant { get; set; }
+
+    /// <summary>
+    /// Gets or sets the project.
+    /// </summary>
+    public TaskResponse? Task { get; set; }
 }
