@@ -35,8 +35,8 @@ public class MemberRequestConfiguration : IEntityTypeConfiguration<MemberRequest
         );
         builder.Property(x => x.StartDate).HasConversion<DateTime>();
         builder.Property(x => x.EndDate).HasConversion<DateTime>();
-        builder.Property(x => x.ExpectedBudget).HasColumnType("decimal(10, 2)");
-        builder.Property(x => x.MinutesPerDay);
+        builder.Property(x => x.ExpectedBudget).HasMaxLength(StringSizes.Title);
+        builder.Property(x => x.WorkHour).HasMaxLength(StringSizes.Title);
         builder.Property(x => x.Timezone).HasMaxLength(StringSizes.Short);
         builder.Property(x => x.Status).HasConversion<string>();
         builder.Property(x => x.RejectedReason).HasMaxLength(300);

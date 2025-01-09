@@ -426,11 +426,10 @@ namespace Platform.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<decimal>("ExpectedBudget")
-                        .HasColumnType("decimal(10, 2)");
-
-                    b.Property<int>("MinutesPerDay")
-                        .HasColumnType("integer");
+                    b.Property<string>("ExpectedBudget")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<string>("RejectedReason")
                         .HasMaxLength(300)
@@ -459,6 +458,11 @@ namespace Platform.Migrations
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("WorkHour")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<string>("WorkspaceId")
                         .IsRequired()

@@ -52,12 +52,12 @@ public record UpdateMemberRequestRequest : IRequest<Result<MemberRequestResponse
     /// <summary>
     /// Gets or sets the expected budget for the member request.
     /// </summary>
-    public decimal? ExpectedBudget { get; init; }
+    public string? ExpectedBudget { get; init; }
 
     /// <summary>
     /// Gets or sets the number of minutes per day expected for the task.
     /// </summary>
-    public int? MinutesPerDay { get; init; }
+    public string? WorkHour { get; init; }
 
     /// <summary>
     /// Gets or sets the timezone relevant to the request.

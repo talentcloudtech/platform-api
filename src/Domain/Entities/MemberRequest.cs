@@ -53,12 +53,12 @@ public class MemberRequest : AuditableEntity<MemberRequestId>
     /// <summary>
     /// Gets or sets the expected budget for the request.
     /// </summary>
-    public decimal ExpectedBudget { get; set; }
+    public required string ExpectedBudget { get; set; }
 
     /// <summary>
-    /// Gets or sets the number of minutes per day expected for the task.
+    /// Gets or sets the number of work hour.
     /// </summary>
-    public int MinutesPerDay { get; set; }
+    public required string WorkHour { get; set; }
 
     /// <summary>
     /// Gets or sets the timezone relevant to the request.

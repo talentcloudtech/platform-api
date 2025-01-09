@@ -62,21 +62,15 @@ public class UpdateMemberRequestValidator : AbstractValidator<UpdateMemberReques
             x => x.FieldsToUpdate.Contains(nameof(UpdateMemberRequestRequest.ExpectedBudget), StringComparer.OrdinalIgnoreCase),
             () =>
             {
-                RuleFor(x => x.ExpectedBudget)
-                    .GreaterThanOrEqualTo(0)
-                    .When(x => x.ExpectedBudget.HasValue)
-                    .WithMessage("Expected budget must be greater than or equal to 0.");
+                RuleFor(x => x.ExpectedBudget).NotEmpty().WithMessage("Expected budget cannot be null when specified in FieldsToUpdate.");
             }
         );
 
         When(
-            x => x.FieldsToUpdate.Contains(nameof(UpdateMemberRequestRequest.MinutesPerDay), StringComparer.OrdinalIgnoreCase),
+            x => x.FieldsToUpdate.Contains(nameof(UpdateMemberRequestRequest.WorkHour), StringComparer.OrdinalIgnoreCase),
             () =>
             {
-                RuleFor(x => x.MinutesPerDay)
-                    .InclusiveBetween(0, 1440)
-                    .When(x => x.MinutesPerDay.HasValue)
-                    .WithMessage("Minutes per day must be between 0 and 1440.");
+                RuleFor(x => x.WorkHour).NotEmpty().WithMessage("Work hour cannot be null when specified in FieldsToUpdate.");
             }
         );
 
