@@ -100,11 +100,11 @@ public class UpdateMemberRequestHandler(IContext context, ICurrentSession sessio
             },
             ["expectedbudget"] = (mr, req) =>
             {
-                mr.ExpectedBudget = req.ExpectedBudget ?? 0;
+                mr.ExpectedBudget = req.ExpectedBudget ?? "";
             },
-            ["minutesperday"] = (mr, req) =>
+            ["workhour"] = (mr, req) =>
             {
-                mr.MinutesPerDay = req.MinutesPerDay ?? 0;
+                mr.WorkHour = req.WorkHour ?? "";
             },
             ["timezone"] = (mr, req) =>
             {
