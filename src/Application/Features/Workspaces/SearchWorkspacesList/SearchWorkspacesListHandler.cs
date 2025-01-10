@@ -40,12 +40,6 @@ public class SearchWorkspacesListHandler(IContext context, ICurrentSession sessi
         if (!string.IsNullOrEmpty(request.Search))
             query = query.Where(x => EF.Functions.Like(x.Name.ToLower().Trim(), $"%{request.Search!.ToLower().Trim()}%"));
 
-        // Apply sorting
-        if (request.SortOrder.ToLower() == "asc")
-            query = query.OrderBy(i => EF.Property<object>(i, request.SortBy));
-        else
-            query = query.OrderByDescending(i => EF.Property<object>(i, request.SortBy));
-
         var workspaces = await query.ToPaginatedListAsync(request.CurrentPage, request.PageSize);
 
         var paginatedResponse = new PaginatedList<WorkspaceResponse>
