@@ -33,7 +33,8 @@ public class SearchWorkspaceTransactionsHandler(IContext context, ICurrentSessio
         CancellationToken cancellationToken
     )
     {
-        IQueryable<WorkspaceTransaction> query = context.WorkspaceTransactions;
+        IQueryable<WorkspaceTransaction> query = context.WorkspaceTransactions.Where(wt => wt.WorkspaceId == request.WorkspaceId);
+        ;
 
         var workspaceMember = await context.WorkspaceMembers.FirstOrDefaultAsync(
             wm => wm.WorkspaceId == request.WorkspaceId && wm.UserId == session.UserId,
