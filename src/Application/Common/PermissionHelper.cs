@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Platform.Domain.Auth.Interfaces;
 using Platform.Domain.Entities;
 using Platform.Domain.Entities.Common;
+using Platform.Domain.Entities.Enums;
 
 namespace Platform.Application.Common;
 
@@ -35,6 +36,9 @@ public static class PermissionHelper
 
         if (task == null)
             return false;
+
+        if (task.Type == TaskType.Open)
+            return true;
 
         var hasAccess =
             task.Project.Workspace.WorkspaceMembers.Any(m => m.UserId == currentUserId) || task.Project.ProjectMembers.Any(m => m.UserId == currentUserId);

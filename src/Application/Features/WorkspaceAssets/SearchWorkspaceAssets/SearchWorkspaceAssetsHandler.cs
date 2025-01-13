@@ -31,7 +31,15 @@ public class SearchWorkspaceAssetsHandler(IContext context, ICurrentSession sess
 
         var isAdmin = session.Role!.Name == UserRole.Admin.Name;
 
-        if (!isAdmin && !workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId))
+        // Check if task exists and is open when taskId is provided
+        var isOpenTask = false;
+        if (request.TaskId.HasValue)
+        {
+            var task = await context.ProjectTasks.FirstOrDefaultAsync(x => x.Id == request.TaskId, cancellationToken);
+            isOpenTask = task?.Type == TaskType.Open;
+        }
+
+        if (!isAdmin && !isOpenTask && !workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId))
             return Result.Forbidden("You are not a member of this workspace.");
 
         var query = context
