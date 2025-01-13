@@ -51,6 +51,7 @@ public class UpdateTaskHandler(IContext context, ICurrentSession session, UserMa
 
         if (
             !isAdmin
+            && task.Type != TaskType.Open
             && !task.Project.Workspace.WorkspaceMembers.Any(x => x.UserId == session.UserId)
             && !task.Project.ProjectMembers.Any(x => x.UserId == session.UserId)
         )
