@@ -70,8 +70,10 @@ public class UpdateTaskHandler(IContext context, ICurrentSession session, UserMa
         task.UpdatedBy = session.UserId;
         task.UpdatedDate = DateTime.UtcNow;
 
-        if (request.Type == TaskType.Open)
+        if (request.Type == TaskType.Open && task.OpenTaskStatus == default)
+        {
             task.OpenTaskStatus = OpenTaskStatus.Pending;
+        }
         var transaction = await context.Database.BeginTransactionAsync(cancellationToken);
         try
         {
