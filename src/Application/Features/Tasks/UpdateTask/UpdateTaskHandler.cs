@@ -70,12 +70,18 @@ public class UpdateTaskHandler(IContext context, ICurrentSession session, UserMa
         task.UpdatedBy = session.UserId;
         task.UpdatedDate = DateTime.UtcNow;
 
-        if (request.Type == TaskType.Open)
+        if (request.Type == TaskType.Open && task.OpenTaskStatus == default)
+        {
             task.OpenTaskStatus = OpenTaskStatus.Pending;
+        }
         var transaction = await context.Database.BeginTransactionAsync(cancellationToken);
         try
         {
-            if ((previousTaskTotalCost / task.Project.Budget).GetValueOrDefault() < 0.8m && (totalCost / task.Project.Budget).GetValueOrDefault() > 0.8m)
+            if (
+                task.Project.Budget > 0
+                && (previousTaskTotalCost / task.Project.Budget).GetValueOrDefault() < 0.8m
+                && (totalCost / task.Project.Budget).GetValueOrDefault() > 0.8m
+            )
             {
                 var adminUsers = await userManager.GetUsersInRoleAsync(UserRole.Admin.Name).ConfigureAwait(false);
                 var adminUser = adminUsers.FirstOrDefault();
