@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Platform.Application.Extensions;
 using Platform.Application.Features.MemberTransactions.CreateMemberTransaction;
+using Platform.Application.Features.MemberTransactions.RequestPayment;
 using Platform.Application.Features.MemberTransactions.SearchMemberTransaction;
 using Platform.Domain.Entities.Common;
 
@@ -43,5 +44,16 @@ public class MemberTransactionEndpoints : IEndpoints
                 }
             )
             .WithSummary("Creates a new member transaction.");
+
+        group
+            .MapGet(
+                "/request-payment",
+                async (IMediator mediator, [AsParameters] RequestPaymentRequest request) =>
+                {
+                    var result = await mediator.Send(request);
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Request payment for a member.");
     }
 }

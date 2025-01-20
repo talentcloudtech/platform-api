@@ -40,7 +40,7 @@ public class CreateMemberTransactionHandler(IContext context, ICurrentSession se
         var newTransaction = request.Adapt<MemberTransaction>();
         newTransaction.UserId = session.UserId;
         newTransaction.Type = TransactionType.Credit;
-        newTransaction.Description = $"Transaction created at {currentTimeStamp:yyyy-MM-dd}";
+        newTransaction.Description = $"Requested to payout {request.Amount} at {currentTimeStamp:yyyy-MM-dd}";
         newTransaction.TransactionId = Guid.NewGuid().ToString();
         newTransaction.Status = TransactionStatus.Pending;
         newTransaction.CreatedBy = session.UserId;

@@ -19,12 +19,12 @@ public class MemberTransactionResponse
     /// <summary>
     /// Gets or sets the identifier of the member associated with this transaction.
     /// </summary>
-    public UserId MemberId { get; set; }
+    public UserId UserId { get; set; }
 
     /// <summary>
     /// Gets or sets the name of the member associated with this transaction.
     /// </summary>
-    public string MemberName { get; set; } = null!;
+    public string UserName { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets the type of the transaction (Credit or Debit).
