@@ -76,7 +76,7 @@ public class ReleasePaymentHandler(IContext context, ICurrentSession session) : 
                     return Result.Error($"Task '{task.Title}' has no assignee. Payment release requires an assigned user.");
 
                 // Deduct from workspace balance
-                workspace.CurrentBalance -= workspace.CurrentBalance - task.Cost ?? 0;
+                workspace.CurrentBalance = workspace.CurrentBalance - task.Cost ?? 0;
                 context.Workspaces.Update(workspace);
 
                 // Add to member balance
