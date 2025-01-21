@@ -30,6 +30,8 @@ public class CreateMemberRequestHandler(IContext context, ICurrentSession sessio
         if (workspace == null)
             return Result.NotFound("Workspace not found.");
 
+        var isAdmin = session.Role!.Name == UserRole.Admin.Name;
+
         if (
             !workspace.WorkspaceMembers.Any(x =>
                 x.UserId == session.UserId && (x.Role == WorkspaceRole.WorkspaceOwner || x.Role == WorkspaceRole.WorkspaceManager)
@@ -49,6 +51,8 @@ public class CreateMemberRequestHandler(IContext context, ICurrentSession sessio
         newMemberRequest.Status = MemberRequestStatus.Draft;
         newMemberRequest.CreatedBy = session.UserId;
         newMemberRequest.CreatedDate = currentTimestamp;
+
+        newMemberRequest.Visibility = isAdmin ? request.Visibility ?? MemberRequestVisibility.Invited : MemberRequestVisibility.Invited;
 
         context.MemberRequests.Add(newMemberRequest);
         await context.SaveChangesAsync(cancellationToken);

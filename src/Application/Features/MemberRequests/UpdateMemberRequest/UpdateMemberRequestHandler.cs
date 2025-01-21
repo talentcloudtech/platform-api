@@ -66,6 +66,11 @@ public class UpdateMemberRequestHandler(IContext context, ICurrentSession sessio
             {
                 memberRequest.RejectedReason = request.RejectedReason;
             }
+
+            if (field.Equals("visibility", StringComparison.OrdinalIgnoreCase) && request.Visibility.HasValue)
+            {
+                memberRequest.Visibility = request.Visibility.Value;
+            }
         }
 
         memberRequest.UpdatedBy = session.UserId;

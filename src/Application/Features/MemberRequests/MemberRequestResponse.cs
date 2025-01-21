@@ -74,6 +74,11 @@ public record MemberRequestResponse
     public DateTime? CreatedDate { get; init; }
 
     /// <summary>
+    /// Gets or sets the visibility of the member request.
+    /// </summary>
+    public MemberRequestVisibility Visibility { get; init; }
+
+    /// <summary>
     /// Gets or sets the workspace.
     /// </summary>
     public WorkspaceResponse? Workspace { get; set; }

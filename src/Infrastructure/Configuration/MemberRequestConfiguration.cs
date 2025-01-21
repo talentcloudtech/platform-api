@@ -40,6 +40,8 @@ public class MemberRequestConfiguration : IEntityTypeConfiguration<MemberRequest
         builder.Property(x => x.Timezone).HasMaxLength(StringSizes.Short);
         builder.Property(x => x.Status).HasConversion<string>();
         builder.Property(x => x.RejectedReason).HasMaxLength(300);
+        builder.Property(x => x.Type).HasConversion<string>();
+        builder.Property(x => x.Visibility).HasConversion<string>();
         builder.Property(x => x.CreatedBy).HasMaxLength(StringSizes.Id).HasConversion<UserId.EfCoreValueConverter>();
         builder.Property(x => x.CreatedDate).HasConversion<DateTime>();
         builder.Property(x => x.UpdatedBy).HasMaxLength(StringSizes.Id).HasConversion<UserId.EfCoreValueConverter>();
