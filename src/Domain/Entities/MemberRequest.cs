@@ -66,6 +66,16 @@ public class MemberRequest : AuditableEntity<MemberRequestId>
     public required string Timezone { get; set; }
 
     /// <summary>
+    /// Gets or sets the visibility of the member request.
+    /// </summary>
+    public MemberRequestVisibility Visibility { get; set; }
+
+    /// <summary>
+    /// Gets or sets the type of the member request.
+    /// </summary>
+    public MemberRequestType Type { get; set; }
+
+    /// <summary>
     /// Gets or sets the current status of the request.
     /// </summary>
     public required MemberRequestStatus Status { get; set; }

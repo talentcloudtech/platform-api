@@ -5,6 +5,7 @@ using Ardalis.Result;
 using MediatR;
 using Platform.Domain.Entities;
 using Platform.Domain.Entities.Common;
+using Platform.Domain.Entities.Enums;
 
 namespace Platform.Application.Features.MemberRequests.CreateMemberRequest;
 
@@ -48,6 +49,11 @@ public record CreateMemberRequestRequest : IRequest<Result<MemberRequestResponse
     /// Gets or sets the number of minutes per day expected for the task.
     /// </summary>
     public string WorkHour { get; init; } = null!;
+
+    /// <summary>
+    /// Gets or sets the visibility of the member request.
+    /// </summary>
+    public MemberRequestVisibility? Visibility { get; init; }
 
     /// <summary>
     /// Gets or sets the timezone relevant to the request.

@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 using Ardalis.Result;
 using Mapster;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
 using Platform.Domain.Auth.Interfaces;
 using Platform.Domain.Entities;
+using Platform.Domain.Entities.Common;
 using Platform.Domain.Entities.Enums;
 
 namespace Platform.Application.Features.MemberRequests.UpdateMemberRequest;
@@ -17,7 +19,8 @@ namespace Platform.Application.Features.MemberRequests.UpdateMemberRequest;
 /// <summary>
 /// Handles the update member request request.
 /// </summary>
-public class UpdateMemberRequestHandler(IContext context, ICurrentSession session) : IRequestHandler<UpdateMemberRequestRequest, Result<MemberRequestResponse>>
+public class UpdateMemberRequestHandler(IContext context, ICurrentSession session, UserManager<ApplicationUser> userManager)
+    : IRequestHandler<UpdateMemberRequestRequest, Result<MemberRequestResponse>>
 {
     /// <summary>
     /// Handles the update member request request.
@@ -42,39 +45,70 @@ public class UpdateMemberRequestHandler(IContext context, ICurrentSession sessio
         )
             return Result.Forbidden("You don't have permission to update this member request.");
 
-        foreach (var field in request.FieldsToUpdate)
+        var transaction = await context.Database.BeginTransactionAsync(cancellationToken);
+
+        try
         {
-            if (_updateActions.TryGetValue(field, out var action))
+            foreach (var field in request.FieldsToUpdate)
             {
-                action(memberRequest, request);
+                if (_updateActions.TryGetValue(field, out var action))
+                {
+                    action(memberRequest, request);
+                }
+                if (field.Equals("status", StringComparison.OrdinalIgnoreCase) && request.Status.HasValue)
+                {
+                    var statusTransitionResult = ValidateStatusTransition(memberRequest.Status, request.Status.Value);
+                    if (!statusTransitionResult.IsSuccess)
+                        return Result.Invalid(
+                            new ValidationError
+                            {
+                                Identifier = "status",
+                                ErrorMessage = statusTransitionResult.Errors.FirstOrDefault(),
+                                ErrorCode = "InvalidStatusTransition",
+                            }
+                        );
+
+                    if (request.Status.Value == MemberRequestStatus.Published && memberRequest.Visibility == MemberRequestVisibility.Public)
+                    {
+                        await CreateGIgInvitationsForAllUsers(memberRequest.Id);
+                    }
+                    memberRequest.Status = request.Status.Value;
+                }
+                if (field.Equals("rejectedReason", StringComparison.OrdinalIgnoreCase) && request.RejectedReason != null)
+                {
+                    memberRequest.RejectedReason = request.RejectedReason;
+                }
+
+                if (isAdmin && field.Equals("visibility", StringComparison.OrdinalIgnoreCase) && request.Visibility.HasValue)
+                {
+                    // Only fetch userIds if visibility is being set to Public
+                    if (
+                        memberRequest.Visibility == MemberRequestVisibility.Invited
+                        && request.Visibility.Value == MemberRequestVisibility.Public
+                        && memberRequest.Status == MemberRequestStatus.Published
+                    )
+                    {
+                        await CreateGIgInvitationsForAllUsers(memberRequest.Id);
+                    }
+
+                    memberRequest.Visibility = request.Visibility.Value;
+                }
             }
-            if (field.Equals("status", StringComparison.OrdinalIgnoreCase) && request.Status.HasValue)
-            {
-                var statusTransitionResult = ValidateStatusTransition(memberRequest.Status, request.Status.Value);
-                if (!statusTransitionResult.IsSuccess)
-                    return Result.Invalid(
-                        new ValidationError
-                        {
-                            Identifier = "status",
-                            ErrorMessage = statusTransitionResult.Errors.FirstOrDefault(),
-                            ErrorCode = "InvalidStatusTransition",
-                        }
-                    );
-                memberRequest.Status = request.Status.Value;
-            }
-            if (field.Equals("rejectedReason", StringComparison.OrdinalIgnoreCase) && request.RejectedReason != null)
-            {
-                memberRequest.RejectedReason = request.RejectedReason;
-            }
+
+            memberRequest.UpdatedBy = session.UserId;
+            memberRequest.UpdatedDate = DateTime.UtcNow;
+
+            context.MemberRequests.Update(memberRequest);
+            await context.SaveChangesAsync(cancellationToken);
+
+            await transaction.CommitAsync(cancellationToken);
+            return Result.Success(memberRequest.Adapt<MemberRequestResponse>());
         }
-
-        memberRequest.UpdatedBy = session.UserId;
-        memberRequest.UpdatedDate = DateTime.UtcNow;
-
-        context.MemberRequests.Update(memberRequest);
-        await context.SaveChangesAsync(cancellationToken);
-
-        return memberRequest.Adapt<MemberRequestResponse>();
+        catch (Exception ex)
+        {
+            await transaction.RollbackAsync(cancellationToken);
+            return Result.Error(ex.Message);
+        }
     }
 
     /// <summary>
@@ -177,5 +211,29 @@ public class UpdateMemberRequestHandler(IContext context, ICurrentSession sessio
             MemberRequestStatus.Cancelled => new[] { MemberRequestStatus.PendingReview },
             _ => Array.Empty<MemberRequestStatus>(),
         };
+    }
+
+    /// <summary>
+    /// Creates gig invitations for all users.
+    /// </summary>
+    /// <param name="memberRequestId">The member request id.</param>
+    /// <returns>The task.</returns>
+    private async Task CreateGIgInvitationsForAllUsers(MemberRequestId memberRequestId)
+    {
+        var userIds = await userManager.GetUsersInRoleAsync(UserRole.User.Name);
+        var currentTime = DateTime.UtcNow;
+
+        var gigInvitations = userIds
+            .Select(user => new GigApplicantInvitation
+            {
+                InvitedUserId = user.Id,
+                MemberRequestId = memberRequestId,
+                Status = GigApplicantInvitationStatus.Pending,
+                CreatedBy = session.UserId,
+                CreatedDate = currentTime,
+            })
+            .ToList();
+
+        context.GigApplicantInvitations.AddRange(gigInvitations);
     }
 }

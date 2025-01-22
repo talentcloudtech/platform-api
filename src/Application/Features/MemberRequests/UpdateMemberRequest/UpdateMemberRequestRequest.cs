@@ -60,6 +60,11 @@ public record UpdateMemberRequestRequest : IRequest<Result<MemberRequestResponse
     public string? WorkHour { get; init; }
 
     /// <summary>
+    /// Gets or sets the visibility of the member request.
+    /// </summary>
+    public MemberRequestVisibility? Visibility { get; init; }
+
+    /// <summary>
     /// Gets or sets the timezone relevant to the request.
     /// </summary>
     public string? Timezone { get; init; }
