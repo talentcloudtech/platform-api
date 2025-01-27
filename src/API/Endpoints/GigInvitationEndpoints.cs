@@ -57,7 +57,7 @@ public class GigInvitationEndpoints : IEndpoints
             )
             .WithSummary("Update a gig invitation status");
 
-        var publicGroup = builder.MapGroup("api/gig-opportunities/public/invitations").WithTags("GigInvitation").AllowAnonymous();
+        var publicGroup = builder.MapGroup("api/gig-opportunities/public").WithTags("GigInvitation").AllowAnonymous();
 
         publicGroup
             .MapGet(
