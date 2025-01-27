@@ -6,6 +6,7 @@ using Platform.Application.Extensions;
 using Platform.Application.Features.GigInvitations.GetGigInvitationById;
 using Platform.Application.Features.GigInvitations.GetUserGigInvitation;
 using Platform.Application.Features.GigInvitations.UpdateGigInvitationStatus;
+using Platform.Application.Features.MemberRequests.SearchMemberRequests;
 using Platform.Domain.Entities.Common;
 
 namespace Platform.API.Endpoints;
@@ -55,5 +56,18 @@ public class GigInvitationEndpoints : IEndpoints
                 }
             )
             .WithSummary("Update a gig invitation status");
+
+        var publicGroup = builder.MapGroup("api/gig-opportunities/public/invitations").WithTags("GigInvitation").AllowAnonymous();
+
+        publicGroup
+            .MapGet(
+                "/",
+                async (IMediator mediator, [AsParameters] GetPublicGigInvitationRequest request) =>
+                {
+                    var result = await mediator.Send(request);
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Get public gig invitations");
     }
 }
