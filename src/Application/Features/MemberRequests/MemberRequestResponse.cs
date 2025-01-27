@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Platform.Application.Common.Responses;
+using Platform.Application.Features.GigInvitations;
 using Platform.Application.Features.Workspaces;
 using Platform.Domain.Entities;
 using Platform.Domain.Entities.Common;
@@ -87,4 +88,9 @@ public record MemberRequestResponse
     /// Gets the user who created this member request.
     /// </summary>
     public CommonUserResponse? CreatedByUser { get; set; }
+
+    /// <summary>
+    /// Gets the user who is assigned to this member request.
+    /// </summary>
+    public GigInvitationResponse? Invitation { get; set; }
 }

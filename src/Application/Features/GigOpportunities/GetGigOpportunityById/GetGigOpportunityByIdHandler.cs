@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Ardalis.Result;
 using Mapster;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Platform.Application.Common;
 using Platform.Application.Common.Responses;
@@ -18,9 +17,7 @@ namespace Platform.Application.Features.GigOpportunities.GetGigOpportunityById;
 /// Handler for getting a gig opportunity by id
 /// </summary>
 /// <param name="context">The database context</param>
-/// <param name="session">The current session</param>
-public class GetGigOpportunityByIdHandler(IContext context, ICurrentSession session)
-    : IRequestHandler<GetGigOpportunityByIdRequest, Result<GigOpportunityResponse>>
+public class GetGigOpportunityByIdHandler(IContext context) : IRequestHandler<GetGigOpportunityByIdRequest, Result<GigOpportunityResponse>>
 {
     /// <summary>
     /// Handles the request to get a gig opportunity by id
@@ -30,9 +27,6 @@ public class GetGigOpportunityByIdHandler(IContext context, ICurrentSession sess
     /// <returns>The gig opportunity</returns>
     public async Task<Result<GigOpportunityResponse>> Handle(GetGigOpportunityByIdRequest request, CancellationToken cancellationToken)
     {
-        if (session.Role!.Name != UserRole.Admin.Name)
-            return Result.Forbidden("You are not authorized to access this resource.");
-
         var memberRequest = await context
             .MemberRequests.Include(x => x.Workspace)
             .Include(x => x.User.MemberProfile)
