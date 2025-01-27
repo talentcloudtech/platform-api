@@ -1,6 +1,7 @@
 using Ardalis.Result;
 using MediatR;
 using Platform.Application.Common.Responses;
+using Platform.Application.Features.MemberRequests;
 using Platform.Domain.Entities;
 using Platform.Domain.Entities.Enums;
 
@@ -22,7 +23,7 @@ public record GetUserGigInvitationRequest(
     GigApplicantInvitationStatus[]? Statuses = null,
     int CurrentPage = 1,
     int PageSize = 10
-) : IRequest<Result<PaginatedList<GigInvitationResponse>>>
+) : IRequest<Result<PaginatedList<MemberRequestResponse>>>
 {
     /// <summary>
     /// A list of invitation statuses to filter the results. If empty, all statuses will be included.

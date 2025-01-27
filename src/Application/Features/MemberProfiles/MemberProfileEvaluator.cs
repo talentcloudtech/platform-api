@@ -19,7 +19,7 @@ public static class MemberProfileEvaluator
             profile => !string.IsNullOrWhiteSpace(profile.FullName),
             profile => !string.IsNullOrWhiteSpace(profile.ShortBio),
             profile => !string.IsNullOrWhiteSpace(profile.Subtitle),
-            profile => !string.IsNullOrWhiteSpace(profile.ProfilePictureUrl),
+            // profile => !string.IsNullOrWhiteSpace(profile.ProfilePictureUrl),
             profile => !string.IsNullOrWhiteSpace(profile.Timezone),
             profile => !string.IsNullOrWhiteSpace(profile.Address),
             profile => profile.Languages.Any(),
