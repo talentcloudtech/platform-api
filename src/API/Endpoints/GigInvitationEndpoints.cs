@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Platform.Application.Extensions;
 using Platform.Application.Features.GigInvitations.GetGigInvitationById;
+using Platform.Application.Features.GigInvitations.GetPublicGigOpportunityById;
 using Platform.Application.Features.GigInvitations.GetUserGigInvitation;
 using Platform.Application.Features.GigInvitations.UpdateGigInvitationStatus;
+using Platform.Application.Features.GigOpportunities.GetGigOpportunityById;
 using Platform.Application.Features.MemberRequests.SearchMemberRequests;
 using Platform.Domain.Entities.Common;
 
@@ -69,5 +71,16 @@ public class GigInvitationEndpoints : IEndpoints
                 }
             )
             .WithSummary("Get public gig invitations");
+
+        publicGroup
+            .MapGet(
+                "/{memberRequestId}",
+                async (IMediator mediator, MemberRequestId memberRequestId) =>
+                {
+                    var result = await mediator.Send(new GetPublicGigOpportunityByIdRequest(memberRequestId));
+                    return result.ToPlatformApiResult();
+                }
+            )
+            .WithSummary("Get a public gig invitation by id");
     }
 }
