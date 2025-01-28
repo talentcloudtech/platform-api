@@ -9,6 +9,7 @@ using Platform.Application.Features.GigOpportunities.GetGigOpportunityCandidates
 using Platform.Application.Features.GigOpportunities.SearchGigOpportunities;
 using Platform.Application.Features.GigOpportunities.SearchUsersForGigOpportunities;
 using Platform.Application.Features.GigOpportunities.UpdateGigOpportunityCandidate;
+using Platform.Domain.Auth.Interfaces;
 using Platform.Domain.Entities.Common;
 
 namespace Platform.API.Endpoints;
@@ -40,7 +41,7 @@ public class GigOpportunityEndpoints : IEndpoints
         group
             .MapGet(
                 "/{memberRequestId}",
-                async (IMediator mediator, MemberRequestId memberRequestId) =>
+                async (IMediator mediator, ICurrentSession session, MemberRequestId memberRequestId) =>
                 {
                     var result = await mediator.Send(new GetGigOpportunityByIdRequest(memberRequestId));
                     return result.ToPlatformApiResult();

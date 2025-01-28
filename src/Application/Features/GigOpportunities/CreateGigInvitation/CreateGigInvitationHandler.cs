@@ -34,9 +34,6 @@ public class CreateGigInvitationHandler(IContext context, ICurrentSession sessio
     /// <returns>The result of the operation.</returns>
     public async Task<Result> Handle(CreateGigInvitationRequest request, CancellationToken cancellationToken)
     {
-        if (session.Role!.Name != UserRole.Admin.Name)
-            return Result.Forbidden("You are not authorized to access this resource.");
-
         // get the member request
         var memberRequest = await context
             .MemberRequests.Include(x => x.Invitations)
@@ -72,7 +69,7 @@ public class CreateGigInvitationHandler(IContext context, ICurrentSession sessio
             {
                 InvitedUserId = userId,
                 MemberRequestId = request.MemberRequestId,
-                Status = GigApplicantInvitationStatus.Pending,
+                Status = request.Status ?? GigApplicantInvitationStatus.Pending,
                 CreatedBy = session.UserId,
                 CreatedDate = currentTime,
             })
