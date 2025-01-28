@@ -101,7 +101,7 @@ public class GetUserGigInvitationHandler(IContext context, ICurrentSession sessi
             .Include(i => i.Invitations.Where(x => x.InvitedUserId == session.UserId))
             .ThenInclude(i => i.CreatedByUser!.MemberProfile)
             .Where(mr =>
-                mr.Visibility == MemberRequestVisibility.Public
+                (mr.Visibility == MemberRequestVisibility.Public && mr.Status == MemberRequestStatus.Published)
                 || (mr.Visibility == MemberRequestVisibility.Invited && mr.Invitations.Any(i => i.InvitedUserId == session.UserId))
             );
 
@@ -124,26 +124,6 @@ public class GetUserGigInvitationHandler(IContext context, ICurrentSession sessi
 
         // Execute query and paginate results
         var paginatedInvitations = await query.ToPaginatedListAsync(request.CurrentPage, request.PageSize);
-
-        // // Map to response objects
-        // //var invitationResponses = paginatedInvitations.Result.Select(i => i.Adapt<MemberRequestResponse>()).ToList();
-
-        // var invitationResponses = paginatedInvitations
-        //    .Result.Select(i => new MemberRequestResponse
-        //    {
-        //        Id = i.Id,
-        //        Status = i.Status,
-
-        //     //    CreatedDate = i.CreatedDate,
-        //     //    UpdatedDate = i.UpdatedDate,
-        //     //    MemberRequestId = i.MemberRequestId,
-        //     //    GigOpportunity = i.MemberRequest.Adapt<GigOpportunityResponse>(),
-        //     //    InvitedUser = new CommonUserResponse(i.InvitedUser!, i.InvitedUser!.MemberProfile),
-        //     //    InvitedBy = new CommonUserResponse(i.CreatedByUser!, i.CreatedByUser!.MemberProfile),
-        //     //    CreatedBy = i.CreatedBy,
-        //     //    UpdatedBy = i.UpdatedBy,
-        //    })
-        //    .ToList();
 
         var paginatedResponse = new PaginatedList<MemberRequestResponse>
         {
