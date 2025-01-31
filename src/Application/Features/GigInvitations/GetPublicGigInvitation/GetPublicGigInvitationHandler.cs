@@ -28,7 +28,11 @@ public class GetPublicGigInvitationHandler(IContext context) : IRequestHandler<G
     /// <returns>A paginated list of <see cref="MemberRequestResponse"/> matching the search criteria.</returns>
     public async Task<Result<PaginatedList<MemberRequestResponse>>> Handle(GetPublicGigInvitationRequest request, CancellationToken cancellationToken)
     {
-        IQueryable<MemberRequest> query = context.MemberRequests.Include(i => i.User.MemberProfile).Where(x => x.Visibility == MemberRequestVisibility.Public);
+        IQueryable<MemberRequest> query = context
+            .MemberRequests.Include(i => i.User.MemberProfile)
+            .Where(x =>
+                x.Visibility == MemberRequestVisibility.Public && x.Status != MemberRequestStatus.Cancelled && x.Status != MemberRequestStatus.Rejected
+            );
 
         if (!string.IsNullOrEmpty(request.Search))
             query = query.Where(x => EF.Functions.Like(x.Title.ToLower().Trim(), $"%{request.Search!.ToLower().Trim()}%"));
