@@ -179,7 +179,7 @@ public class UpdateMemberRequestHandler(IContext context, ICurrentSession sessio
     {
         return currentStatus switch
         {
-            MemberRequestStatus.Draft => new[] { MemberRequestStatus.PendingReview, MemberRequestStatus.Closed, MemberRequestStatus.Cancelled },
+            MemberRequestStatus.Draft => new[] { MemberRequestStatus.PendingReview, MemberRequestStatus.Published, MemberRequestStatus.Closed, MemberRequestStatus.Cancelled },
             MemberRequestStatus.PendingReview => new[]
             {
                 MemberRequestStatus.Published,
