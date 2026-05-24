@@ -1,12 +1,15 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Platform.API.Common;
 using Platform.API.Configurations;
 using Platform.Application.Common.Services;
+using System.Threading.RateLimiting;
 
 DotNetEnv.Env.Load();
 
@@ -15,11 +18,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Controllers
 builder.AddValidationSetup();
 
-// identity
+// Identity & Auth
 builder.Services.ConfigureIdentity(builder.Configuration);
 builder.Services.AddAuthorization();
 
-// Swagger
+// Swagger (registered always; exposed only in non-production)
 builder.Services.AddSwaggerSetup();
 
 // Persistence
@@ -42,7 +45,7 @@ builder.Services.AddExceptionHandler<ExceptionHandler>();
 // Blob storage
 builder.Services.AddScoped<IBlobStorageService, AzureBlobStorageService>();
 
-//IOptionConfigure
+// IOptionConfigure
 builder.Services.ConfigureAllOptions(builder.Configuration);
 builder.Logging.ClearProviders();
 
@@ -55,12 +58,52 @@ if (builder.Environment.EnvironmentName != "Testing")
     builder.AddOpenTelemetrySetup();
 }
 
-builder.Services.AddCors(options => options.AddDefaultPolicy(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
+// CORS — restrict to known frontend origin only
+var frontendUrl = EnvironmentVariables.FrontendUrl;
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+        policy.WithOrigins(frontendUrl)
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials());
+});
+
+// Rate limiting — protect auth endpoints from brute-force & flooding
+builder.Services.AddRateLimiter(options =>
+{
+    // Strict limiter for sensitive auth endpoints (login, register, forgot-password, refresh)
+    options.AddFixedWindowLimiter("auth", opt =>
+    {
+        opt.PermitLimit = 10;
+        opt.Window = TimeSpan.FromMinutes(1);
+        opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        opt.QueueLimit = 0;
+    });
+
+    // General API limiter applied globally
+    options.AddFixedWindowLimiter("global", opt =>
+    {
+        opt.PermitLimit = 200;
+        opt.Window = TimeSpan.FromMinutes(1);
+        opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        opt.QueueLimit = 5;
+    });
+
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+});
+
+// Health checks
+builder.Services.AddHealthChecks()
+    .AddNpgSql(builder.Configuration.GetConnectionString("DefaultConnection")!, name: "database");
 
 var app = builder.Build();
 
 // Order is critical here!
-app.UseForwardedHeaders(new ForwardedHeadersOptions { ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto });
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
 
 // Ensure CORS is applied before routing, authentication, and authorization
 app.UseCors();
@@ -72,15 +115,28 @@ app.UseHsts();
 app.UseResponseCompression();
 app.UseHttpsRedirection();
 
+app.UseRateLimiter();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Replace all individual endpoint mappings with this single line
+// Map endpoints
 app.MapAllEndpoints();
 
 app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
-app.UseSwaggerSetup();
-app.MapGet("/", () => Results.Redirect("/swagger"));
+// Swagger — only exposed outside production to avoid leaking API schema
+if (!app.Environment.IsProduction())
+{
+    app.UseSwaggerSetup();
+    app.MapGet("/", () => Results.Redirect("/swagger"));
+}
+else
+{
+    app.MapGet("/", () => Results.Ok(new { status = "Platform API is running" }));
+}
+
+// Health check endpoint
+app.MapHealthChecks("/health");
 
 await app.RunAsync();

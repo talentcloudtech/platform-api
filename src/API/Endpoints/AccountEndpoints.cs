@@ -46,7 +46,8 @@ public class AccountEndpoints : IEndpoints
                 }
             )
             .WithSummary("Login user.")
-            .AllowAnonymous();
+            .AllowAnonymous()
+            .RequireRateLimiting("auth");
 
         group
             .MapGet(
@@ -65,7 +66,8 @@ public class AccountEndpoints : IEndpoints
                 }
             )
             .WithSummary("Confirm email.")
-            .AllowAnonymous();
+            .AllowAnonymous()
+            .RequireRateLimiting("auth");
 
         group
             .MapPost(
@@ -77,7 +79,8 @@ public class AccountEndpoints : IEndpoints
                 }
             )
             .WithSummary("Resend email confirmation.")
-            .AllowAnonymous();
+            .AllowAnonymous()
+            .RequireRateLimiting("auth");
 
         // register account
         group
@@ -90,7 +93,8 @@ public class AccountEndpoints : IEndpoints
                 }
             )
             .WithSummary("Register account.")
-            .AllowAnonymous();
+            .AllowAnonymous()
+            .RequireRateLimiting("auth");
 
         group
             .MapPost(
@@ -102,7 +106,8 @@ public class AccountEndpoints : IEndpoints
                 }
             )
             .WithSummary("Forgot password.")
-            .AllowAnonymous();
+            .AllowAnonymous()
+            .RequireRateLimiting("auth");
 
         group
             .MapPost(
@@ -114,7 +119,8 @@ public class AccountEndpoints : IEndpoints
                 }
             )
             .WithSummary("Reset password.")
-            .AllowAnonymous();
+            .AllowAnonymous()
+            .RequireRateLimiting("auth");
 
         group
             .MapPost(
@@ -126,7 +132,8 @@ public class AccountEndpoints : IEndpoints
                 }
             )
             .WithSummary("Refresh token.")
-            .AllowAnonymous();
+            .AllowAnonymous()
+            .RequireRateLimiting("auth");
 
         group
             .MapPost(
@@ -205,7 +212,7 @@ public class AccountEndpoints : IEndpoints
                 "/change-password",
                 async (IMediator mediator, ICurrentSession currentUser, ChangePasswordRequest request) =>
                 {
-                    var result = await mediator.Send(request);
+                    var result = await mediator.Send(request with { UserId = currentUser.UserId });
                     return result.ToPlatformApiResult();
                 }
             )

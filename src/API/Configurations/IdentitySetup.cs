@@ -32,7 +32,7 @@ public static class IdentitySetup
                 options.Password.RequireLowercase = true;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = true;
-                options.Password.RequiredLength = 6;
+                options.Password.RequiredLength = 8;
                 options.Password.RequiredUniqueChars = 1;
 
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
@@ -45,7 +45,7 @@ public static class IdentitySetup
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
 
-        services.Configure<DataProtectionTokenProviderOptions>(opt => opt.TokenLifespan = TimeSpan.FromHours(2)); // Change to 1 hour before deployment
+        services.Configure<DataProtectionTokenProviderOptions>(opt => opt.TokenLifespan = TimeSpan.FromHours(1));
         services.AddDataProtection().PersistKeysToDbContext<ApplicationDbContext>();
 
         var jwtSettings = configuration.GetSection("JwtSettings");
@@ -60,7 +60,7 @@ public static class IdentitySetup
             .AddJwtBearer(opt =>
             {
                 opt.SaveToken = true;
-                opt.RequireHttpsMetadata = false;
+                opt.RequireHttpsMetadata = true;
                 // opt.UseSecurityTokenValidators = true;
                 opt.TokenValidationParameters = new TokenValidationParameters
                 {
