@@ -55,7 +55,11 @@ if (builder.Environment.EnvironmentName != "Testing")
     builder.AddOpenTelemetrySetup();
 }
 
-builder.Services.AddCors(options => options.AddDefaultPolicy(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
+builder.Services.AddCors(options =>
+    options.AddDefaultPolicy(builder =>
+        builder.WithOrigins(EnvironmentVariables.FrontendUrl).AllowAnyHeader().AllowAnyMethod().AllowCredentials()
+    )
+);
 
 var app = builder.Build();
 
@@ -80,7 +84,10 @@ app.MapAllEndpoints();
 
 app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
-app.UseSwaggerSetup();
-app.MapGet("/", () => Results.Redirect("/swagger"));
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwaggerSetup();
+    app.MapGet("/", () => Results.Redirect("/swagger"));
+}
 
 await app.RunAsync();
