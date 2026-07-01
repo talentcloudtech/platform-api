@@ -28,6 +28,28 @@ namespace Platform.API.Endpoints;
 /// </summary>
 public class AccountEndpoints : IEndpoints
 {
+    private const string RefreshTokenCookieName = "refreshToken";
+
+    private static void SetRefreshTokenCookie(HttpContext httpContext, string refreshToken)
+    {
+        httpContext.Response.Cookies.Append(
+            RefreshTokenCookieName,
+            refreshToken,
+            new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Path = "/api/accounts",
+            }
+        );
+    }
+
+    private static void ClearRefreshTokenCookie(HttpContext httpContext)
+    {
+        httpContext.Response.Cookies.Delete(RefreshTokenCookieName, new CookieOptions { Path = "/api/accounts" });
+    }
+
     /// <summary>
     /// Maps the endpoints for account-related operations.
     /// </summary>
@@ -39,9 +61,13 @@ public class AccountEndpoints : IEndpoints
         group
             .MapPost(
                 "/login",
-                async (IMediator mediator, LoginRequest request) =>
+                async (IMediator mediator, HttpContext httpContext, LoginRequest request) =>
                 {
                     var result = await mediator.Send(request);
+                    if (result.IsSuccess)
+                    {
+                        SetRefreshTokenCookie(httpContext, result.Value.RefreshToken);
+                    }
                     return result.ToPlatformApiResult();
                 }
             )
@@ -119,9 +145,22 @@ public class AccountEndpoints : IEndpoints
         group
             .MapPost(
                 "/refresh",
-                async (IMediator mediator, RefreshTokenRequest request) =>
+                async (IMediator mediator, HttpContext httpContext) =>
                 {
-                    var result = await mediator.Send(request);
+                    if (!httpContext.Request.Cookies.TryGetValue(RefreshTokenCookieName, out var refreshToken) || string.IsNullOrEmpty(refreshToken))
+                    {
+                        return Results.Unauthorized();
+                    }
+
+                    var result = await mediator.Send(new RefreshTokenRequest(refreshToken));
+                    if (result.IsSuccess)
+                    {
+                        SetRefreshTokenCookie(httpContext, result.Value.RefreshToken);
+                    }
+                    else
+                    {
+                        ClearRefreshTokenCookie(httpContext);
+                    }
                     return result.ToPlatformApiResult();
                 }
             )
@@ -131,9 +170,17 @@ public class AccountEndpoints : IEndpoints
         group
             .MapPost(
                 "/logout",
-                async (IMediator mediator, ICurrentSession currentUser, LogoutRequest request) =>
+                async (IMediator mediator, HttpContext httpContext, ICurrentSession currentUser, LogoutRequest request) =>
                 {
-                    var result = await mediator.Send(request with { UserId = currentUser.UserId });
+                    httpContext.Request.Cookies.TryGetValue(RefreshTokenCookieName, out var refreshToken);
+                    var result = await mediator.Send(
+                        request with
+                        {
+                            UserId = currentUser.UserId,
+                            RefreshToken = refreshToken ?? request.RefreshToken,
+                        }
+                    );
+                    ClearRefreshTokenCookie(httpContext);
                     return result.ToPlatformApiResult();
                 }
             )

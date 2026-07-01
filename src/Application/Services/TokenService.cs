@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Platform.API.Configurations;
@@ -76,6 +77,9 @@ public class TokenService(
     /// <inheritdoc/>
     public async Task<RefreshToken> CreateRefreshTokenAsync(ApplicationUser user)
     {
+        var existingTokens = await context.RefreshTokens.Where(rt => rt.UserId == user.Id).ToListAsync();
+        context.RefreshTokens.RemoveRange(existingTokens);
+
         var refreshToken = new RefreshToken
         {
             UserId = user.Id,

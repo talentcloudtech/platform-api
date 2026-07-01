@@ -80,7 +80,7 @@ public class ReleasePaymentHandler(IContext context, ICurrentSession session) : 
                 context.Workspaces.Update(workspace);
 
                 // Add to member balance
-                member.CurrentBalance = member.CurrentBalance ?? 0 + task.Cost;
+                member.CurrentBalance = (member.CurrentBalance ?? 0) + task.Cost;
                 context.Users.Update(member);
 
                 // Create member transaction (Credit)
