@@ -2,6 +2,7 @@ using System.Linq;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.Routing;
 using Platform.API.Configurations;
 using Platform.Application.Extensions;
@@ -34,7 +35,7 @@ public class AccountEndpoints : IEndpoints
     /// <param name="builder">The endpoint route builder.</param>
     public static void MapEndpoints(IEndpointRouteBuilder builder)
     {
-        var group = builder.MapGroup("api/accounts").WithTags("Account");
+        var group = builder.MapGroup("api/accounts").WithTags("Account").RequireRateLimiting("auth");
 
         group
             .MapPost(
