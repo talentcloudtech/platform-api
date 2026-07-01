@@ -66,7 +66,8 @@ public class FinanceEndpoints : IEndpoints
                     return result.ToPlatformApiResult();
                 }
             )
-            .WithSummary("Release payments for tasks");
+            .WithSummary("Release payments for tasks")
+            .RequireAuthorization(policy => policy.RequireRole("Admin", "WorkspaceOwner"));
 
         group.MapPost(
             "/request-payment",

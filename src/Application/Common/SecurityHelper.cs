@@ -36,6 +36,11 @@ public static class SecurityHelper
     /// <returns>The result of the verification.</returns>
     public static bool VerifyHMACSHA256Signature(string singingKey, string payload, string signature)
     {
-        return GenerateHMACSHA256Signature(singingKey, payload) == signature;
+        var expectedSignature = GenerateHMACSHA256Signature(singingKey, payload);
+        var expectedBytes = System.Text.Encoding.UTF8.GetBytes(expectedSignature);
+        var actualBytes = System.Text.Encoding.UTF8.GetBytes(signature ?? string.Empty);
+
+        return expectedBytes.Length == actualBytes.Length
+            && System.Security.Cryptography.CryptographicOperations.FixedTimeEquals(expectedBytes, actualBytes);
     }
 }
